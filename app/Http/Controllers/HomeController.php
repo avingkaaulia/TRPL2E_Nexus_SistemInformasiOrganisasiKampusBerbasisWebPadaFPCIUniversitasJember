@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Post;
-
+use App\Models\PeriodePendaftaran;
 class HomeController extends Controller
 {
     public function index()
@@ -61,13 +61,24 @@ class HomeController extends Controller
             ->take(2)
             ->get();
 
-       return view('home', compact(
-    'carousel',
-    'about',
-    'kegiatan',
-    'writings',
-    'urgent',
-    'posts' // 🔥 INI YANG KURANG
-));
+        // 🔥 JUDUL SECTION
+        $latestTitle = 'Latest Updates';
+        $urgentTitle = 'Urgent Notice';
+
+
+       /// 🔥 CEK APAKAH PENDAFTARAN DIBUKA
+        $periodeAktif = PeriodePendaftaran::where('is_active', 1)
+            ->where('tanggal_mulai', '<=', date('Y-m-d'))
+            ->where('tanggal_selesai', '>=', date('Y-m-d'))
+            ->first();
+        
+        $isPendaftaranOpen = $periodeAktif ? true : false;
+        $pendaftaranInfo = $periodeAktif;
+        
+        return view('home', compact(
+            'carousel', 'about', 'kegiatan', 'writings', 
+            'urgent', 'posts', 'latestTitle', 'urgentTitle',
+            'isPendaftaranOpen', 'pendaftaranInfo'
+        ));
     }
 }

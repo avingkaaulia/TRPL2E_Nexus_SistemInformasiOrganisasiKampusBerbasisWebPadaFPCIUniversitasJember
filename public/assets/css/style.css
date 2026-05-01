@@ -300,13 +300,17 @@ main {
 }
 
 .footer h5 {
-    font-weight: 600;
-    margin-bottom: 15px;
+    font-weight: 700;
+    margin-bottom: 25px;
+    position: relative;
+    display: inline-block;
 }
 
+
 .footer p {
-    color: #ccc;
+    color: #B6CCCA;
     font-size: 14px;
+    line-height: 1.6;
 }
 
 .footer img {
@@ -315,25 +319,37 @@ main {
 
 
 /* SOCIAL ICON */
+
 .social-icon {
-    color: #ccc;
-    transition: 0.3s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+    color: white;
+    transition: all 0.3s ease;
+    margin: 0 1px;
 }
 
 .social-icon:hover {
-    color: #5C6844;
+    background: #5C6844;
     transform: translateY(-3px);
+    color: white;
 }
 /* FOOTER LINK */
 .footer-link {
-    color: #ccc;
+    color: #B6CCCA;
     text-decoration: none;
-    transition: 0.3s;
+    transition: all 0.3s ease;
+    display: inline-block;
+    margin-bottom: 12px;
 }
 
 .footer-link:hover {
     color: #5C6844;
-    padding-left: 5px;
+    transform: translateX(5px);
 }
 /* RAPIIIN FOOTER GRID */
 .footer-row {

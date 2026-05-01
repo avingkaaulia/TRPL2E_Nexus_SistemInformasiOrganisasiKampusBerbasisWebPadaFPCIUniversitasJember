@@ -14,7 +14,11 @@
                     <input type="email" name="email" placeholder="Your Email" class="comment-input" required>
                 </div>
                 <div class="form-group">
-                    <textarea name="isi_komentar" rows="4" placeholder="Type your comment here..." class="comment-textarea" required></textarea>
+                    <textarea name="isi_komentar" rows="4"
+    placeholder="Type your comment here..."
+    class="comment-textarea"
+    maxlength="1000"
+    required>{{ old('isi_komentar') }}</textarea>
                 </div>
                 <button type="submit" class="btn-publish">Publish</button>
             </form>
@@ -48,4 +52,19 @@
     <script>
         alert("{{ session('success') }}");
     </script>
+@endif
+@if(session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
+
+@if($errors->any())
+    <div class="alert alert-danger">
+        <ul class="mb-0">
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
 @endif

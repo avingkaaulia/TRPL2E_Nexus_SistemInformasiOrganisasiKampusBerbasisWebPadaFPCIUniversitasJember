@@ -162,10 +162,6 @@
     background: #D7CEAF;
 }
 
-.comment-content {
-    flex: 1;
-}
-
 .comment-header {
     display: flex;
     align-items: baseline;
@@ -190,6 +186,15 @@
     line-height: 1.6;
     font-size: 14px;
     margin: 0;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.comment-content {
+    flex: 1;
+    min-width: 0;
 }
 
 .no-comments {

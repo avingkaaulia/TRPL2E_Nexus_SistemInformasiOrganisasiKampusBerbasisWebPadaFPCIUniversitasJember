@@ -43,7 +43,7 @@
 <!-- LATEST -->
 <div class="container mt-5">
     <div class="section-header">
-<h2 class="text-center">Latest Updates</h2>
+<h2 class="text-center">{{ $latestTitle }}</h2>
 <div class="section-line"></div>
     </div>
     
@@ -70,9 +70,11 @@
 
 <!-- URGENT -->
  
-<div class="container mt-5 mb-5">
-<h2 class="text-center mt-5">Urgent Notice</h2>
-
+<div class="container mt-5 ">
+    <div class="section-header">
+<h2 class="text-center mt-5">{{ $urgentTitle }}</h2>
+<div class="section-line"></div>
+    </div>
 <div class="row">
 @foreach($urgent as $u)
 <div class="col-md-6">
@@ -93,6 +95,25 @@
 </div>
 @endforeach
 </div>
+</div>
+<!-- 🔥 TOMBOL PENDAFTARAN (DI BAWAH URGENT) -->
+<div class="container mt-5 mb-5">
+    <div class="pendaftaran-cta">
+        <div class="pendaftaran-cta-content">
+            <h3>📋 {{ $isPendaftaranOpen ? 'Pendaftaran Anggota Baru Dibuka!' : 'Pendaftaran Sedang Ditutup' }}</h3>
+            @if($isPendaftaranOpen && isset($pendaftaranInfo))
+                <p>Periode: {{ $pendaftaranInfo->nama_periode }} ({{ $pendaftaranInfo->tahun_ajaran }})</p>
+                <p>📅 {{ \Carbon\Carbon::parse($pendaftaranInfo->tanggal_mulai)->format('d M Y') }} - {{ \Carbon\Carbon::parse($pendaftaranInfo->tanggal_selesai)->format('d M Y') }}</p>
+                <p>🎯 Kuota tersisa: {{ $pendaftaranInfo->kuota - $pendaftaranInfo->getJumlahPendaftarAttribute() }} dari {{ $pendaftaranInfo->kuota }}</p>
+            @elseif(!$isPendaftaranOpen)
+                <p>Pendaftaran anggota baru sedang ditutup. Silahkan tunggu informasi selanjutnya.</p>
+            @endif
+            
+            <a href="{{ route('pendaftaran') }}" class="btn-pendaftaran">
+                {{ $isPendaftaranOpen ? 'Daftar Sekarang →' : 'Info Pendaftaran' }}
+            </a>
+        </div>
+    </div>
 </div>
 
 @endsection
