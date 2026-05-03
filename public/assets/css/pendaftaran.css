@@ -231,11 +231,143 @@ textarea.form-control {
     text-decoration: none;
     margin-top: 20px;
 }
+/* Tambahkan di assets/css/pendaftaran.css */
 
-@media (max-width: 768px) {
-    .pendaftaran-cta {
-        padding: 30px 20px;
+/* Required star */
+.required-star {
+    color: #e74c3c;
+    font-size: 16px;
+    margin-left: 4px;
+}
+
+.optional-text {
+    color: #999;
+    font-size: 12px;
+    font-weight: normal;
+    margin-left: 8px;
+}
+
+/* File Upload Wrapper */
+.file-upload-wrapper {
+    position: relative;
+}
+
+.file-upload-input {
+    width: 100%;
+    padding: 12px;
+    border: 2px dashed #E8E4D9;
+    border-radius: 12px;
+    background: #FAF9F5;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.file-upload-input:hover {
+    border-color: #5C6844;
+    background: #F5F2E8;
+}
+
+.file-upload-input:focus {
+    outline: none;
+    border-color: #5C6844;
+    background: #fff;
+}
+
+.file-upload-info {
+    margin-top: 8px;
+}
+
+/* Error message */
+.error-message {
+    color: #e74c3c;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+/* Tambahkan di assets/css/pendaftaran.css */
+
+/* Alert Messages */
+.alert-success-custom {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    color: #155724;
+    border: none;
+    border-left: 5px solid #28a745;
+    border-radius: 12px;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: slideDown 0.3s ease;
+}
+
+.alert-error-custom {
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+    color: #721c24;
+    border: none;
+    border-left: 5px solid #dc3545;
+    border-radius: 12px;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    animation: slideDown 0.3s ease;
+}
+
+.alert-success-custom i,
+.alert-error-custom i {
+    font-size: 20px;
+}
+
+.alert-success-custom ul,
+.alert-error-custom ul {
+    margin-left: 20px;
+}
+
+.alert-dismissible {
+    position: relative;
+    padding-right: 40px;
+}
+
+.btn-close {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+
+.btn-close:hover {
+    opacity: 1;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
     }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Loading state for button */
+.btn-submit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .file-upload-input {
+        padding: 10px;
+    }
+}
     
     .pendaftaran-header h1 {
         font-size: 28px;
@@ -257,4 +389,3 @@ textarea.form-control {
     .btn-submit, .btn-cancel {
         width: 100%;
     }
-}

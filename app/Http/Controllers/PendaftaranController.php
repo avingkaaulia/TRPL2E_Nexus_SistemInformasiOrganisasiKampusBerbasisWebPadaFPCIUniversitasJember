@@ -5,8 +5,12 @@ use Illuminate\Http\Request;
 use App\Models\PeriodePendaftaran;
 use App\Models\Pendaftaran;
 use App\Models\JenisBerkas;
+use App\Models\BerkasPendaftaran;
+use App\Models\FormField;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB; // 🔥 TAMBAHKAN INI
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class PendaftaranController extends Controller
 {
@@ -17,46 +21,155 @@ class PendaftaranController extends Controller
             ->where('tanggal_selesai', '>=', date('Y-m-d'))
             ->first();
         
-        $config = DB::table('pendaftaran_config')->first(); // 🔥 PAKAI DB INI
+        $config = DB::table('pendaftaran_config')->first();
+        $formFields = FormField::getActiveFields();
         $jenisBerkas = JenisBerkas::all();
         
-        return view('pendaftaran', compact('periodeAktif', 'config', 'jenisBerkas'));
+        return view('pendaftaran', compact('periodeAktif', 'config', 'formFields', 'jenisBerkas'));
     }
     
     public function store(Request $request)
     {
-        $request->validate([
-            'nama' => 'required|string|max:100',
-            'email' => 'required|email|max:100|unique:pendaftaran,email',
-            'no_hp' => 'required|string|max:20',
-            'nim' => 'required|string|max:20',
-            'jurusan' => 'required|string|max:100',
-            'fakultas' => 'required|string|max:100',
-            'alamat' => 'required|string',
-            'alasan' => 'required|string',
-            'id_periode' => 'required|exists:periode_pendaftaran,id_periode'
-        ]);
+         // 🔥 LOG UNTUK DEBUG
+        Log::info('Pendaftaran store method called');
+        // 🔥 VALIDASI DINAMIS BERDASARKAN DATABASE
+        $rules = [];
         
-        Pendaftaran::create([
-            'nama' => $request->nama,
-            'email' => $request->email,
-            'no_hp' => $request->no_hp,
-            'nim' => $request->nim,
-            'jurusan' => $request->jurusan,
-            'fakultas' => $request->fakultas,
-            'alamat' => $request->alamat,
-            'alasan' => $request->alasan,
+        // Validasi form fields dari database
+        $formFields = FormField::getActiveFields();
+        foreach ($formFields as $field) {
+            $fieldRules = [];
+            if ($field->is_required) {
+                $fieldRules[] = 'required';
+            }
+            
+            switch ($field->field_type) {
+                case 'email':
+                    $fieldRules[] = 'email';
+                    if ($field->field_name == 'email') {
+                        $fieldRules[] = 'unique:pendaftaran,email';
+                    }
+                    break;
+                case 'number':
+                    $fieldRules[] = 'numeric';
+                    break;
+                case 'tel':
+                    $fieldRules[] = 'string';
+                    $fieldRules[] = 'max:20';
+                    break;
+                default:
+                    $fieldRules[] = 'string';
+                    $fieldRules[] = 'max:255';
+            }
+            
+            if ($field->field_name == 'nim') {
+                $fieldRules[] = 'unique:pendaftaran,nim';
+            }
+            
+            $rules[$field->field_name] = $fieldRules;
+        }
+        
+        // 🔥 VALIDASI BERKAS DENGAN FORMAT YANG BENAR
+        $jenisBerkas = JenisBerkas::all();
+        foreach ($jenisBerkas as $berkas) {
+            $berkasRules = [];
+            
+            if ($berkas->is_required) {
+                $berkasRules[] = 'required';
+            }
+            
+            $berkasRules[] = 'file';
+            $berkasRules[] = 'mimes:' . $berkas->file_type;
+            // 🔥 PERBAIKAN: max harus diikuti angka (dalam kilobyte)
+            $berkasRules[] = 'max:' . $berkas->max_size; // max_size sudah dalam KB
+            
+            $rules['berkas_' . $berkas->id_jenis] = $berkasRules;
+        }
+        
+        $rules['id_periode'] = 'required|exists:periode_pendaftaran,id_periode';
+        
+        // Custom error messages untuk file size
+        $messages = [];
+        foreach ($jenisBerkas as $berkas) {
+            $maxSizeMB = round($berkas->max_size / 1024, 2);
+            $messages['berkas_' . $berkas->id_jenis . '.max'] = 'Ukuran file ' . $berkas->nama_jenis . ' maksimal ' . $maxSizeMB . ' MB.';
+            $messages['berkas_' . $berkas->id_jenis . '.mimes'] = 'Format file ' . $berkas->nama_jenis . ' harus .' . $berkas->file_type;
+            $messages['berkas_' . $berkas->id_jenis . '.required'] = 'File ' . $berkas->nama_jenis . ' wajib diupload.';
+        }
+        
+        try {
+            $request->validate($rules, $messages);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()->withErrors($e->validator)->withInput();
+        }
+        
+        // 🔥 CEK PERIODE AKTIF
+        $periode = PeriodePendaftaran::find($request->id_periode);
+        if (!$periode->isAktif()) {
+            return redirect()->back()->with('error', 'Periode pendaftaran sudah berakhir!')->withInput();
+        }
+        
+        // 🔥 CEK KUOTA
+        if ($periode->getSisaKuotaAttribute() <= 0) {
+            return redirect()->back()->with('error', 'Maaf, kuota pendaftaran sudah penuh!')->withInput();
+        }
+        
+        // 🔥 SIMPAN DATA PENDAFTARAN (DINAMIS)
+        $dataPendaftaran = [
             'id_periode' => $request->id_periode,
             'status' => 'menunggu',
             'tanggal_daftar' => Carbon::now()
-        ]);
+        ];
         
-        return redirect()->back()->with('success', 'Pendaftaran berhasil! Silahkan tunggu konfirmasi.');
+        foreach ($formFields as $field) {
+            $dataPendaftaran[$field->field_name] = $request->{$field->field_name};
+        }
+        
+        $pendaftaran = Pendaftaran::create($dataPendaftaran);
+        
+        // 🔥 SIMPAN BERKAS-BERKAS
+        foreach ($jenisBerkas as $berkas) {
+            $fieldName = 'berkas_' . $berkas->id_jenis;
+            if ($request->hasFile($fieldName)) {
+                $file = $request->file($fieldName);
+                
+                // Cek ukuran file manual (opsional)
+                $fileSizeKB = round($file->getSize() / 1024);
+                if ($fileSizeKB > $berkas->max_size) {
+                    $maxSizeMB = round($berkas->max_size / 1024, 2);
+                    return redirect()->back()->with('error', 'Ukuran file ' . $berkas->nama_jenis . ' (' . round($fileSizeKB/1024,2) . ' MB) melebihi batas maksimal ' . $maxSizeMB . ' MB.')->withInput();
+                }
+                
+                $extension = $file->getClientOriginalExtension();
+                $fileName = time() . '_' . Str::slug($request->nama) . '_' . $berkas->nama_jenis . '.' . $extension;
+                
+                $uploadDir = public_path('berkas/' . $pendaftaran->id_pendaftaran);
+                if (!file_exists($uploadDir)) {
+                    mkdir($uploadDir, 0755, true);
+                }
+                
+                $file->move($uploadDir, $fileName);
+                $filePath = 'berkas/' . $pendaftaran->id_pendaftaran . '/' . $fileName;
+                
+                BerkasPendaftaran::create([
+                    'id_pendaftaran' => $pendaftaran->id_pendaftaran,
+                    'id_jenis' => $berkas->id_jenis,
+                    'file_path' => $filePath
+                ]);
+            }
+        }
+        
+        return redirect()->back()->with('success', 'Pendaftaran berhasil! Silahkan tunggu konfirmasi melalui email.');
     }
     
     public function cekStatus($email)
     {
         $pendaftaran = Pendaftaran::where('email', $email)->first();
+        if ($pendaftaran) {
+            $pendaftaran->berkas = BerkasPendaftaran::with('jenisBerkas')
+                ->where('id_pendaftaran', $pendaftaran->id_pendaftaran)
+                ->get();
+        }
         return response()->json($pendaftaran);
     }
 }
