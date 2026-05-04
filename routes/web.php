@@ -31,5 +31,5 @@ Route::post('/pendaftaran', [PendaftaranController::class, 'store'])->name('pend
 Route::get('/cek-pendaftaran/{email}', [PendaftaranController::class, 'cekStatus']);
 // Routes untuk Writings
 Route::get('/writings', [PostController::class, 'index'])->name('writings');
-Route::get('/writings/category/{categoryId}', [PostController::class, 'index'])->name('writings.category');
+Route::get('/writings/category/{categoryId}', [PostController::class, 'category'])->name('writings.category');
 Route::get('/writings/{id}', [PostController::class, 'show'])->name('writings.show');

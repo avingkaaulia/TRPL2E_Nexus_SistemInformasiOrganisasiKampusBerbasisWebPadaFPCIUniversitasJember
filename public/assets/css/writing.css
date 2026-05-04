@@ -10,12 +10,23 @@
     color: white;
 }
 
-/* Alert info */
+/* Alert Info */
 .alert-info {
     background: #E8F0FE;
     border: 1px solid #5C6844;
     color: #1C150F;
     border-radius: 12px;
+    padding: 12px 20px;
+}
+
+.alert-info a {
+    color: #5C6844;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.alert-info a:hover {
+    text-decoration: underline;
 }
 
 /* Pagination */

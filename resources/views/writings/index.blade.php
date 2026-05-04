@@ -13,9 +13,9 @@
             <a href="{{ route('writings') }}" class="text-decoration-none" style="color: #5C6844;">View All Writings →</a>
         </div>
         <div class="category-grid">
-            @foreach($categories->whereIn('category_name', ['Foreign Policy', 'Technology', 'Economy', 'Security', 'writings']) as $cat)
+            @foreach($categories->whereIn('category_name', ['Foreign Policy', 'Technology', 'Economy', 'Security', 'writings', 'kegiatan', 'pengumuman']) as $cat)
             <a href="{{ route('writings.category', $cat->id_category) }}" class="text-decoration-none">
-                <div class="category-item {{ request('category') == $cat->id_category ? 'active' : '' }}">
+                <div class="category-item {{ isset($currentCategory) && $currentCategory->id_category == $cat->id_category ? 'active' : '' }}">
                     <span class="category-name">{{ $cat->category_name }}</span>
                 </div>
             </a>
@@ -23,10 +23,19 @@
         </div>
     </div>
 
+    <!-- Current Category Info -->
+    @if(isset($currentCategory))
+    <div class="alert alert-info mb-4 text-center">
+        <i class="bi bi-folder"></i> 
+        Showing posts from category: <strong>{{ $currentCategory->category_name }}</strong>
+        <a href="{{ route('writings') }}" class="ms-3">View all →</a>
+    </div>
+    @endif
+
     <!-- Search Form -->
     <div class="row mb-4">
         <div class="col-md-6 mx-auto">
-            <form action="{{ route('writings') }}" method="GET" class="search-wrapper d-flex">
+            <form action="{{ isset($currentCategory) ? route('writings.category', $currentCategory->id_category) : route('writings') }}" method="GET" class="search-wrapper d-flex">
                 <input type="text" name="search" class="search-input flex-grow-1" 
                        placeholder="Search writings..." value="{{ $search ?? '' }}">
                 <button type="submit" class="btn-search-submit">
@@ -36,17 +45,12 @@
         </div>
     </div>
 
-    <!-- Filter Info -->
-    @if($search || $categoryFilter)
+    <!-- Filter Info Search -->
+    @if($search)
     <div class="alert alert-info mb-4 text-center">
-        <i class="bi bi-funnel"></i> 
-        @if($search)
-            Showing results for: <strong>"{{ $search }}"</strong>
-        @endif
-        @if($categoryFilter)
-            Category: <strong>{{ $currentCategoryName }}</strong>
-        @endif
-        <a href="{{ route('writings') }}" class="ms-3">Clear filter →</a>
+        <i class="bi bi-search"></i> 
+        Showing results for: <strong>"{{ $search }}"</strong>
+        <a href="{{ isset($currentCategory) ? route('writings.category', $currentCategory->id_category) : route('writings') }}" class="ms-3">Clear search →</a>
     </div>
     @endif
 
@@ -112,19 +116,17 @@
             @endforelse
         </div>
 
-        <!-- Pagination (Bootstrap) -->
+        <!-- Pagination -->
         <div class="d-flex justify-content-center mt-4">
             @if($posts->hasPages())
                 <nav aria-label="Page navigation">
                     <ul class="pagination">
-                        {{-- Previous Page Link --}}
                         @if($posts->onFirstPage())
                             <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
                         @else
                             <li class="page-item"><a class="page-link" href="{{ $posts->previousPageUrl() }}">&laquo;</a></li>
                         @endif
 
-                        {{-- Pagination Elements --}}
                         @foreach($posts->getUrlRange(1, $posts->lastPage()) as $page => $url)
                             @if($page == $posts->currentPage())
                                 <li class="page-item active"><span class="page-link">{{ $page }}</span></li>
@@ -133,7 +135,6 @@
                             @endif
                         @endforeach
 
-                        {{-- Next Page Link --}}
                         @if($posts->hasMorePages())
                             <li class="page-item"><a class="page-link" href="{{ $posts->nextPageUrl() }}">&raquo;</a></li>
                         @else
