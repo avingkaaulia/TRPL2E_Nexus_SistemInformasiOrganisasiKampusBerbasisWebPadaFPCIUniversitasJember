@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PendaftaranController;
+use App\Http\Controllers\PostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,3 +29,7 @@ Route::post('/post/{id_post}/comments', [App\Http\Controllers\CommentController:
 Route::get('/pendaftaran', [PendaftaranController::class, 'index'])->name('pendaftaran');
 Route::post('/pendaftaran', [PendaftaranController::class, 'store'])->name('pendaftaran.store');
 Route::get('/cek-pendaftaran/{email}', [PendaftaranController::class, 'cekStatus']);
+// Routes untuk Writings
+Route::get('/writings', [PostController::class, 'index'])->name('writings');
+Route::get('/writings/category/{categoryId}', [PostController::class, 'index'])->name('writings.category');
+Route::get('/writings/{id}', [PostController::class, 'show'])->name('writings.show');

@@ -11,6 +11,8 @@ $contact = DB::table('contact')->first();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
      <link rel="stylesheet" href="{{ asset('assets/css/comments.css') }}">
          <link rel="stylesheet" href="{{ asset('assets/css/pendaftaran.css') }}">
+         <link rel="stylesheet" href="{{ asset('assets/css/writing.css') }}">
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 </head>
 
