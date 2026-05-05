@@ -24,15 +24,13 @@ class HomeController extends Controller
                 $q->where('category_name','about');
             })
             ->first();
-        // 🔥 LATEST (gabungan semua kategori)
-        $posts = Post::with('category')
-            ->where('status','publish')
-            ->whereHas('category', function($q){
-                $q->whereIn('category_name', ['kegiatan','writings','pengumuman']);
-            })
-            ->orderBy('date_published','desc')
-            ->take(4)
-            ->get();
+        // 🔥 LATEST - Semua postingan terbaru dari semua kategori (kegiatan, writings, pengumuman, dll)
+$posts = Post::with('category')
+    ->where('status', 'publish')
+    ->where('post_type', 'post')
+    ->orderBy('date_published', 'desc')
+    ->take(4)
+    ->get();
 
         // 🔥 KEGIATAN
         $kegiatan = Post::with('category')

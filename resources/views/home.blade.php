@@ -43,29 +43,27 @@
 <!-- LATEST -->
 <div class="container mt-5">
     <div class="section-header">
-<h2 class="text-center">{{ $latestTitle }}</h2>
-<div class="section-line"></div>
+        <h2 class="text-center">{{ $latestTitle }}</h2>
+        <div class="section-line"></div>
     </div>
     
-<div class="row">
-@foreach($posts as $p)
-<div class="col-md-3">
-    <div class="card card-custom">
-        <a href="/post/{{ $p->id_post }}">
-    <img src="{{ asset($p->featured_image_path) }}" class="card-img-top">
-</a>
-        
-        <div class="p-3">
-            <button class="btn btn-sm btn-main">
-                {{ $p->category->category_name }}
-            </button>
-
-            <h6>{{ $p->title }}</h6>
+    <div class="row">
+        @foreach($posts as $p)
+        <div class="col-md-3">
+            <a href="{{ route('post.show', $p->id_post) }}" class="text-decoration-none">
+                <div class="card card-custom">
+                    <img src="{{ asset($p->featured_image_path) }}" class="card-img-top">
+                    <div class="p-3">
+                        <button class="btn btn-sm btn-main">
+                            {{ $p->category->category_name }}
+                        </button>
+                        <h6>{{ $p->title }}</h6>
+                    </div>
+                </div>
+            </a>
         </div>
+        @endforeach
     </div>
-</div>
-@endforeach
-</div>
 </div>
 
 <!-- URGENT -->

@@ -9,16 +9,16 @@ use Carbon\Carbon;
 
 class CommentController extends Controller
 {
-    // 🔥 UNTUK TESTING - Menampilkan halaman post dengan comment
-    public function testShow($id)
+    // Menampilkan komentar
+    public function index($id_post)
     {
-        $post = Post::with(['category', 'user'])->findOrFail($id);
-        $comments = Comment::where('id_post', $id)
+        $comments = Comment::where('id_post', $id_post)
             ->orderBy('tanggal', 'desc')
             ->get();
         
-        // Langsung panggil view comments saja (tanpa layout post dari teman)
-        return view('test-post', compact('post', 'comments'));
+        $post = Post::find($id_post);
+        
+        return view('writings.show', compact('comments', 'post'));
     }
     
     // Menyimpan komentar baru

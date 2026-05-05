@@ -1,0 +1,371 @@
+/* ============================================
+   DETAIL POSTINGAN - FULL WIDTH & RESPONSIVE
+   ============================================ */
+
+/* Container lebih lebar - HILANGKAN BATASAN */
+.container.py-5 {
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 auto;
+    padding: 40px 5%;
+}
+
+@media (min-width: 1400px) {
+    .container.py-5 {
+        padding: 60px 10%;
+    }
+}
+
+@media (min-width: 1920px) {
+    .container.py-5 {
+        padding: 80px 15%;
+    }
+}
+
+/* Hilangkan batasan col-lg-8 */
+.col-lg-8 {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+}
+
+/* Post Header - Lebar penuh */
+.post-detail-header {
+    background: white;
+    border-radius: 24px;
+    padding: 50px 60px;
+    margin-bottom: 40px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .post-detail-header {
+        padding: 30px 25px;
+    }
+}
+
+.post-category {
+    display: inline-block;
+    background: #5C6844;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+}
+
+.post-title {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #1C150F;
+    margin-bottom: 25px;
+    line-height: 1.2;
+}
+
+@media (max-width: 992px) {
+    .post-title {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .post-title {
+        font-size: 1.8rem;
+    }
+}
+
+.post-meta {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    color: #888;
+    font-size: 15px;
+    flex-wrap: wrap;
+    padding-top: 20px;
+    border-top: 1px solid #F0EDE3;
+}
+
+.post-meta span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.post-meta i {
+    font-size: 18px;
+    color: #5C6844;
+}
+
+/* Featured Image - Full width */
+.post-featured-image {
+    border-radius: 24px;
+    overflow: hidden;
+    margin-bottom: 40px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    width: 100%;
+}
+
+.post-featured-image img {
+    width: 100%;
+    max-height: 600px;
+    object-fit: cover;
+}
+
+/* Post Content - Lebar penuh */
+.post-content {
+    background: white;
+    border-radius: 24px;
+    padding: 60px;
+    font-size: 1.15rem;
+    line-height: 1.9;
+    color: #333;
+    margin-bottom: 40px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    width: 100%;
+}
+
+@media (max-width: 992px) {
+    .post-content {
+        padding: 40px;
+    }
+}
+
+@media (max-width: 768px) {
+    .post-content {
+        padding: 25px;
+    }
+}
+
+/* Typography dalam post content */
+.post-content h1 {
+    font-size: 2.2rem;
+    color: #1C150F;
+    margin: 40px 0 25px;
+}
+
+.post-content h2 {
+    font-size: 2rem;
+    color: #1C150F;
+    margin: 40px 0 20px;
+    padding-bottom: 12px;
+    border-bottom: 3px solid #5C6844;
+}
+
+.post-content h3 {
+    font-size: 1.7rem;
+    color: #5C6844;
+    margin: 35px 0 20px;
+}
+
+.post-content h4 {
+    font-size: 1.4rem;
+    color: #1C150F;
+    margin: 30px 0 15px;
+}
+
+.post-content p {
+    margin-bottom: 25px;
+    font-size: 1.1rem;
+    line-height: 1.9;
+}
+
+.post-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 16px;
+    margin: 30px 0;
+}
+
+.post-content ul, 
+.post-content ol {
+    margin: 20px 0;
+    padding-left: 30px;
+}
+
+.post-content li {
+    margin-bottom: 12px;
+    line-height: 1.8;
+}
+
+.post-content blockquote {
+    border-left: 5px solid #5C6844;
+    background: #F5F2E8;
+    padding: 25px 35px;
+    margin: 30px 0;
+    border-radius: 20px;
+    font-style: italic;
+    color: #555;
+    font-size: 1.05rem;
+}
+
+/* Gallery Section - Lebar penuh */
+.gallery-section {
+    background: white;
+    border-radius: 24px;
+    padding: 50px;
+    margin-bottom: 40px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .gallery-section {
+        padding: 30px 20px;
+    }
+}
+
+.gallery-section h4 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #1C150F;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.gallery-item {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.gallery-item:hover {
+    transform: translateY(-5px);
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.gallery-item:hover img {
+    transform: scale(1.05);
+}
+
+.gallery-caption {
+    font-size: 14px;
+    color: #666;
+    margin-top: 12px;
+    text-align: center;
+    padding: 10px;
+    background: #F5F2E8;
+    border-radius: 12px;
+}
+
+/* Related Posts - Grid Lebar */
+.related-posts {
+    margin-top: 40px;
+    margin-bottom: 60px;
+    width: 100%;
+}
+
+.related-posts h4 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #1C150F;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.related-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    height: 100%;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+}
+
+.related-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(92,104,68,0.15);
+}
+
+.related-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.related-card .related-title {
+    padding: 15px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1C150F;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.related-card a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.related-card a:hover .related-title {
+    color: #5C6844;
+}
+
+/* Comments Section - Lebar penuh */
+.comments-section {
+    background: white;
+    border-radius: 24px;
+    padding: 50px;
+    margin: 40px 0;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .comments-section {
+        padding: 30px 20px;
+    }
+}
+
+.comments-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #1C150F;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 3px solid #5C6844;
+}
+
+/* Responsive untuk layar besar */
+@media (min-width: 1400px) {
+    .post-content {
+        padding: 70px;
+    }
+    
+    .post-title {
+        font-size: 3.5rem;
+    }
+    
+    .post-content p {
+        font-size: 1.15rem;
+    }
+    
+    .gallery-item img {
+        height: 220px;
+    }
+}
+
+@media (min-width: 1920px) {
+    .post-content {
+        padding: 80px;
+    }
+    
+    .post-title {
+        font-size: 4rem;
+    }
+}
+

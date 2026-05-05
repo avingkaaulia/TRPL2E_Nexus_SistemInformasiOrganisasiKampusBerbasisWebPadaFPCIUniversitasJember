@@ -1,9 +1,10 @@
-{{-- resources/views/writings/show.blade.php --}}
+{{-- resources/views/show.blade.php --}}
 @extends('layouts.app')
 
 @section('content')
 <link rel="stylesheet" href="{{ asset('assets/css/writing.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/css/comments.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/post.css') }}">
 
 <div class="container py-5">
     <div class="row">
@@ -51,8 +52,8 @@
             </div>
             @endif
             
-            <!-- 🔥 COMMENTS SECTION (OTOMATIS) 🔥 -->
-            @include('partials.comments', ['comments' => $comments, 'post' => $post])
+            <!-- 🔥 COMMENTS SECTION 🔥 -->
+            @include('comments', ['comments' => $comments, 'post' => $post])
             
             <!-- Related Posts -->
             @if($relatedPosts->count() > 0)
@@ -62,9 +63,9 @@
                     @foreach($relatedPosts as $related)
                     <div class="col-md-4">
                         <div class="related-card">
-                            <a href="{{ route('writings.show', $related->id_post) }}" class="text-decoration-none">
+                            <a href="{{ route('post.show', $related->id_post) }}" class="text-decoration-none">
                                 <img src="{{ asset($related->featured_image_path ?? 'https://picsum.photos/400/250?random=' . $related->id_post) }}" 
-                                     class="w-100" alt="{{ $related->title }}">
+                                     class="w-100" alt="{{ $related->title }}" style="height: 150px; object-fit: cover;">
                                 <p class="related-title">{{ Str::limit($related->title, 50) }}</p>
                             </a>
                         </div>

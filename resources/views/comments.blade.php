@@ -29,7 +29,7 @@
             @forelse($comments as $comment)
                 <div class="comment-item">
                     <div class="comment-avatar">
-                        <img src="{{ asset('assets/img/avatars/default-avatar.png') }}" alt="Avatar" class="avatar-img">
+                        <img src="{{ asset('assets/img/avatar.png') }}" alt="Avatar" class="avatar-img">
                     </div>
                     <div class="comment-content">
                         <div class="comment-header">
