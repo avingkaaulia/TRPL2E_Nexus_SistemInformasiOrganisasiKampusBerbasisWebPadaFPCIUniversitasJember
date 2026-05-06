@@ -2,47 +2,30 @@
 
 @section('content')
 <link rel="stylesheet" href="{{ asset('assets/css/writing.css') }}">
-        <link rel="stylesheet" href="{{ asset('assets/css/post.css') }}">
 
-<!-- 🔥 CAROUSEL UNTUK HALAMAN WRITINGS -->
-<div id="carouselExampleIndicators" 
-     class="carousel slide" 
-     data-bs-ride="carousel"
-     data-bs-interval="5000">
+<!-- CAROUSEL DINAMIS -->
+<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
     <div class="carousel-indicators">
         @foreach($carousel as $key => $c)
-            <button data-bs-target="#carouselExampleIndicators"
-                    data-bs-slide-to="{{ $key }}"
-                    class="{{ $key == 0 ? 'active' : '' }}">
-            </button>
+            <button data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ $key }}" class="{{ $key == 0 ? 'active' : '' }}"></button>
         @endforeach
     </div>
-
     <div class="carousel-inner">
         @foreach($carousel as $key => $c)
         <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
             <img src="{{ asset($c->featured_image_path) }}" class="d-block w-100" alt="{{ $c->title }}">
             <div class="carousel-caption">
                 <h1>{{ $c->title }}</h1>
-                <p>{{ $c->content }}</p>
+                <p>{{ Str::limit($c->content, 100) }}</p>
             </div>
         </div>
         @endforeach
     </div>
-
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-    </button>
 </div>
 
 <div class="container py-5">
 
-    <!-- Category Section - Sub Kategori Writings -->
+    <!-- Category Section - Sub Kategori Writings (DINAMIS) -->
     <div class="category-section">
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
             <h3 class="section-heading">Writings Category</h3>
@@ -67,7 +50,7 @@
     </div>
     @endif
 
-    <!-- Search -->
+    <!-- Search Form -->
     <div class="row mb-4">
         <div class="col-md-6 mx-auto">
             <form action="{{ isset($currentCategory) ? route('writings.category', $currentCategory->id_category) : route('writings') }}" method="GET" class="search-wrapper d-flex">

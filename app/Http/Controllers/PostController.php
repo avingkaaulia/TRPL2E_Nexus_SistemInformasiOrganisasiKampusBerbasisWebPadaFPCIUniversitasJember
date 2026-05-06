@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 
 class PostController extends Controller
 {
-    // 🔥 DETAIL POSTINGAN UNTUK SEMUA KATEGORI
+    // 🔥 DETAIL POSTINGAN UNTUK SEMUA KATEGORI (Dinamis)
     public function show($id)
     {
         try {
@@ -18,7 +18,7 @@ class PostController extends Controller
                 ->where('post_type', 'post')
                 ->findOrFail($id);
             
-            // Related posts based on category
+            // Related posts berdasarkan kategori yang sama
             $relatedPosts = Post::with(['category', 'user'])
                 ->where('status', 'publish')
                 ->where('post_type', 'post')
@@ -27,12 +27,11 @@ class PostController extends Controller
                 ->take(3)
                 ->get();
             
-            // Comments untuk post ini
+            // Comments
             $comments = Comment::where('id_post', $id)
                 ->orderBy('tanggal', 'desc')
                 ->get();
             
-            // Pastikan view show.blade.php ada di root resources/views
             return view('show', compact('post', 'relatedPosts', 'comments'));
             
         } catch (\Exception $e) {

@@ -13,6 +13,7 @@ $contact = DB::table('contact')->first();
          <link rel="stylesheet" href="{{ asset('assets/css/pendaftaran.css') }}">
          <link rel="stylesheet" href="{{ asset('assets/css/writing.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/css/post.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/css/kegiatan.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 </head>
 

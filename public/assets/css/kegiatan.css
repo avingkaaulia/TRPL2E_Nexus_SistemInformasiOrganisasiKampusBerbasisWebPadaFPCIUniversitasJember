@@ -1,0 +1,333 @@
+/* assets/css/kegiatan.css */
+/* Halaman Kegiatan - Dinamis */
+
+/* Category Buttons */
+.categories {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 30px 0;
+    flex-wrap: wrap;
+}
+
+.btn-category {
+    background: white;
+    border: 2px solid #5C6844;
+    color: #5C6844;
+    border-radius: 30px;
+    padding: 8px 25px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-category:hover,
+.btn-category.active {
+    background: #5C6844;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Section Header */
+.section-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.section-header h2 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1C150F;
+    position: relative;
+    display: inline-block;
+}
+
+.section-header .section-line {
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, #5C6844, #67898C);
+    margin: 10px auto 0;
+    border-radius: 2px;
+}
+
+/* See More Link */
+.see-more-link {
+    color: #5C6844;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.see-more-link:hover {
+    color: #4a5637;
+    text-decoration: underline;
+}
+
+/* Card */
+.card-kegiatan {
+    border: none;
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    background: white;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    height: 100%;
+}
+
+.card-kegiatan:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(92,104,68,0.15);
+}
+
+.card-kegiatan img {
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+    width: 100%;
+}
+
+.card-kegiatan:hover img {
+    transform: scale(1.05);
+}
+
+.card-kegiatan .card-body {
+    padding: 20px;
+    text-align: center;
+}
+
+.card-kegiatan .category-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: #5C6844;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    z-index: 1;
+}
+
+.card-kegiatan h5 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 15px 0;
+    color: #1C150F;
+    line-height: 1.4;
+}
+
+/* Featured Program Card */
+.featured-card {
+    text-decoration: none;
+    display: block;
+}
+
+.featured-img {
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+}
+
+.featured-img img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.featured-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    color: white;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.featured-img:hover .featured-overlay {
+    opacity: 1;
+}
+
+.featured-img:hover img {
+    transform: scale(1.08);
+}
+
+.featured-overlay h5 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+/* Detail Page */
+.hero-parallax-container {
+    position: relative;
+    height: 450px;
+    overflow: hidden;
+    border-radius: 20px;
+}
+
+.hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7));
+}
+
+.hero-content {
+    position: absolute;
+    bottom: 40px;
+    left: 40px;
+    color: white;
+}
+
+.hero-content h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.detail-meta {
+    background: white;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.detail-content {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: #333;
+}
+
+.detail-content p {
+    margin-bottom: 20px;
+}
+
+.detail-thumb {
+    border-radius: 16px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.detail-thumb:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+/* Gallery Section */
+.gallery-section {
+    margin-top: 40px;
+}
+
+.gallery-card {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.gallery-card:hover {
+    transform: translateY(-5px);
+}
+
+.gallery-img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.gallery-card:hover .gallery-img {
+    transform: scale(1.08);
+}
+
+.gallery-sosmed-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(92,104,68,0.85);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    color: white;
+}
+
+.gallery-card:hover .gallery-sosmed-overlay {
+    opacity: 1;
+}
+
+/* Navigation Buttons */
+.btn-nav {
+    background: transparent;
+    border: 2px solid #5C6844;
+    color: #5C6844;
+    border-radius: 30px;
+    padding: 8px 25px;
+    transition: all 0.3s ease;
+}
+
+.btn-nav:hover {
+    background: #5C6844;
+    color: white;
+    transform: translateX(-3px);
+}
+
+.btn-nav-next:hover {
+    transform: translateX(3px);
+}
+
+/* Pagination */
+.pagination {
+    gap: 8px;
+}
+
+.pagination .page-link {
+    color: #5C6844;
+    border-radius: 8px;
+    border: 1px solid #E8E4D9;
+    padding: 8px 14px;
+}
+
+.pagination .page-item.active .page-link {
+    background: #5C6844;
+    border-color: #5C6844;
+    color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero-parallax-container {
+        height: 300px;
+    }
+    
+    .hero-content h1 {
+        font-size: 1.3rem;
+    }
+    
+    .hero-content {
+        left: 20px;
+        bottom: 20px;
+    }
+    
+    .categories {
+        gap: 10px;
+    }
+    
+    .btn-category {
+        padding: 6px 18px;
+        font-size: 12px;
+    }
+    
+    .section-header h2 {
+        font-size: 24px;
+    }
+}

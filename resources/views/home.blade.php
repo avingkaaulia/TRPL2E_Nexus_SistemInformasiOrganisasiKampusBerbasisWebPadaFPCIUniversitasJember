@@ -60,8 +60,16 @@
                 <div class="card card-custom">
                     <img src="{{ asset($p->featured_image_path) }}" class="card-img-top">
                     <div class="p-3">
+                        <!-- 🔥 TAMPILKAN PARENT CATEGORY, BUKAN SUB-CATEGORY -->
                         <button class="btn btn-sm btn-main">
-                            {{ $p->category->category_name }}
+                            @php
+                                // Jika kategori memiliki parent, tampilkan parent-nya
+                                if($p->category && $p->category->parent) {
+                                    echo $p->category->parent->category_name;
+                                } else {
+                                    echo $p->category->category_name ?? 'Uncategorized';
+                                }
+                            @endphp
                         </button>
                         <h6>{{ $p->title }}</h6>
                     </div>

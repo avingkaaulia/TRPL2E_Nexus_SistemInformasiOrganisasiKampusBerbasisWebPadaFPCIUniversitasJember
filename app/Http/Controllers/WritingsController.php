@@ -1,19 +1,21 @@
 <?php
-// app/Http/Controllers/WritingController.php
+// app/Http/Controllers/WritingsController.php
+
 namespace App\Http\Controllers;
 
 use App\Models\Post;
 use App\Models\PostCategory;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use App\Models\Comment;
-class WritingController extends Controller
+
+class WritingsController extends Controller
 {
-    // Halaman Writings dengan Carousel
+    // Halaman Writings - Dinamis mengambil dari database
     public function index(Request $request)
     {
         try {
-            // 🔥 CAROUSEL UNTUK HALAMAN WRITINGS
+            // 🔥 CAROUSEL - Dinamis dari database
             $carousel = Post::where('status', 'publish')
                 ->whereHas('category', function($q) {
                     $q->where('category_name', 'carousel');
@@ -21,16 +23,30 @@ class WritingController extends Controller
                 ->orderBy('date_published', 'desc')
                 ->get();
             
-            // Sub-kategori writings: Foreign Policy, Technology, Economy, Security
-            $subCategories = PostCategory::whereIn('category_name', ['Foreign Policy', 'Technology', 'Economy', 'Security'])->get();
+            // 🔥 AMBIL KATEGORI WRITINGS (dinamis, cari kategori dengan nama 'writings')
+            $writingsCategory = PostCategory::where('category_name', 'writings')->first();
             
-            // Query posts - hanya dari sub-kategori writings
+            // 🔥 SUB KATEGORI WRITINGS (semua kategori yang parent_id-nya = id writings)
+            $subCategories = collect();
+            if ($writingsCategory) {
+                $subCategories = PostCategory::where('parent_id', $writingsCategory->id_category)->get();
+            }
+            
+            // Jika tidak ada sub kategori, ambil berdasarkan parent_id = 4 (fallback)
+            if ($subCategories->isEmpty()) {
+                $subCategories = PostCategory::where('parent_id', 4)->get();
+            }
+            
+            // 🔥 QUERY POSTS - HANYA DARI SUB KATEGORI WRITINGS
             $query = Post::with(['category', 'user'])
                 ->where('status', 'publish')
-                ->where('post_type', 'post')
-                ->whereIn('id_post_category', $subCategories->pluck('id_category'));
+                ->where('post_type', 'post');
             
-            // Search
+            if ($subCategories->isNotEmpty()) {
+                $query->whereIn('id_post_category', $subCategories->pluck('id_category'));
+            }
+            
+            // Search dinamis
             $search = $request->get('search');
             if ($search) {
                 $query->where(function($q) use ($search) {
@@ -39,10 +55,10 @@ class WritingController extends Controller
                 });
             }
             
-            // Hot topics
+            // Hot topics (6 posts terbaru)
             $hotTopics = (clone $query)->orderBy('date_published', 'desc')->take(6)->get();
             
-            // Posts dengan pagination
+            // Posts dengan pagination (8 per halaman)
             $posts = $query->orderBy('date_published', 'desc')->paginate(8);
             
             // Filter kategori yang dipilih
@@ -54,7 +70,7 @@ class WritingController extends Controller
             return view('writings.index', compact('carousel', 'subCategories', 'hotTopics', 'posts', 'search', 'currentCategory'));
             
         } catch (\Exception $e) {
-            Log::error('WritingController@index error: ' . $e->getMessage());
+            Log::error('WritingsController@index error: ' . $e->getMessage());
             return view('writings.index', [
                 'carousel' => collect(),
                 'subCategories' => collect(),
@@ -64,11 +80,11 @@ class WritingController extends Controller
         }
     }
     
-    // Filter berdasarkan sub-kategori
+    // Filter berdasarkan sub-kategori (dinamis)
     public function category(Request $request, $categoryId)
     {
         try {
-            // 🔥 CAROUSEL TETAP MUNCUL
+            // CAROUSEL
             $carousel = Post::where('status', 'publish')
                 ->whereHas('category', function($q) {
                     $q->where('category_name', 'carousel');
@@ -76,11 +92,25 @@ class WritingController extends Controller
                 ->orderBy('date_published', 'desc')
                 ->get();
             
+            // Kategori yang dipilih
             $currentCategory = PostCategory::findOrFail($categoryId);
-            $subCategories = PostCategory::whereIn('category_name', ['Foreign Policy', 'Technology', 'Economy', 'Security'])->get();
             
+            // Ambil kategori writings
+            $writingsCategory = PostCategory::where('category_name', 'writings')->first();
+            
+            // Sub kategori writings
+            $subCategories = collect();
+            if ($writingsCategory) {
+                $subCategories = PostCategory::where('parent_id', $writingsCategory->id_category)->get();
+            }
+            if ($subCategories->isEmpty()) {
+                $subCategories = PostCategory::where('parent_id', 4)->get();
+            }
+            
+            // Search
             $search = $request->get('search');
             
+            // Query posts berdasarkan kategori yang dipilih
             $query = Post::with(['category', 'user'])
                 ->where('status', 'publish')
                 ->where('post_type', 'post')
@@ -103,32 +133,33 @@ class WritingController extends Controller
         }
     }
     
-    /// Detail postingan writings
-public function show($id)
-{
-    try {
-        $post = Post::with(['category', 'user', 'gallery', 'comments'])
-            ->where('status', 'publish')
-            ->where('post_type', 'post')
-            ->findOrFail($id);
-        
-        $relatedPosts = Post::with(['category', 'user'])
-            ->where('status', 'publish')
-            ->where('post_type', 'post')
-            ->where('id_post_category', $post->id_post_category)
-            ->where('id_post', '!=', $id)
-            ->take(3)
-            ->get();
-        
-        $comments = Comment::where('id_post', $id)
-            ->orderBy('tanggal', 'desc')
-            ->get();
-        
-        // Gunakan view show.blade.php yang sama
-        return view('show', compact('post', 'relatedPosts', 'comments'));
-        
-    } catch (\Exception $e) {
-        abort(404, 'Post not found');
+    // Detail postingan writings (dinamis)
+    public function show($id)
+    {
+        try {
+            $post = Post::with(['category', 'user', 'gallery', 'comments'])
+                ->where('status', 'publish')
+                ->where('post_type', 'post')
+                ->findOrFail($id);
+            
+            // Related posts berdasarkan kategori yang sama
+            $relatedPosts = Post::with(['category', 'user'])
+                ->where('status', 'publish')
+                ->where('post_type', 'post')
+                ->where('id_post_category', $post->id_post_category)
+                ->where('id_post', '!=', $id)
+                ->take(3)
+                ->get();
+            
+            // Comments
+            $comments = Comment::where('id_post', $id)
+                ->orderBy('tanggal', 'desc')
+                ->get();
+            
+            return view('show', compact('post', 'relatedPosts', 'comments'));
+            
+        } catch (\Exception $e) {
+            abort(404, 'Post not found');
+        }
     }
-}
 }

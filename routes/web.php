@@ -3,7 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\PostController;
-use App\Http\Controllers\WritingController;
+use App\Http\Controllers\WritingsController;
+use App\Http\Controllers\KegiatanController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -31,9 +32,15 @@ Route::post('/post/{id_post}/comments', [CommentController::class, 'store'])->na
 Route::get('/pendaftaran', [PendaftaranController::class, 'index'])->name('pendaftaran');
 Route::post('/pendaftaran', [PendaftaranController::class, 'store'])->name('pendaftaran.store');
 Route::get('/cek-pendaftaran/{email}', [PendaftaranController::class, 'cekStatus']);
-// Routes untuk Writings
-Route::get('/writings', [WritingController::class, 'index'])->name('writings');
-Route::get('/writings/category/{categoryId}', [WritingController::class, 'category'])->name('writings.category');
-Route::get('/writings/{id}', [WritingController::class, 'show'])->name('writings.show');
-// 🔥 DETAIL POSTINGAN UNTUK SEMUA KATEGORI (DINAMIS)
+// 🔥 KEGIATAN ROUTES (Semua mengarah ke show.blade.php)
+Route::get('/events', [KegiatanController::class, 'index'])->name('kegiatan.index');
+Route::get('/events/all', [KegiatanController::class, 'all'])->name('kegiatan.all');
+Route::get('/events/{id}', [KegiatanController::class, 'show'])->name('kegiatan.show');
+
+// 🔥 WRITINGS ROUTES (Semua mengarah ke show.blade.php)
+Route::get('/writings', [WritingsController::class, 'index'])->name('writings');
+Route::get('/writings/category/{categoryId}', [WritingsController::class, 'category'])->name('writings.category');
+Route::get('/writings/{id}', [WritingsController::class, 'show'])->name('writings.show');
+
+// 🔥 DETAIL POST UNTUK SEMUA KATEGORI (menggunakan show.blade.php)
 Route::get('/post/{id}', [PostController::class, 'show'])->name('post.show');

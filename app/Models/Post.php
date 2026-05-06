@@ -51,4 +51,22 @@ class Post extends Model
     {
         return $this->hasMany(Comment::class, 'id_post');
     }
+
+    // Ambil nama parent category untuk ditampilkan
+public function getParentCategoryNameAttribute()
+{
+    if ($this->category && $this->category->parent) {
+        return $this->category->parent->category_name;
+    }
+    return $this->category->category_name ?? 'Uncategorized';
+}
+
+// Ambil ID parent category
+public function getParentCategoryIdAttribute()
+{
+    if ($this->category && $this->category->parent) {
+        return $this->category->parent->id_category;
+    }
+    return $this->category->id_category ?? null;
+}
 }
