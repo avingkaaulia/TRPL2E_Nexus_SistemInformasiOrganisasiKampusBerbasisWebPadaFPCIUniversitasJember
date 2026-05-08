@@ -28,23 +28,15 @@
         @endforeach
     </div>
 
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-    </button>
 </div>
 
 <!-- ABOUT -->
- <div class="about-card">
-<div class="text-center mt-5">
-    <h2>{{ $about->title ?? 'About' }}</h2>
-    <p>{{ $about->content ?? '' }}</p>
-<a href="/about" class="btn btn-outline-main">Learn More</a>
-</div>
+<div class="about-card">
+    <div class="text-center mt-5">
+        <h2>{{ $about->title ?? 'About FPCI UNEJ' }}</h2>
+        <p>{{ Str::limit(strip_tags($about->content ?? ''), 150) }}</p>
+        <a href="/about" class="btn btn-outline-main">Learn More →</a>
+    </div>
 </div>
 <!-- LATEST -->
 <div class="container mt-5">

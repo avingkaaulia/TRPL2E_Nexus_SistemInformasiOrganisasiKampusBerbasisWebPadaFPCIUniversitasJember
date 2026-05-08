@@ -15,13 +15,22 @@ class WritingsController extends Controller
     public function index(Request $request)
     {
         try {
-            // 🔥 CAROUSEL - Dinamis dari database
-            $carousel = Post::where('status', 'publish')
-                ->whereHas('category', function($q) {
-                    $q->where('category_name', 'carousel');
-                })
-                ->orderBy('date_published', 'desc')
-                ->get();
+            // 🔥 CAROUSEL WRITINGS - khusus kategori carousel_writings
+    $carousel = Post::where('status', 'publish')
+        ->whereHas('category', function($q) {
+            $q->where('category_name', 'carousel_writings');
+        })
+        ->orderBy('date_published', 'desc')
+        ->get();
+    
+    if ($carousel->isEmpty()) {
+        $carousel = Post::where('status', 'publish')
+            ->whereHas('category', function($q) {
+                $q->where('category_name', 'carousel');
+            })
+            ->orderBy('date_published', 'desc')
+            ->get();
+    }
             
             // 🔥 AMBIL KATEGORI WRITINGS (dinamis, cari kategori dengan nama 'writings')
             $writingsCategory = PostCategory::where('category_name', 'writings')->first();

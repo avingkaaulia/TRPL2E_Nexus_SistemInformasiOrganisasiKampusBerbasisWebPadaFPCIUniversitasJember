@@ -52,4 +52,9 @@ class PostCategory extends Model
     {
         return self::whereNull('parent_id')->orWhere('parent_id', 0)->get();
     }
+     // 🔥 RELASI KE POSTS (INI YANG PENTING)
+    public function posts()
+    {
+        return $this->hasMany(Post::class, 'id_post_category', 'id_category');
+    }
 }

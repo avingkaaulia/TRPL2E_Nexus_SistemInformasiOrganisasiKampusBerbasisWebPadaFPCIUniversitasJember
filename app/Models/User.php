@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Anggota;
 
 class User extends Authenticatable
 {
@@ -24,6 +25,10 @@ class User extends Authenticatable
         'id_role',
         'tanggal_daftar'
     ];
+       public function anggota()
+    {
+        return $this->hasOne(Anggota::class, 'id_user', 'id_user');
+    }
 
     protected $hidden = [
         'password',

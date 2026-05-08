@@ -1,10 +1,15 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PendaftaranController;
-use App\Http\Controllers\PostController;
-use App\Http\Controllers\WritingsController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\AboutController;
 use App\Http\Controllers\KegiatanController;
+use App\Http\Controllers\WritingsController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\PendaftaranController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\AdminController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -15,9 +20,6 @@ use App\Http\Controllers\KegiatanController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\CommentController;
 
 Route::get('/', [HomeController::class,'index']);
 // routes/web.php
@@ -32,6 +34,10 @@ Route::post('/post/{id_post}/comments', [CommentController::class, 'store'])->na
 Route::get('/pendaftaran', [PendaftaranController::class, 'index'])->name('pendaftaran');
 Route::post('/pendaftaran', [PendaftaranController::class, 'store'])->name('pendaftaran.store');
 Route::get('/cek-pendaftaran/{email}', [PendaftaranController::class, 'cekStatus']);
+// About Routes (Dinamis)
+Route::get('/about', [AboutController::class, 'index'])->name('about');
+// Contact Routes
+Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 // 🔥 KEGIATAN ROUTES (Semua mengarah ke show.blade.php)
 // KEGIATAN ROUTES
 Route::get('/events', [KegiatanController::class, 'index'])->name('kegiatan.index');
@@ -47,3 +53,6 @@ Route::get('/writings/{id}', [WritingsController::class, 'show'])->name('writing
 
 // 🔥 DETAIL POST UNTUK SEMUA KATEGORI (menggunakan show.blade.php)
 Route::get('/post/{id}', [PostController::class, 'show'])->name('post.show');
+
+// Admin Routes
+Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');

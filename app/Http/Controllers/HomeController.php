@@ -6,17 +6,28 @@ use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\PostCategory;
 use App\Models\PeriodePendaftaran;
+
 class HomeController extends Controller
 {
     public function index()
     {
-        // 🔥 CAROUSEL
+        // 🔥 CAROUSEL HOME - khusus kategori carousel_home
         $carousel = Post::where('status','publish')
             ->whereHas('category', function($q){
-                $q->where('category_name','carousel');
+                $q->where('category_name', 'carousel_home');
             })
             ->orderBy('date_published','desc')
             ->get();
+        
+        // Jika tidak ada carousel khusus home, ambil dari carousel umum
+        if ($carousel->isEmpty()) {
+            $carousel = Post::where('status','publish')
+                ->whereHas('category', function($q){
+                    $q->where('category_name', 'carousel');
+                })
+                ->orderBy('date_published','desc')
+                ->get();
+        }
 
         // 🔥 ABOUT
         $about = Post::where('status','publish')
@@ -24,14 +35,40 @@ class HomeController extends Controller
                 $q->where('category_name','about');
             })
             ->first();
-             // 🔥 LATEST - Semua postingan terbaru dari SEMUA KATEGORI
-        // Tampilkan parent category di badge (bukan sub-category)
-        $posts = Post::with(['category', 'category.parent'])
-            ->where('status', 'publish')
-            ->where('post_type', 'post')
-            ->orderBy('date_published', 'desc')
-            ->take(4)
-            ->get();
+        
+        // 🔥 LATEST UPDATES - 1 POSTINGAN TERBARU PER KATEGORI
+        // Fungsi helper untuk mendapatkan ID kategori termasuk sub-kategori
+        $getCategoryIds = function($categoryName) {
+            $category = PostCategory::where('category_name', $categoryName)->first();
+            if (!$category) return [];
+            
+            $ids = [$category->id_category];
+            $subCats = PostCategory::where('parent_id', $category->id_category)->get();
+            foreach ($subCats as $sub) {
+                $ids[] = $sub->id_category;
+            }
+            return $ids;
+        };
+        
+        // Kategori yang akan ditampilkan (urutan tetap: writings, pengumuman, event, program)
+        $categories = ['writings', 'pengumuman', 'event', 'program'];
+        
+        $posts = collect();
+        foreach ($categories as $catName) {
+            $categoryIds = $getCategoryIds($catName);
+            if (!empty($categoryIds)) {
+                $latestPost = Post::with(['category', 'category.parent'])
+                    ->where('status', 'publish')
+                    ->where('post_type', 'post')
+                    ->whereIn('id_post_category', $categoryIds)
+                    ->orderBy('date_published', 'desc')
+                    ->first();
+                
+                if ($latestPost) {
+                    $posts->push($latestPost);
+                }
+            }
+        }
 
         // 🔥 KEGIATAN
         $kegiatan = Post::with('category')
@@ -46,10 +83,9 @@ class HomeController extends Controller
 
         // 🔥 WRITINGS (parent) dan SUB-KATEGORINYA
         $writingsCat = PostCategory::where('category_name', 'writings')->first();
-        $writingsIds = [$writingsCat->id_category ?? 4];
+        $writingsIds = [$writingsCat->id_category ?? 2];
         
-        // Ambil semua sub-kategori dari writings
-        $writingsSubCats = PostCategory::where('parent_id', $writingsCat->id_category ?? 4)->get();
+        $writingsSubCats = PostCategory::where('parent_id', $writingsCat->id_category ?? 2)->get();
         foreach ($writingsSubCats as $sub) {
             $writingsIds[] = $sub->id_category;
         }
@@ -73,12 +109,10 @@ class HomeController extends Controller
             ->take(2)
             ->get();
 
-        // 🔥 JUDUL SECTION
         $latestTitle = 'Latest Updates';
         $urgentTitle = 'Urgent Notice';
 
-
-       /// 🔥 CEK APAKAH PENDAFTARAN DIBUKA
+        /// 🔥 CEK PENDAFTARAN
         $periodeAktif = PeriodePendaftaran::where('is_active', 1)
             ->where('tanggal_mulai', '<=', date('Y-m-d'))
             ->where('tanggal_selesai', '>=', date('Y-m-d'))

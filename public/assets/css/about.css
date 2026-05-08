@@ -1,0 +1,394 @@
+/* assets/css/about.css */
+/* Halaman About Us - Khusus About */
+
+/* ========== HERO SECTION ========== */
+.about-hero {
+    position: relative;
+    min-height: 400px;
+    background: linear-gradient(135deg, #1C150F 0%, #5C6844 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+
+.about-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('/assets/img/pattern.png') repeat;
+    opacity: 0.1;
+}
+
+.about-hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    padding: 0 20px;
+}
+
+.about-hero h1 {
+    font-size: 48px;
+    font-weight: 800;
+    margin-bottom: 20px;
+    animation: fadeInUp 0.8s ease;
+}
+
+.about-hero p {
+    font-size: 18px;
+    opacity: 0.9;
+    animation: fadeInUp 0.8s ease 0.2s both;
+}
+
+/* ========== ABOUT SECTIONS - KE BAWAH ========== */
+.about-sections {
+    padding: 60px 0;
+    background: white;
+}
+
+.about-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.about-item {
+    margin-bottom: 40px;
+    background: #F5F2E8;
+    border-radius: 24px;
+    padding: 35px;
+    transition: all 0.4s ease;
+}
+
+.about-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+.about-item h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1C150F;
+    margin-bottom: 20px;
+    position: relative;
+    display: inline-block;
+}
+
+.about-item h2:after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: #5C6844;
+}
+
+.about-item p {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #444;
+    margin-bottom: 15px;
+}
+
+/* ========== VISI & MISI SEJAJAR ========== */
+.visi-misi-row {
+    display: flex;
+    gap: 40px;
+    margin: 0 auto 60px;
+    max-width: 1000px;
+}
+
+.visi-box, .misi-box {
+    flex: 1;
+    background: white;
+    border-radius: 20px;
+    padding: 35px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    transition: all 0.4s ease;
+}
+
+.visi-box:hover, .misi-box:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(92,104,68,0.15);
+}
+
+.visi-box h3, .misi-box h3 {
+    font-size: 28px;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.visi-box h3 {
+    color: #5C6844;
+}
+
+.misi-box h3 {
+    color: #67898C;
+}
+
+.visi-box p {
+    font-size: 16px;
+    line-height: 1.8;
+    text-align: center;
+}
+
+.misi-list {
+    list-style: none;
+    padding: 0;
+}
+
+.misi-list li {
+    margin-bottom: 12px;
+    padding-left: 25px;
+    position: relative;
+    line-height: 1.6;
+}
+
+.misi-list li:before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: #5C6844;
+    font-weight: bold;
+}
+
+/* ========== STRUKTUR ORGANISASI (KOTAK FULL) ========== */
+.struktur-section {
+    background: #D7CEAF;
+    padding: 60px 0;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.section-header h2 {
+    font-size: 42px;
+    font-weight: 800;
+    color: #1C150F;
+    position: relative;
+    display: inline-block;
+}
+
+.section-header .section-line {
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, #5C6844, #67898C);
+    margin: 15px auto 0;
+    border-radius: 2px;
+}
+
+/* Grid 4 kolom x 2 baris */
+.struktur-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Card Anggota - KOTAK FULL */
+.anggota-card {
+    background: white;
+    border-radius: 16px;
+    padding: 0;
+    text-align: center;
+    transition: all 0.4s ease;
+    text-decoration: none;
+    display: block;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+}
+
+.anggota-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 35px rgba(0,0,0,0.15);
+}
+
+/* Foto - Full width kotak */
+.anggota-foto-wrapper {
+    width: 100%;
+    height: 280px;
+    overflow: hidden;
+    background: #5C6844;
+}
+
+.anggota-foto {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.anggota-card:hover .anggota-foto {
+    transform: scale(1.05);
+}
+
+/* Nama dan Posisi dalam kotak */
+.anggota-info {
+    padding: 20px;
+    background: white;
+}
+
+.anggota-posisi {
+    font-size: 16px;
+    font-weight: 700;
+    color: #5C6844;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Nama tidak ditampilkan */
+.anggota-nama {
+    display: none;
+}
+
+/* Link Instagram - DISEMBUNYIKAN */
+.anggota-instagram {
+    display: none;
+}
+
+/* ========== LOGO SECTION ========== */
+.logo-section {
+    background: white;    /* 🔥 BACKGROUND PUTIH */
+    padding: 80px 0;
+    text-align: center;
+    margin-top: 60px;
+    margin-bottom: 60px;
+}
+
+.logo-section h2 {
+    font-size: 36px;
+    font-weight: 800;
+    margin-bottom: 30px;
+    color: #1C150F;       /* 🔥 WARNA TEKS JADI GELAP */
+}
+
+.logo-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.main-logo {
+    max-height: 150px;
+    transition: transform 0.3s ease;
+    /* HAPUS filter: brightness(0) invert(1); - biar warna logo asli */
+}
+
+.main-logo:hover {
+    transform: scale(1.05);
+}
+
+/* ========== ANIMATIONS ========== */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 1200px) {
+    .struktur-grid {
+        gap: 25px;
+    }
+    
+    .anggota-foto-wrapper {
+        height: 250px;
+    }
+}
+
+@media (max-width: 992px) {
+    .visi-misi-row {
+        flex-direction: column;
+        gap: 30px;
+        padding: 0 20px;
+    }
+    
+    .struktur-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
+        max-width: 600px;
+    }
+    
+    .anggota-foto-wrapper {
+        height: 280px;
+    }
+}
+
+@media (max-width: 768px) {
+    .about-hero {
+        min-height: 300px;
+    }
+    
+    .about-hero h1 {
+        font-size: 32px;
+    }
+    
+    .about-hero p {
+        font-size: 14px;
+    }
+    
+    .section-header h2 {
+        font-size: 32px;
+    }
+    
+    .about-item {
+        padding: 25px;
+    }
+    
+    .visi-box, .misi-box {
+        padding: 25px;
+    }
+    
+    .visi-box h3, .misi-box h3 {
+        font-size: 24px;
+    }
+    
+    .struktur-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+    
+    .anggota-foto-wrapper {
+        height: 220px;
+    }
+    
+    .anggota-posisi {
+        font-size: 13px;
+    }
+    
+    .logo-section h2 {
+        font-size: 28px;
+    }
+    
+    .main-logo {
+        max-height: 100px;
+    }
+}
+
+@media (max-width: 576px) {
+    .struktur-grid {
+        grid-template-columns: 1fr;
+        gap: 25px;
+        max-width: 300px;
+    }
+    
+    .anggota-foto-wrapper {
+        height: 300px;
+    }
+}

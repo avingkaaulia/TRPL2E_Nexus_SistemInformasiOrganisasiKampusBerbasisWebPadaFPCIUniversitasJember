@@ -13,13 +13,22 @@ class KegiatanController extends Controller
     // Halaman utama Event & Program
     public function index(Request $request)
     {
-        // 🔥 CAROUSEL
+        // 🔥 CAROUSEL KEGIATAN - khusus kategori carousel_kegiatan
+    $carousel = Post::where('status', 'publish')
+        ->whereHas('category', function($q) {
+            $q->where('category_name', 'carousel_kegiatan');
+        })
+        ->orderBy('date_published', 'desc')
+        ->get();
+    
+    if ($carousel->isEmpty()) {
         $carousel = Post::where('status', 'publish')
             ->whereHas('category', function($q) {
                 $q->where('category_name', 'carousel');
             })
             ->orderBy('date_published', 'desc')
             ->get();
+    }
         
         // 🔥 AMBIL KATEGORI EVENT DAN PROGRAM
         $eventCategory = PostCategory::where('category_name', 'event')->first();
