@@ -23,103 +23,133 @@
     </div>
 </div>
 
-<!-- CATEGORY FILTER BUTTONS -->
-<div class="categories">
-    <a href="{{ route('kegiatan.index') }}" class="btn-category {{ !request()->get('category') ? 'active' : '' }}">All</a>
-    @foreach($categories->where('category_name', 'kegiatan') as $cat)
-    <a href="{{ route('kegiatan.index', ['category' => $cat->category_name]) }}" class="btn-category {{ request()->get('category') == $cat->category_name ? 'active' : '' }}">
-        {{ $cat->category_name }}
-    </a>
-    @endforeach
-</div>
-
-<!-- LATEST UPDATES SECTION -->
+<!-- ==================== EVENT REGULER ==================== -->
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div class="section-header text-start mb-0">
-            <h2>Latest Updates</h2>
+            <h2>📋 Event Reguler</h2>
             <div class="section-line"></div>
         </div>
-        <a href="{{ route('kegiatan.all') }}" class="see-more-link">See More <i class="bi bi-arrow-right-circle ms-1"></i></a>
+        <a href="{{ route('kegiatan.event.reguler') }}" class="see-more-link">See More <i class="bi bi-arrow-right-circle ms-1"></i></a>
     </div>
 
     <div class="row g-4">
-        @forelse($latest as $post)
+        @forelse($eventRegulerPosts as $event)
         <div class="col-md-4">
-            <div class="card-kegiatan position-relative">
-                <img src="{{ asset($post->featured_image_path) }}" alt="{{ $post->title }}">
-                <span class="category-badge">{{ $post->category->category_name ?? 'Kegiatan' }}</span>
-                <div class="card-body">
-                    <h5>{{ Str::limit($post->title, 50) }}</h5>
-                    <!-- Link untuk detail kegiatan menggunakan route('kegiatan.show') -->
-<a href="{{ route('kegiatan.show', $post->id_post) }}" class="btn btn-main mt-2">
-    Detail <i class="bi bi-info-circle ms-1"></i>
-</a>
+            <div class="card-event">
+                <div class="card-image">
+                    <img src="{{ asset($event->featured_image_path) }}" alt="{{ $event->title }}">
+                    <div class="event-badge reguler">Event Reguler</div>
                 </div>
-            </div>
-        </div>
-        @empty
-        <div class="col-12 text-center py-5">
-            <p>Belum ada kegiatan terbaru.</p>
-        </div>
-        @endforelse
-    </div>
-</div>
-
-<!-- OTHER EVENTS & PROGRAMS -->
-<div class="container mt-5">
-    <div class="section-header">
-        <h2>Other Events & Programs</h2>
-        <div class="section-line"></div>
-    </div>
-
-    <div class="row g-4">
-        @forelse($others as $event)
-        <div class="col-md-4 col-sm-6">
-            <div class="card-kegiatan position-relative">
-                <img src="{{ asset($event->featured_image_path) }}" alt="{{ $event->title }}">
-                <span class="category-badge">{{ $event->category->category_name ?? 'Kegiatan' }}</span>
                 <div class="card-body">
                     <h5>{{ Str::limit($event->title, 50) }}</h5>
-                    <!-- Link untuk detail kegiatan menggunakan route('kegiatan.show') -->
-<a href="{{ route('kegiatan.show', $post->id_post) }}" class="btn btn-main mt-2">
-    Detail <i class="bi bi-info-circle ms-1"></i>
-</a>
+                    <p class="date"><i class="bi bi-calendar"></i> {{ \Carbon\Carbon::parse($event->date_published)->format('d M Y') }}</p>
+                    <a href="{{ route('kegiatan.show', $event->id_post) }}" class="btn btn-event">Detail <i class="bi bi-arrow-right"></i></a>
                 </div>
             </div>
         </div>
         @empty
         <div class="col-12 text-center py-5">
-            <p>Belum ada kegiatan lainnya.</p>
+            <p>Belum ada event reguler.</p>
         </div>
         @endforelse
     </div>
 </div>
 
-<!-- FEATURED PROGRAMS -->
+<!-- ==================== EVENT UNGGULAN ==================== -->
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="section-header text-start mb-0">
+            <h2>⭐ Event Unggulan</h2>
+            <div class="section-line"></div>
+        </div>
+        <a href="{{ route('kegiatan.event.unggulan') }}" class="see-more-link">See More <i class="bi bi-arrow-right-circle ms-1"></i></a>
+    </div>
+
+    <div class="row g-4">
+        @forelse($eventUnggulanPosts as $event)
+        <div class="col-md-4">
+            <div class="card-event-unggulan">
+                <div class="card-image">
+                    <img src="{{ asset($event->featured_image_path) }}" alt="{{ $event->title }}">
+                    <div class="event-badge unggulan">Event Unggulan</div>
+                </div>
+                <div class="card-body">
+                    <h5>{{ Str::limit($event->title, 50) }}</h5>
+                    <p class="date"><i class="bi bi-calendar"></i> {{ \Carbon\Carbon::parse($event->date_published)->format('d M Y') }}</p>
+                    <a href="{{ route('kegiatan.show', $event->id_post) }}" class="btn btn-event-unggulan">Detail <i class="bi bi-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+        @empty
+        <div class="col-12 text-center py-5">
+            <p>Belum ada event unggulan.</p>
+        </div>
+        @endforelse
+    </div>
+</div>
+
+<!-- ==================== PROGRAM BY STATUS ==================== -->
 <div class="container mt-5 mb-5">
     <div class="section-header">
-        <h2>Featured Programs</h2>
+        <h2>📌 Programs by Status</h2>
         <div class="section-line"></div>
     </div>
 
     <div class="row g-4">
-        @forelse($featured as $item)
+        <!-- Sedang Direncanakan -->
         <div class="col-md-4">
-            <a href="{{ route('kegiatan.show', $post->id_post) }}" class="featured-card">
-                <div class="featured-img">
-                    <img src="{{ asset($item->featured_image_path) }}" alt="{{ $item->title }}">
-                    <div class="featured-overlay">
-                        <h5>{{ Str::limit($item->title, 40) }}</h5>
-                    </div>
+            <div class="status-card planned">
+                <h4><i class="bi bi-clock-history"></i> Sedang Direncanakan</h4>
+                <div class="status-list">
+                    @forelse($programsPlanned as $program)
+                    <a href="{{ route('kegiatan.show', $program->id_post) }}" class="status-item">
+                        <span class="status-title">{{ Str::limit($program->title, 40) }}</span>
+                        <span class="status-date">{{ \Carbon\Carbon::parse($program->date_published)->format('d M Y') }}</span>
+                    </a>
+                    @empty
+                    <p class="text-muted">Tidak ada program direncanakan.</p>
+                    @endforelse
+                    <a href="{{ route('kegiatan.programs', 'planned') }}" class="see-more-link-small">See all →</a>
                 </div>
-            </a>
+            </div>
         </div>
-        @empty
-        <div class="col-12 text-center py-5">
-            <p>Belum ada program unggulan.</p>
+
+        <!-- Sedang Berlangsung -->
+        <div class="col-md-4">
+            <div class="status-card ongoing">
+                <h4><i class="bi bi-play-circle"></i> Sedang Berlangsung</h4>
+                <div class="status-list">
+                    @forelse($programsOngoing as $program)
+                    <a href="{{ route('kegiatan.show', $program->id_post) }}" class="status-item">
+                        <span class="status-title">{{ Str::limit($program->title, 40) }}</span>
+                        <span class="status-date">{{ \Carbon\Carbon::parse($program->date_published)->format('d M Y') }}</span>
+                    </a>
+                    @empty
+                    <p class="text-muted">Tidak ada program berlangsung.</p>
+                    @endforelse
+                    <a href="{{ route('kegiatan.programs', 'ongoing') }}" class="see-more-link-small">See all →</a>
+                </div>
+            </div>
         </div>
-        @endforelse
+
+        <!-- Selesai -->
+        <div class="col-md-4">
+            <div class="status-card completed">
+                <h4><i class="bi bi-check-circle"></i> Selesai</h4>
+                <div class="status-list">
+                    @forelse($programsCompleted as $program)
+                    <a href="{{ route('kegiatan.show', $program->id_post) }}" class="status-item">
+                        <span class="status-title">{{ Str::limit($program->title, 40) }}</span>
+                        <span class="status-date">{{ \Carbon\Carbon::parse($program->date_published)->format('d M Y') }}</span>
+                    </a>
+                    @empty
+                    <p class="text-muted">Tidak ada program selesai.</p>
+                    @endforelse
+                    <a href="{{ route('kegiatan.programs', 'completed') }}" class="see-more-link-small">See all →</a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 @endsection

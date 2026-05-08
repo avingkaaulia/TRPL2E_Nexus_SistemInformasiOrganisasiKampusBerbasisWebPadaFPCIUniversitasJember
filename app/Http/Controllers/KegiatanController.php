@@ -10,7 +10,7 @@ use App\Models\Comment;
 
 class KegiatanController extends Controller
 {
-    // Halaman utama kegiatan
+    // Halaman utama Event & Program
     public function index(Request $request)
     {
         // 🔥 CAROUSEL
@@ -21,65 +21,130 @@ class KegiatanController extends Controller
             ->orderBy('date_published', 'desc')
             ->get();
         
-        // 🔥 LATEST POSTS - 3 post terbaru dari kategori kegiatan
-        $latest = Post::with(['category', 'gallery'])
+        // 🔥 AMBIL KATEGORI EVENT DAN PROGRAM
+        $eventCategory = PostCategory::where('category_name', 'event')->first();
+        $programCategory = PostCategory::where('category_name', 'program')->first();
+        
+        // 🔥 SUB KATEGORI EVENT (Event Reguler & Event Unggulan)
+        $eventReguler = PostCategory::where('category_name', 'Event Reguler')->first();
+        $eventUnggulan = PostCategory::where('category_name', 'Event Unggulan')->first();
+        
+        // 🔥 SUB KATEGORI PROGRAM (status)
+        $programPlanned = PostCategory::where('category_name', 'Sedang Direncanakan')->first();
+        $programOngoing = PostCategory::where('category_name', 'Sedang Berlangsung')->first();
+        $programCompleted = PostCategory::where('category_name', 'Selesai')->first();
+        
+        // 🔥 EVENT REGULER - 3 event terbaru
+        $eventRegulerPosts = Post::with(['category', 'gallery'])
             ->where('status', 'publish')
             ->where('post_type', 'post')
-            ->whereHas('category', function($q) {
-                $q->where('category_name', 'kegiatan');
-            })
+            ->where('id_post_category', $eventReguler->id_category ?? 0)
             ->latest('date_published')
             ->take(3)
             ->get();
         
-        // 🔥 OTHER POSTS - 6 post lainnya
-        $others = Post::with(['category', 'gallery'])
+        // 🔥 EVENT UNGGULAN - 3 event terbaru
+        $eventUnggulanPosts = Post::with(['category', 'gallery'])
             ->where('status', 'publish')
             ->where('post_type', 'post')
-            ->whereHas('category', function($q) {
-                $q->where('category_name', 'kegiatan');
-            })
+            ->where('id_post_category', $eventUnggulan->id_category ?? 0)
             ->latest('date_published')
-            ->skip(3)
-            ->take(6)
-            ->get();
-        
-        // 🔥 FEATURED PROGRAMS
-        $featured = Post::with(['category', 'gallery'])
-            ->where('status', 'publish')
-            ->where('post_type', 'post')
-            ->whereHas('category', function($q) {
-                $q->where('category_name', 'kegiatan');
-            })
-            ->inRandomOrder()
             ->take(3)
             ->get();
         
-        $categories = PostCategory::all();
+        // 🔥 PROGRAM SEDANG DIRENCANAKAN
+        $programsPlanned = Post::with(['category', 'gallery'])
+            ->where('status', 'publish')
+            ->where('post_type', 'post')
+            ->where('id_post_category', $programPlanned->id_category ?? 0)
+            ->latest('date_published')
+            ->take(4)
+            ->get();
+        
+        // 🔥 PROGRAM SEDANG BERLANGSUNG
+        $programsOngoing = Post::with(['category', 'gallery'])
+            ->where('status', 'publish')
+            ->where('post_type', 'post')
+            ->where('id_post_category', $programOngoing->id_category ?? 0)
+            ->latest('date_published')
+            ->take(4)
+            ->get();
+        
+        // 🔥 PROGRAM SELESAI
+        $programsCompleted = Post::with(['category', 'gallery'])
+            ->where('status', 'publish')
+            ->where('post_type', 'post')
+            ->where('id_post_category', $programCompleted->id_category ?? 0)
+            ->latest('date_published')
+            ->take(4)
+            ->get();
+        
         $currentSlide = $request->get('slide', 0);
         
         return view('kegiatan.index', compact(
-            'carousel', 'latest', 'others', 'featured', 
-            'categories', 'currentSlide'
+            'carousel', 
+            'eventRegulerPosts', 
+            'eventUnggulanPosts',
+            'programsPlanned', 
+            'programsOngoing', 
+            'programsCompleted',
+            'currentSlide'
         ));
     }
     
-    // Halaman all kegiatan (pagination)
-    public function all()
+    // Halaman all Event Reguler
+    public function allEventReguler()
     {
+        $eventReguler = PostCategory::where('category_name', 'Event Reguler')->first();
+        
         $posts = Post::with(['category', 'gallery'])
             ->where('status', 'publish')
             ->where('post_type', 'post')
-            ->whereHas('category', function($q) {
-                $q->where('category_name', 'kegiatan');
-            })
+            ->where('id_post_category', $eventReguler->id_category ?? 0)
             ->latest('date_published')
             ->paginate(9);
         
         return view('kegiatan.all', compact('posts'));
     }
     
-    // 🔥 DETAIL KEGIATAN - Menggunakan show.blade.php (SAMA DENGAN WRITINGS)
+    // Halaman all Event Unggulan
+    public function allEventUnggulan()
+    {
+        $eventUnggulan = PostCategory::where('category_name', 'Event Unggulan')->first();
+        
+        $posts = Post::with(['category', 'gallery'])
+            ->where('status', 'publish')
+            ->where('post_type', 'post')
+            ->where('id_post_category', $eventUnggulan->id_category ?? 0)
+            ->latest('date_published')
+            ->paginate(9);
+        
+        return view('kegiatan.all', compact('posts'));
+    }
+    
+    // Halaman all Programs by status
+    public function allPrograms($status)
+    {
+        $statusMap = [
+            'planned' => 'Sedang Direncanakan',
+            'ongoing' => 'Sedang Berlangsung',
+            'completed' => 'Selesai'
+        ];
+        
+        $categoryName = $statusMap[$status] ?? 'Sedang Direncanakan';
+        $programCategory = PostCategory::where('category_name', $categoryName)->first();
+        
+        $posts = Post::with(['category', 'gallery'])
+            ->where('status', 'publish')
+            ->where('post_type', 'post')
+            ->where('id_post_category', $programCategory->id_category ?? 0)
+            ->latest('date_published')
+            ->paginate(9);
+        
+        return view('kegiatan.all', compact('posts'));
+    }
+    
+    // Detail Event/Program
     public function show($id)
     {
         try {
@@ -88,7 +153,6 @@ class KegiatanController extends Controller
                 ->where('post_type', 'post')
                 ->findOrFail($id);
             
-            // Related posts based on category
             $relatedPosts = Post::with(['category', 'user'])
                 ->where('status', 'publish')
                 ->where('post_type', 'post')
@@ -97,12 +161,10 @@ class KegiatanController extends Controller
                 ->take(3)
                 ->get();
             
-            // Comments untuk post ini
             $comments = Comment::where('id_post', $id)
                 ->orderBy('tanggal', 'desc')
                 ->get();
             
-            // 🔥 PAKAI SHOW.BLADE.PHP YANG SAMA DENGAN WRITINGS
             return view('show', compact('post', 'relatedPosts', 'comments'));
             
         } catch (\Exception $e) {

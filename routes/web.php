@@ -33,8 +33,11 @@ Route::get('/pendaftaran', [PendaftaranController::class, 'index'])->name('penda
 Route::post('/pendaftaran', [PendaftaranController::class, 'store'])->name('pendaftaran.store');
 Route::get('/cek-pendaftaran/{email}', [PendaftaranController::class, 'cekStatus']);
 // 🔥 KEGIATAN ROUTES (Semua mengarah ke show.blade.php)
+// KEGIATAN ROUTES
 Route::get('/events', [KegiatanController::class, 'index'])->name('kegiatan.index');
-Route::get('/events/all', [KegiatanController::class, 'all'])->name('kegiatan.all');
+Route::get('/events/event/reguler', [KegiatanController::class, 'allEventReguler'])->name('kegiatan.event.reguler');
+Route::get('/events/event/unggulan', [KegiatanController::class, 'allEventUnggulan'])->name('kegiatan.event.unggulan');
+Route::get('/events/programs/{status}', [KegiatanController::class, 'allPrograms'])->name('kegiatan.programs');
 Route::get('/events/{id}', [KegiatanController::class, 'show'])->name('kegiatan.show');
 
 // 🔥 WRITINGS ROUTES (Semua mengarah ke show.blade.php)

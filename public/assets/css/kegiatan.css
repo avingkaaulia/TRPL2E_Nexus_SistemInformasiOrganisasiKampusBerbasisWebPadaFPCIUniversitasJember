@@ -1,33 +1,390 @@
 /* assets/css/kegiatan.css */
-/* Halaman Kegiatan - Dinamis */
+/* Halaman Events & Programs */
 
-/* Category Buttons */
-.categories {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin: 30px 0;
-    flex-wrap: wrap;
+/* ==================== CARD EVENT ==================== */
+.card-event {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    height: 100%;
 }
 
-.btn-category {
-    background: white;
-    border: 2px solid #5C6844;
-    color: #5C6844;
-    border-radius: 30px;
-    padding: 8px 25px;
+.card-event:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(92,104,68,0.15);
+}
+
+.card-event .card-image {
+    position: relative;
+    overflow: hidden;
+    height: 200px;
+}
+
+.card-event .card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.card-event:hover .card-image img {
+    transform: scale(1.05);
+}
+
+.status-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    color: white;
+}
+
+.status-badge.sedang-direncanakan {
+    background: #f39c12;
+}
+
+.status-badge.sedang-berlangsung {
+    background: #3498db;
+}
+
+.status-badge.selesai {
+    background: #2ecc71;
+}
+
+.card-event .card-body {
+    padding: 20px;
+    text-align: center;
+}
+
+.card-event h5 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #1C150F;
+}
+
+.card-event .date {
+    font-size: 12px;
+    color: #999;
+    margin-bottom: 15px;
+}
+
+/* Card Event Unggulan */
+.card-event-unggulan {
+    background: linear-gradient(135deg, #1C150F 0%, #5C6844 100%);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    height: 100%;
+    color: white;
+}
+
+.card-event-unggulan:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(92,104,68,0.3);
+}
+
+.card-event-unggulan .card-image {
+    position: relative;
+    overflow: hidden;
+    height: 200px;
+}
+
+.card-event-unggulan .card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+    opacity: 0.85;
+}
+
+.card-event-unggulan:hover .card-image img {
+    transform: scale(1.05);
+}
+
+.event-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.event-badge.reguler {
+    background: #3498db;
+    color: white;
+}
+
+.event-badge.unggulan {
+    background: #f39c12;
+    color: white;
+}
+
+.card-event-unggulan .card-body {
+    padding: 20px;
+    text-align: center;
+}
+
+.card-event-unggulan h5 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.card-event-unggulan .date {
+    font-size: 12px;
+    opacity: 0.8;
+    margin-bottom: 15px;
+}
+
+.btn-event-unggulan {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.5);
+    border-radius: 25px;
+    padding: 8px 20px;
+    font-size: 13px;
     font-weight: 600;
     transition: all 0.3s ease;
 }
 
-.btn-category:hover,
-.btn-category.active {
-    background: #5C6844;
-    color: white;
+.btn-event-unggulan:hover {
+    background: white;
+    color: #5C6844;
     transform: translateY(-2px);
 }
 
-/* Section Header */
+.see-more-link-small {
+    display: inline-block;
+    margin-top: 15px;
+    color: #5C6844;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.see-more-link-small:hover {
+    text-decoration: underline;
+}
+
+/* ==================== CARD PROGRAM ==================== */
+.card-program {
+    background: linear-gradient(135deg, #5C6844 0%, #67898C 100%);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    height: 100%;
+    color: white;
+}
+
+.card-program:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(92,104,68,0.3);
+}
+
+.card-program .card-image {
+    position: relative;
+    overflow: hidden;
+    height: 200px;
+}
+
+.card-program .card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+    opacity: 0.85;
+}
+
+.card-program:hover .card-image img {
+    transform: scale(1.05);
+}
+
+.program-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: rgba(255,255,255,0.9);
+    color: #5C6844;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.card-program .card-body {
+    padding: 20px;
+    text-align: center;
+}
+
+.card-program h5 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.card-program .date {
+    font-size: 12px;
+    opacity: 0.8;
+    margin-bottom: 15px;
+}
+
+/* ==================== STATUS CARDS ==================== */
+.status-card {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    height: 100%;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+
+.status-card.planned {
+    border-top: 4px solid #f39c12;
+}
+
+.status-card.ongoing {
+    border-top: 4px solid #3498db;
+}
+
+.status-card.completed {
+    border-top: 4px solid #2ecc71;
+}
+
+.status-card h4 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #1C150F;
+}
+
+.status-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.status-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background: #F5F2E8;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.status-item:hover {
+    background: #5C6844;
+    transform: translateX(5px);
+}
+
+.status-item:hover .status-title {
+    color: white;
+}
+
+.status-item:hover .status-date {
+    color: rgba(255,255,255,0.8);
+}
+
+.status-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1C150F;
+}
+
+.status-date {
+    font-size: 11px;
+    color: #999;
+}
+
+/* ==================== CARD PROGRAM SMALL ==================== */
+.card-program-small {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    height: 200px;
+    cursor: pointer;
+}
+
+.card-program-small img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.card-program-small:hover img {
+    transform: scale(1.08);
+}
+
+.card-program-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.card-program-small:hover .card-program-overlay {
+    opacity: 1;
+}
+
+.card-program-overlay h5 {
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+/* ==================== BUTTONS ==================== */
+.btn-event {
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 8px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-event:hover {
+    background: #2980b9;
+    transform: translateY(-2px);
+    color: white;
+}
+
+.btn-program {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.5);
+    border-radius: 25px;
+    padding: 8px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-program:hover {
+    background: white;
+    color: #5C6844;
+    transform: translateY(-2px);
+}
+
+/* ==================== SECTION HEADER ==================== */
 .section-header {
     text-align: center;
     margin-bottom: 40px;
@@ -49,7 +406,6 @@
     border-radius: 2px;
 }
 
-/* See More Link */
 .see-more-link {
     color: #5C6844;
     text-decoration: none;
@@ -62,272 +418,24 @@
     text-decoration: underline;
 }
 
-/* Card */
-.card-kegiatan {
-    border: none;
-    border-radius: 16px;
-    overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    background: white;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-    height: 100%;
-}
-
-.card-kegiatan:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 35px rgba(92,104,68,0.15);
-}
-
-.card-kegiatan img {
-    height: 200px;
-    object-fit: cover;
-    transition: transform 0.5s ease;
-    width: 100%;
-}
-
-.card-kegiatan:hover img {
-    transform: scale(1.05);
-}
-
-.card-kegiatan .card-body {
-    padding: 20px;
-    text-align: center;
-}
-
-.card-kegiatan .category-badge {
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    background: #5C6844;
-    color: white;
-    padding: 5px 15px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 600;
-    z-index: 1;
-}
-
-.card-kegiatan h5 {
-    font-size: 1rem;
-    font-weight: 700;
-    margin: 15px 0;
-    color: #1C150F;
-    line-height: 1.4;
-}
-
-/* Featured Program Card */
-.featured-card {
-    text-decoration: none;
-    display: block;
-}
-
-.featured-img {
-    position: relative;
-    overflow: hidden;
-    border-radius: 16px;
-}
-
-.featured-img img {
-    width: 100%;
-    height: 250px;
-    object-fit: cover;
-    transition: transform 0.5s ease;
-}
-
-.featured-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 20px;
-    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-    color: white;
-    opacity: 0;
-    transition: opacity 0.4s ease;
-}
-
-.featured-img:hover .featured-overlay {
-    opacity: 1;
-}
-
-.featured-img:hover img {
-    transform: scale(1.08);
-}
-
-.featured-overlay h5 {
-    margin: 0;
-    font-size: 1rem;
-    font-weight: 600;
-}
-
-/* Detail Page */
-.hero-parallax-container {
-    position: relative;
-    height: 450px;
-    overflow: hidden;
-    border-radius: 20px;
-}
-
-.hero-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.hero-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7));
-}
-
-.hero-content {
-    position: absolute;
-    bottom: 40px;
-    left: 40px;
-    color: white;
-}
-
-.hero-content h1 {
-    font-size: 2rem;
-    font-weight: 800;
-    margin-bottom: 10px;
-}
-
-.detail-meta {
-    background: white;
-    padding: 20px;
-    border-radius: 16px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-}
-
-.detail-content {
-    font-size: 1.05rem;
-    line-height: 1.8;
-    color: #333;
-}
-
-.detail-content p {
-    margin-bottom: 20px;
-}
-
-.detail-thumb {
-    border-radius: 16px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.detail-thumb:hover {
-    transform: scale(1.02);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-}
-
-/* Gallery Section */
-.gallery-section {
-    margin-top: 40px;
-}
-
-.gallery-card {
-    position: relative;
-    border-radius: 12px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-}
-
-.gallery-card:hover {
-    transform: translateY(-5px);
-}
-
-.gallery-img {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-    transition: transform 0.5s ease;
-}
-
-.gallery-card:hover .gallery-img {
-    transform: scale(1.08);
-}
-
-.gallery-sosmed-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(92,104,68,0.85);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    color: white;
-}
-
-.gallery-card:hover .gallery-sosmed-overlay {
-    opacity: 1;
-}
-
-/* Navigation Buttons */
-.btn-nav {
-    background: transparent;
-    border: 2px solid #5C6844;
-    color: #5C6844;
-    border-radius: 30px;
-    padding: 8px 25px;
-    transition: all 0.3s ease;
-}
-
-.btn-nav:hover {
-    background: #5C6844;
-    color: white;
-    transform: translateX(-3px);
-}
-
-.btn-nav-next:hover {
-    transform: translateX(3px);
-}
-
-/* Pagination */
-.pagination {
-    gap: 8px;
-}
-
-.pagination .page-link {
-    color: #5C6844;
-    border-radius: 8px;
-    border: 1px solid #E8E4D9;
-    padding: 8px 14px;
-}
-
-.pagination .page-item.active .page-link {
-    background: #5C6844;
-    border-color: #5C6844;
-    color: white;
-}
-
-/* Responsive */
+/* ==================== RESPONSIVE ==================== */
 @media (max-width: 768px) {
-    .hero-parallax-container {
-        height: 300px;
-    }
-    
-    .hero-content h1 {
-        font-size: 1.3rem;
-    }
-    
-    .hero-content {
-        left: 20px;
-        bottom: 20px;
-    }
-    
-    .categories {
-        gap: 10px;
-    }
-    
-    .btn-category {
-        padding: 6px 18px;
-        font-size: 12px;
-    }
-    
     .section-header h2 {
         font-size: 24px;
+    }
+    
+    .card-event .card-image,
+    .card-program .card-image {
+        height: 180px;
+    }
+    
+    .status-card h4 {
+        font-size: 1rem;
+    }
+    
+    .status-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 5px;
     }
 }
