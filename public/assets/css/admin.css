@@ -1,5 +1,5 @@
 /* assets/css/admin.css */
-/* Dashboard Admin FPCI UNEJ */
+/* Dashboard Admin FPCI UNEJ - Tambahan untuk tombol */
 
 * {
     margin: 0;
@@ -140,7 +140,78 @@ body {
     color: #1C150F;
 }
 
-/* Stat Cards */
+/* ========== BUTTON STYLES ========== */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+}
+
+.btn-sm {
+    padding: 6px 14px;
+    font-size: 12px;
+}
+
+.btn-success {
+    background: #5C6844;
+    color: white;
+    box-shadow: 0 2px 5px rgba(92,104,68,0.3);
+}
+
+.btn-success:hover {
+    background: #4a5637;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(92,104,68,0.4);
+}
+
+.btn-warning {
+    background: #f0ad4e;
+    color: #1C150F;
+}
+
+.btn-warning:hover {
+    background: #ec971f;
+    transform: translateY(-2px);
+}
+
+.btn-danger {
+    background: #d9534f;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #c9302c;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+}
+
+.btn-primary {
+    background: #67898C;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #557577;
+    transform: translateY(-2px);
+}
+
+/* ========== STATS CARDS ========== */
 .stats-row {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -192,7 +263,7 @@ body {
     color: #5C6844;
 }
 
-/* Two Columns */
+/* ========== TWO COLUMNS ========== */
 .two-columns {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -200,6 +271,7 @@ body {
     margin-bottom: 25px;
 }
 
+/* ========== ADMIN CARDS ========== */
 .admin-card {
     background: white;
     border-radius: 16px;
@@ -211,7 +283,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     padding-bottom: 12px;
     border-bottom: 2px solid #f0f0f0;
 }
@@ -224,16 +296,16 @@ body {
 }
 
 .admin-card-header a {
-    color: #5C6844;
+    color: #1C150F;
     text-decoration: none;
-    font-size: 12px;
+    font-size: 13px;
 }
 
 .admin-card-header a:hover {
     text-decoration: underline;
 }
 
-/* Tables */
+/* ========== TABLES ========== */
 .admin-table {
     width: 100%;
 }
@@ -243,7 +315,7 @@ body {
 }
 
 .admin-table td {
-    padding: 10px 0;
+    padding: 12px 0;
     font-size: 13px;
     color: #333;
 }
@@ -252,7 +324,15 @@ body {
     text-align: right;
 }
 
-/* Badges */
+.admin-table th {
+    text-align: left;
+    padding: 12px 0;
+    font-weight: 600;
+    color: #1C150F;
+    font-size: 13px;
+}
+
+/* ========== BADGES ========== */
 .badge-status {
     display: inline-block;
     padding: 4px 12px;
@@ -286,12 +366,12 @@ body {
     color: #155724;
 }
 
-/* Category Stats */
+/* ========== CATEGORY STATS ========== */
 .category-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 0;
+    padding: 10px 0;
     border-bottom: 1px solid #f0f0f0;
 }
 
@@ -309,7 +389,74 @@ body {
     color: #1C150F;
 }
 
-/* Responsive */
+/* ========== ALERTS ========== */
+.alert {
+    border-radius: 12px;
+    border: none;
+    padding: 12px 20px;
+    margin-bottom: 20px;
+}
+
+.alert-success {
+    background: #d4edda;
+    color: #155724;
+    border-left: 4px solid #28a745;
+}
+
+.alert-danger {
+    background: #f8d7da;
+    color: #721c24;
+    border-left: 4px solid #dc3545;
+}
+
+.alert-dismissible {
+    position: relative;
+    padding-right: 40px;
+}
+
+.btn-close {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    opacity: 0.5;
+}
+
+.btn-close:hover {
+    opacity: 1;
+}
+
+/* ========== NAV TABS ========== */
+.nav-tabs {
+    border-bottom: 2px solid #e0e0e0;
+    gap: 5px;
+}
+
+.nav-tabs .nav-link {
+    border: none;
+    padding: 10px 20px;
+    font-weight: 500;
+    color: #666;
+    border-radius: 8px 8px 0 0;
+    transition: all 0.3s ease;
+}
+
+.nav-tabs .nav-link:hover {
+    color: #5C6844;
+    background: #f5f5f5;
+}
+
+.nav-tabs .nav-link.active {
+    color: #5C6844;
+    background: #e8f0fe;
+    border-bottom: 3px solid #5C6844;
+}
+
+/* ========== RESPONSIVE ========== */
 @media (max-width: 992px) {
     .stats-row {
         grid-template-columns: repeat(2, 1fr);
@@ -339,5 +486,15 @@ body {
     
     .stats-row {
         grid-template-columns: 1fr;
+    }
+    
+    .btn {
+        padding: 6px 16px;
+        font-size: 12px;
+    }
+    
+    .nav-tabs .nav-link {
+        padding: 8px 12px;
+        font-size: 12px;
     }
 }

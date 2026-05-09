@@ -10,6 +10,8 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AdminController;
+
+use App\Http\Controllers\Admin\CarouselController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -55,4 +57,15 @@ Route::get('/writings/{id}', [WritingsController::class, 'show'])->name('writing
 Route::get('/post/{id}', [PostController::class, 'show'])->name('post.show');
 
 // Admin Routes
-Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+Route::prefix('admin')->group(function () {
+    // Dashboard
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    
+    // Carousel Routes
+    Route::get('/carousel', [CarouselController::class, 'index'])->name('admin.carousel');
+    Route::get('/carousel/create/{categoryId}', [CarouselController::class, 'create'])->name('admin.carousel.create');
+    Route::post('/carousel/store/{categoryId}', [CarouselController::class, 'store'])->name('admin.carousel.store');
+    Route::get('/carousel/edit/{id}', [CarouselController::class, 'edit'])->name('admin.carousel.edit');
+    Route::put('/carousel/update/{id}', [CarouselController::class, 'update'])->name('admin.carousel.update');
+    Route::delete('/carousel/destroy/{id}', [CarouselController::class, 'destroy'])->name('admin.carousel.destroy');
+});

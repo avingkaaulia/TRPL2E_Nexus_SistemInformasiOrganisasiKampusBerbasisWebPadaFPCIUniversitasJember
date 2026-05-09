@@ -3,31 +3,23 @@
 @section('content')
 
 <!-- CAROUSEL -->
-<div id="carouselExampleIndicators" 
-     class="carousel slide" 
-     data-bs-ride="carousel"
-     data-bs-interval="5000">
+<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
     <div class="carousel-indicators">
         @foreach($carousel as $key => $c)
-            <button data-bs-target="#carouselExampleIndicators"
-                    data-bs-slide-to="{{ $key }}"
-                    class="{{ $key == 0 ? 'active' : '' }}">
-            </button>
+            <button data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ $key }}" class="{{ $key == 0 ? 'active' : '' }}"></button>
         @endforeach
     </div>
-
     <div class="carousel-inner">
         @foreach($carousel as $key => $c)
         <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
-            <img src="{{ asset($c->featured_image_path) }}" class="d-block w-100" alt="{{ $c->title }}">
+            <img src="{{ $c->image_url }}" class="d-block w-100" alt="{{ $c->title }}">
             <div class="carousel-caption">
                 <h1>{{ $c->title }}</h1>
-                <p>{{ $c->content }}</p>
+                <p>{{ Str::limit(strip_tags($c->content), 100) }}</p>
             </div>
         </div>
         @endforeach
     </div>
-
 </div>
 
 <!-- ABOUT -->

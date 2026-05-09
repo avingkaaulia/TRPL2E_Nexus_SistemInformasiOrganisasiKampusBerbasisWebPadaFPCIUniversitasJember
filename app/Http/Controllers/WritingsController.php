@@ -15,22 +15,27 @@ class WritingsController extends Controller
     public function index(Request $request)
     {
         try {
-            // 🔥 CAROUSEL WRITINGS - khusus kategori carousel_writings
-    $carousel = Post::where('status', 'publish')
-        ->whereHas('category', function($q) {
-            $q->where('category_name', 'carousel_writings');
-        })
-        ->orderBy('date_published', 'desc')
-        ->get();
-    
-    if ($carousel->isEmpty()) {
+        // 🔥 CAROUSEL WRITINGS
         $carousel = Post::where('status', 'publish')
             ->whereHas('category', function($q) {
-                $q->where('category_name', 'carousel');
+                $q->where('category_name', 'carousel_writings');
             })
             ->orderBy('date_published', 'desc')
             ->get();
-    }
+        
+        if ($carousel->isEmpty()) {
+            $carousel = Post::where('status', 'publish')
+                ->whereHas('category', function($q) {
+                    $q->where('category_name', 'carousel');
+                })
+                ->orderBy('date_published', 'desc')
+                ->get();
+        }
+        
+        // Proses gambar carousel
+        foreach ($carousel as $item) {
+            $item->image_url = $this->getImageUrl($item->featured_image_path);
+        }
             
             // 🔥 AMBIL KATEGORI WRITINGS (dinamis, cari kategori dengan nama 'writings')
             $writingsCategory = PostCategory::where('category_name', 'writings')->first();
@@ -171,4 +176,20 @@ class WritingsController extends Controller
             abort(404, 'Post not found');
         }
     }
+    // Tambahkan fungsi helper
+private function getImageUrl($path)
+{
+    if (!$path) return asset('assets/img/default-image.jpg');
+    
+    if (file_exists(storage_path('app/public/' . $path))) {
+        return asset('storage/' . $path);
+    }
+    if (file_exists(public_path($path))) {
+        return asset($path);
+    }
+    if (file_exists(public_path('assets/' . $path))) {
+        return asset('assets/' . $path);
+    }
+    return asset('assets/img/default-image.jpg');
+}
 }

@@ -10,16 +10,9 @@ use App\Models\Post;
 
 class ContactController extends Controller
 {
-    public function index()
-    {
-        // 🔥 Ambil data contact dari database
-        $contact = Contact::first();
-        
-        // 🔥 Ambil menu untuk navbar & footer
-        $menus = Menu::where('id_menu_parent', 0)->get();
-        
-        
-    // 🔥 CAROUSEL CONTACT - khusus kategori carousel_contact
+   // Di ContactController.php
+public function index()
+{
     $carousel = Post::where('status', 'publish')
         ->whereHas('category', function($q) {
             $q->where('category_name', 'carousel_contact');
@@ -35,7 +28,30 @@ class ContactController extends Controller
             ->orderBy('date_published', 'desc')
             ->get();
     }
-        
-        return view('contact.index', compact('contact', 'menus', 'carousel'));
+    
+    foreach ($carousel as $item) {
+        $item->image_url = $this->getImageUrl($item->featured_image_path);
     }
+    
+    $contact = Contact::first();
+    $menus = Menu::where('id_menu_parent', 0)->get();
+    
+    return view('contact.index', compact('carousel', 'contact', 'menus'));
+}
+
+private function getImageUrl($path)
+{
+    if (!$path) return asset('assets/img/default-image.jpg');
+    
+    if (file_exists(storage_path('app/public/' . $path))) {
+        return asset('storage/' . $path);
+    }
+    if (file_exists(public_path($path))) {
+        return asset($path);
+    }
+    if (file_exists(public_path('assets/' . $path))) {
+        return asset('assets/' . $path);
+    }
+    return asset('assets/img/default-image.jpg');
+}
 }

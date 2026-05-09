@@ -14,21 +14,31 @@ class KegiatanController extends Controller
     public function index(Request $request)
     {
         // 🔥 CAROUSEL KEGIATAN - khusus kategori carousel_kegiatan
-    $carousel = Post::where('status', 'publish')
-        ->whereHas('category', function($q) {
-            $q->where('category_name', 'carousel_kegiatan');
-        })
-        ->orderBy('date_published', 'desc')
-        ->get();
-    
-    if ($carousel->isEmpty()) {
-        $carousel = Post::where('status', 'publish')
-            ->whereHas('category', function($q) {
-                $q->where('category_name', 'carousel');
+    // 🔥 CAROUSEL HOME - khusus kategori carousel_home
+        $carousel = Post::where('status','publish')
+            ->whereHas('category', function($q){
+                $q->where('category_name', 'carousel_kegiatan');
             })
-            ->orderBy('date_published', 'desc')
+            ->orderBy('date_published','desc')
             ->get();
-    }
+        
+        // Proses gambar carousel agar bisa ditampilkan
+        foreach ($carousel as $item) {
+            $item->image_url = $this->getImageUrl($item->featured_image_path);
+        }
+        
+        // Jika tidak ada carousel khusus home, ambil dari carousel umum
+        if ($carousel->isEmpty()) {
+            $carousel = Post::where('status','publish')
+                ->whereHas('category', function($q){
+                    $q->where('category_name', 'carousel');
+                })
+                ->orderBy('date_published','desc')
+                ->get();
+            foreach ($carousel as $item) {
+                $item->image_url = $this->getImageUrl($item->featured_image_path);
+            }
+        }
         
         // 🔥 AMBIL KATEGORI EVENT DAN PROGRAM
         $eventCategory = PostCategory::where('category_name', 'event')->first();
@@ -179,5 +189,32 @@ class KegiatanController extends Controller
         } catch (\Exception $e) {
             abort(404, 'Post not found');
         }
+    }
+    // Fungsi helper untuk mendapatkan URL gambar
+    private function getImageUrl($path)
+    {
+        if (!$path) {
+            return asset('assets/img/default-image.jpg');
+        }
+        
+        // Cek di storage
+        $storagePath = storage_path('app/public/' . $path);
+        if (file_exists($storagePath)) {
+            return asset('storage/' . $path);
+        }
+        
+        // Cek di public
+        $publicPath = public_path($path);
+        if (file_exists($publicPath)) {
+            return asset($path);
+        }
+        
+        // Cek di public/assets/img
+        $assetsPath = public_path('assets/' . $path);
+        if (file_exists($assetsPath)) {
+            return asset('assets/' . $path);
+        }
+        
+        return asset('assets/img/default-image.jpg');
     }
 }

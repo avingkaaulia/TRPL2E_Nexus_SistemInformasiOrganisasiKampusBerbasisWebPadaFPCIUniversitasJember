@@ -19,6 +19,11 @@ class HomeController extends Controller
             ->orderBy('date_published','desc')
             ->get();
         
+        // Proses gambar carousel agar bisa ditampilkan
+        foreach ($carousel as $item) {
+            $item->image_url = $this->getImageUrl($item->featured_image_path);
+        }
+        
         // Jika tidak ada carousel khusus home, ambil dari carousel umum
         if ($carousel->isEmpty()) {
             $carousel = Post::where('status','publish')
@@ -27,6 +32,9 @@ class HomeController extends Controller
                 })
                 ->orderBy('date_published','desc')
                 ->get();
+            foreach ($carousel as $item) {
+                $item->image_url = $this->getImageUrl($item->featured_image_path);
+            }
         }
 
         // 🔥 ABOUT
@@ -126,5 +134,32 @@ class HomeController extends Controller
             'urgent', 'posts', 'latestTitle', 'urgentTitle',
             'isPendaftaranOpen', 'pendaftaranInfo'
         ));
+    }
+    // Fungsi helper untuk mendapatkan URL gambar
+    private function getImageUrl($path)
+    {
+        if (!$path) {
+            return asset('assets/img/default-image.jpg');
+        }
+        
+        // Cek di storage
+        $storagePath = storage_path('app/public/' . $path);
+        if (file_exists($storagePath)) {
+            return asset('storage/' . $path);
+        }
+        
+        // Cek di public
+        $publicPath = public_path($path);
+        if (file_exists($publicPath)) {
+            return asset($path);
+        }
+        
+        // Cek di public/assets/img
+        $assetsPath = public_path('assets/' . $path);
+        if (file_exists($assetsPath)) {
+            return asset('assets/' . $path);
+        }
+        
+        return asset('assets/img/default-image.jpg');
     }
 }

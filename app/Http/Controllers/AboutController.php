@@ -15,7 +15,7 @@ class AboutController extends Controller
 {
     public function index()
     {
-         // 🔥 CAROUSEL ABOUT - khusus kategori carousel_about
+         // 🔥 CAROUSEL ABOUT
     $carousel = Post::where('status', 'publish')
         ->whereHas('category', function($q) {
             $q->where('category_name', 'carousel_about');
@@ -23,7 +23,6 @@ class AboutController extends Controller
         ->orderBy('date_published', 'desc')
         ->get();
     
-    // Fallback ke carousel umum jika kosong
     if ($carousel->isEmpty()) {
         $carousel = Post::where('status', 'publish')
             ->whereHas('category', function($q) {
@@ -31,6 +30,10 @@ class AboutController extends Controller
             })
             ->orderBy('date_published', 'desc')
             ->get();
+    }
+    
+    foreach ($carousel as $item) {
+        $item->image_url = $this->getImageUrl($item->featured_image_path);
     }
         // 🔥 Ambil SEMUA konten About dari database (terpisah-pisah)
         $aboutSections = Post::where('status', 'publish')
@@ -91,4 +94,19 @@ class AboutController extends Controller
             'anggota', 'menus', 'contact'
         ));
     }
+    private function getImageUrl($path)
+{
+    if (!$path) return asset('assets/img/default-image.jpg');
+    
+    if (file_exists(storage_path('app/public/' . $path))) {
+        return asset('storage/' . $path);
+    }
+    if (file_exists(public_path($path))) {
+        return asset($path);
+    }
+    if (file_exists(public_path('assets/' . $path))) {
+        return asset('assets/' . $path);
+    }
+    return asset('assets/img/default-image.jpg');
+}
 }
