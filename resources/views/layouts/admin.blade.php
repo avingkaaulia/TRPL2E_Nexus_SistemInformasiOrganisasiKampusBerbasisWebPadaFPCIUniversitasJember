@@ -31,12 +31,12 @@
 <a href="{{ route('admin.carousel') }}" class="menu-item {{ request()->routeIs('admin.carousel*') ? 'active' : '' }}">
     <i class="bi bi-images"></i> Carousel / Slider
 </a>
-            <a href="#" class="menu-item">
-                <i class="bi bi-file-post"></i> Semua Postingan
-            </a>
-            <a href="#" class="menu-item">
-                <i class="bi bi-plus-circle"></i> Tambah Post
-            </a>
+            <a href="{{ route('admin.posts.index') }}" class="menu-item {{ request()->routeIs('admin.posts*') ? 'active' : '' }}">
+    <i class="bi bi-file-post"></i> Semua Postingan
+</a>
+<a href="{{ route('admin.posts.create') }}" class="menu-item">
+    <i class="bi bi-plus-circle"></i> Tambah Post
+</a>
             <a href="#" class="menu-item">
                 <i class="bi bi-tags"></i> Kategori
             </a>

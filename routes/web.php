@@ -10,8 +10,8 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AdminController;
-
 use App\Http\Controllers\Admin\CarouselController;
+use App\Http\Controllers\Admin\PostAdminController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -68,4 +68,15 @@ Route::prefix('admin')->group(function () {
     Route::get('/carousel/edit/{id}', [CarouselController::class, 'edit'])->name('admin.carousel.edit');
     Route::put('/carousel/update/{id}', [CarouselController::class, 'update'])->name('admin.carousel.update');
     Route::delete('/carousel/destroy/{id}', [CarouselController::class, 'destroy'])->name('admin.carousel.destroy');
+});
+
+// Admin Post Routes
+Route::prefix('admin')->group(function () {
+    Route::get('/posts', [PostAdminController::class, 'index'])->name('admin.posts.index');
+    Route::get('/posts/create', [PostAdminController::class, 'create'])->name('admin.posts.create');
+    Route::post('/posts/store', [PostAdminController::class, 'store'])->name('admin.posts.store');
+    Route::get('/posts/edit/{id}', [PostAdminController::class, 'edit'])->name('admin.posts.edit');
+    Route::put('/posts/update/{id}', [PostAdminController::class, 'update'])->name('admin.posts.update');
+    Route::delete('/posts/destroy/{id}', [PostAdminController::class, 'destroy'])->name('admin.posts.destroy');
+    Route::delete('/posts/gallery/{id}', [PostAdminController::class, 'deleteGallery'])->name('admin.posts.gallery.delete');
 });
