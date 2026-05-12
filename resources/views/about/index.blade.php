@@ -24,7 +24,7 @@
     </div>
 </div>
 
-<!-- About Sections Dinamis (KE BAWAH) -->
+<!-- About Sections Dinamis (KE BAWAH) - TENTANG, SEJARAH, TUJUAN -->
 <section class="about-sections">
     <div class="container">
         <div class="about-container">
@@ -78,7 +78,23 @@
     </div>
 </section>
 
-<!-- Struktur Organisasi - KOTAK FULL (Tanpa Nama, Tanpa IG) -->
+<!-- 🔥 POSTINGAN ABOUT LAINNYA (yang ditambahkan via admin) -->
+@if($otherSections && $otherSections->count() > 0)
+<section class="about-sections">
+    <div class="container">
+        <div class="about-container">
+            @foreach($otherSections as $section)
+            <div class="about-item">
+                <h2>{{ $section->title }}</h2>
+                {!! $section->content !!}
+            </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+@endif
+
+<!-- Struktur Organisasi -->
 <section class="struktur-section">
     <div class="container">
         <div class="section-header">

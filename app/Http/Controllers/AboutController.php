@@ -15,27 +15,28 @@ class AboutController extends Controller
 {
     public function index()
     {
-         // 🔥 CAROUSEL ABOUT
-    $carousel = Post::where('status', 'publish')
-        ->whereHas('category', function($q) {
-            $q->where('category_name', 'carousel_about');
-        })
-        ->orderBy('date_published', 'desc')
-        ->get();
-    
-    if ($carousel->isEmpty()) {
+        // 🔥 CAROUSEL ABOUT
         $carousel = Post::where('status', 'publish')
             ->whereHas('category', function($q) {
-                $q->where('category_name', 'carousel');
+                $q->where('category_name', 'carousel_about');
             })
             ->orderBy('date_published', 'desc')
             ->get();
-    }
-    
-    foreach ($carousel as $item) {
-        $item->image_url = $this->getImageUrl($item->featured_image_path);
-    }
-        // 🔥 Ambil SEMUA konten About dari database (terpisah-pisah)
+        
+        if ($carousel->isEmpty()) {
+            $carousel = Post::where('status', 'publish')
+                ->whereHas('category', function($q) {
+                    $q->where('category_name', 'carousel');
+                })
+                ->orderBy('date_published', 'desc')
+                ->get();
+        }
+        
+        foreach ($carousel as $item) {
+            $item->image_url = getImageUrl($item->featured_image_path);
+        }
+        
+        // 🔥 Ambil SEMUA konten About dari database (urutan berdasarkan id_post)
         $aboutSections = Post::where('status', 'publish')
             ->where('post_type', 'post')
             ->whereHas('category', function($q) {
@@ -44,41 +45,18 @@ class AboutController extends Controller
             ->orderBy('id_post', 'asc')
             ->get();
         
-        // 🔥 Atau bisa juga diambil berdasarkan judul spesifik
-        $tentang = Post::where('status', 'publish')
-            ->where('title', 'Tentang FPCI UNEJ')
-            ->whereHas('category', function($q) {
-                $q->where('category_name', 'about');
-            })
-            ->first();
+        // Pisahkan berdasarkan judul untuk kontrol yang lebih baik
+        $tentang = $aboutSections->firstWhere('title', 'Tentang FPCI UNEJ');
+        $sejarah = $aboutSections->firstWhere('title', 'Sejarah');
+        $tujuan = $aboutSections->firstWhere('title', 'Tujuan');
+        $visi = $aboutSections->firstWhere('title', 'Visi');
+        $misi = $aboutSections->firstWhere('title', 'Misi');
         
-        $sejarah = Post::where('status', 'publish')
-            ->where('title', 'Sejarah')
-            ->whereHas('category', function($q) {
-                $q->where('category_name', 'about');
-            })
-            ->first();
-        
-        $tujuan = Post::where('status', 'publish')
-            ->where('title', 'Tujuan')
-            ->whereHas('category', function($q) {
-                $q->where('category_name', 'about');
-            })
-            ->first();
-        
-        $visi = Post::where('status', 'publish')
-            ->where('title', 'Visi')
-            ->whereHas('category', function($q) {
-                $q->where('category_name', 'about');
-            })
-            ->first();
-        
-        $misi = Post::where('status', 'publish')
-            ->where('title', 'Misi')
-            ->whereHas('category', function($q) {
-                $q->where('category_name', 'about');
-            })
-            ->first();
+        // 🔥 Ambil POSTINGAN LAINNYA (selain yang sudah ditentukan di atas)
+        // Postingan baru akan masuk ke sini
+        $otherSections = $aboutSections->filter(function($item) {
+            return !in_array($item->title, ['Tentang FPCI UNEJ', 'Sejarah', 'Tujuan', 'Visi', 'Misi']);
+        });
         
         // 🔥 Ambil semua anggota untuk struktur organisasi
         $anggota = Anggota::with(['user', 'divisi'])
@@ -90,23 +68,10 @@ class AboutController extends Controller
         $contact = Contact::first();
         
         return view('about.index', compact(
-            'carousel', 'tentang', 'sejarah', 'tujuan', 'visi', 'misi',
+            'carousel', 
+            'tentang', 'sejarah', 'tujuan', 'visi', 'misi',
+            'otherSections', // 🔥 KIRIMKAN KE VIEW
             'anggota', 'menus', 'contact'
         ));
     }
-    private function getImageUrl($path)
-{
-    if (!$path) return asset('assets/img/default-image.jpg');
-    
-    if (file_exists(storage_path('app/public/' . $path))) {
-        return asset('storage/' . $path);
-    }
-    if (file_exists(public_path($path))) {
-        return asset($path);
-    }
-    if (file_exists(public_path('assets/' . $path))) {
-        return asset('assets/' . $path);
-    }
-    return asset('assets/img/default-image.jpg');
-}
 }

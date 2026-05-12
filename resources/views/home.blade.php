@@ -42,7 +42,7 @@
         <div class="col-md-3">
             <a href="{{ route('post.show', $p->id_post) }}" class="text-decoration-none">
                 <div class="card card-custom">
-                    <img src="{{ asset($p->featured_image_path) }}" class="card-img-top">
+                    <img src="{{ $p->image_url }}" class="card-img-top" alt="{{ $p->title }}">
                     <div class="p-3">
                         <!-- 🔥 TAMPILKAN PARENT CATEGORY, BUKAN SUB-CATEGORY -->
                         <button class="btn btn-sm btn-main">
@@ -83,7 +83,7 @@
             </div>
 
             <div class="col-md-3 text-end">
-                <img src="{{ asset($u->featured_image_path) }}" width="70">
+                <img src="{{ $u->image_url }}" width="70">
             </div>
 
         </div>

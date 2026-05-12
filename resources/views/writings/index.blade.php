@@ -29,7 +29,6 @@
     <div class="category-section">
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
             <h3 class="section-heading">Writings Category</h3>
-            <a href="{{ route('writings') }}" class="text-decoration-none" style="color: #5C6844;">View All Writings →</a>
         </div>
         <div class="category-grid">
             @foreach($subCategories as $cat)
@@ -77,14 +76,14 @@
         </div>
     </div>
 
-    <!-- Writings Grid -->
+    <!-- Writings Grid (8 POSTINGAN TERBARU) -->
     <div class="row">
         @forelse($posts as $post)
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
             <a href="{{ route('writings.show', $post->id_post) }}" class="text-decoration-none">
                 <div class="writing-card">
                     <div class="card-image">
-                        <img src="{{ asset($post->featured_image_path ?? 'https://picsum.photos/400/300?random=' . $post->id_post) }}" alt="{{ $post->title }}">
+                        <img src="{{ $post->image_url ?? 'https://picsum.photos/400/300?random=' . $post->id_post }}" alt="{{ $post->title }}">
                     </div>
                     <div class="separator"></div>
                     <div class="card-body">
@@ -110,10 +109,15 @@
         @endforelse
     </div>
 
-    <!-- Pagination -->
-    <div class="d-flex justify-content-center mt-4">
-        {{ $posts->withQueryString()->links() }}
+    <!-- 🔥 LINK VIEW ALL (TAMBAHAN) -->
+    @if($posts->count() > 0)
+    <div class="text-center mt-4">
+        <a href="{{ route('writings.all') }}" class="btn btn-main">
+            View All Writings <i class="bi bi-arrow-right ms-2"></i>
+        </a>
     </div>
+    @endif
+
 </div>
 
 <!-- Create Your Own Section -->

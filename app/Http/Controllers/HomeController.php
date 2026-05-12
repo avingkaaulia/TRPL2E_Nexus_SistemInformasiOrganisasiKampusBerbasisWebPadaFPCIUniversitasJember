@@ -73,6 +73,7 @@ class HomeController extends Controller
                     ->first();
                 
                 if ($latestPost) {
+                    $latestPost->image_url = getImageUrl($latestPost->featured_image_path);
                     $posts->push($latestPost);
                 }
             }
@@ -88,6 +89,10 @@ class HomeController extends Controller
             ->latest('date_published')
             ->take(4)
             ->get();
+
+            foreach ($kegiatan as $item) {
+            $item->image_url = getImageUrl($item->featured_image_path);
+            }
 
         // 🔥 WRITINGS (parent) dan SUB-KATEGORINYA
         $writingsCat = PostCategory::where('category_name', 'writings')->first();
@@ -106,6 +111,10 @@ class HomeController extends Controller
             ->take(4)
             ->get();
 
+            foreach ($writings as $item) {
+            $item->image_url = getImageUrl($item->featured_image_path);
+            }
+
         // 🔥 URGENT
         $urgent = Post::with('category')
             ->where('status', 'publish')
@@ -116,6 +125,10 @@ class HomeController extends Controller
             ->latest('date_published')
             ->take(2)
             ->get();
+
+            foreach ($urgent as $item) {
+            $item->image_url = getImageUrl($item->featured_image_path);
+        }
 
         $latestTitle = 'Latest Updates';
         $urgentTitle = 'Urgent Notice';

@@ -11,47 +11,41 @@ use Illuminate\Support\Facades\Log;
 
 class WritingsController extends Controller
 {
-    // Halaman Writings - Dinamis mengambil dari database
     public function index(Request $request)
     {
         try {
-        // 🔥 CAROUSEL WRITINGS
-        $carousel = Post::where('status', 'publish')
-            ->whereHas('category', function($q) {
-                $q->where('category_name', 'carousel_writings');
-            })
-            ->orderBy('date_published', 'desc')
-            ->get();
-        
-        if ($carousel->isEmpty()) {
             $carousel = Post::where('status', 'publish')
                 ->whereHas('category', function($q) {
-                    $q->where('category_name', 'carousel');
+                    $q->where('category_name', 'carousel_writings');
                 })
                 ->orderBy('date_published', 'desc')
                 ->get();
-        }
-        
-        // Proses gambar carousel
-        foreach ($carousel as $item) {
-            $item->image_url = $this->getImageUrl($item->featured_image_path);
-        }
             
-            // 🔥 AMBIL KATEGORI WRITINGS (dinamis, cari kategori dengan nama 'writings')
+            if ($carousel->isEmpty()) {
+                $carousel = Post::where('status', 'publish')
+                    ->whereHas('category', function($q) {
+                        $q->where('category_name', 'carousel');
+                    })
+                    ->orderBy('date_published', 'desc')
+                    ->get();
+            }
+            
+            foreach ($carousel as $item) {
+                $item->image_url = getImageUrl($item->featured_image_path);
+            }
+            
             $writingsCategory = PostCategory::where('category_name', 'writings')->first();
             
-            // 🔥 SUB KATEGORI WRITINGS (semua kategori yang parent_id-nya = id writings)
             $subCategories = collect();
             if ($writingsCategory) {
                 $subCategories = PostCategory::where('parent_id', $writingsCategory->id_category)->get();
             }
             
-            // Jika tidak ada sub kategori, ambil berdasarkan parent_id = 4 (fallback)
             if ($subCategories->isEmpty()) {
                 $subCategories = PostCategory::where('parent_id', 4)->get();
             }
             
-            // 🔥 QUERY POSTS - HANYA DARI SUB KATEGORI WRITINGS
+            // 🔥 QUERY UNTUK 8 POSTINGAN TERBARU DI HALAMAN UTAMA
             $query = Post::with(['category', 'user'])
                 ->where('status', 'publish')
                 ->where('post_type', 'post');
@@ -60,7 +54,6 @@ class WritingsController extends Controller
                 $query->whereIn('id_post_category', $subCategories->pluck('id_category'));
             }
             
-            // Search dinamis
             $search = $request->get('search');
             if ($search) {
                 $query->where(function($q) use ($search) {
@@ -72,10 +65,17 @@ class WritingsController extends Controller
             // Hot topics (6 posts terbaru)
             $hotTopics = (clone $query)->orderBy('date_published', 'desc')->take(6)->get();
             
-            // Posts dengan pagination (8 per halaman)
-            $posts = $query->orderBy('date_published', 'desc')->paginate(8);
+            foreach ($hotTopics as $item) {
+                $item->image_url = getImageUrl($item->featured_image_path);
+            }
             
-            // Filter kategori yang dipilih
+            // 🔥 AMBIL 8 POSTINGAN TERBARU UNTUK GRID
+            $posts = $query->orderBy('date_published', 'desc')->take(8)->get();
+            
+            foreach ($posts as $item) {
+                $item->image_url = getImageUrl($item->featured_image_path);
+            }
+            
             $currentCategory = null;
             if ($request->get('category')) {
                 $currentCategory = PostCategory::find($request->get('category'));
@@ -94,11 +94,52 @@ class WritingsController extends Controller
         }
     }
     
-    // Filter berdasarkan sub-kategori (dinamis)
+    // 🔥 HALAMAN ALL WRITINGS (SEMUA POSTINGAN DENGAN PAGINATION)
+    public function all(Request $request)
+    {
+        try {
+            $writingsCategory = PostCategory::where('category_name', 'writings')->first();
+            
+            $subCategories = collect();
+            if ($writingsCategory) {
+                $subCategories = PostCategory::where('parent_id', $writingsCategory->id_category)->get();
+            }
+            
+            if ($subCategories->isEmpty()) {
+                $subCategories = PostCategory::where('parent_id', 4)->get();
+            }
+            
+            $query = Post::with(['category', 'user'])
+                ->where('status', 'publish')
+                ->where('post_type', 'post')
+                ->whereIn('id_post_category', $subCategories->pluck('id_category'));
+            
+            $search = $request->get('search');
+            if ($search) {
+                $query->where(function($q) use ($search) {
+                    $q->where('title', 'like', '%' . $search . '%')
+                      ->orWhere('content', 'like', '%' . $search . '%');
+                });
+            }
+            
+            // 🔥 PAGINATION UNTUK HALAMAN ALL (9 PER HALAMAN)
+            $posts = $query->orderBy('date_published', 'desc')->paginate(9);
+            
+            foreach ($posts as $item) {
+                $item->image_url = getImageUrl($item->featured_image_path);
+            }
+            
+            return view('writings.all', compact('posts', 'search'));
+            
+        } catch (\Exception $e) {
+            Log::error('WritingsController@all error: ' . $e->getMessage());
+            return view('writings.all', ['posts' => collect()]);
+        }
+    }
+    
     public function category(Request $request, $categoryId)
     {
         try {
-            // CAROUSEL
             $carousel = Post::where('status', 'publish')
                 ->whereHas('category', function($q) {
                     $q->where('category_name', 'carousel');
@@ -106,13 +147,14 @@ class WritingsController extends Controller
                 ->orderBy('date_published', 'desc')
                 ->get();
             
-            // Kategori yang dipilih
+            foreach ($carousel as $item) {
+                $item->image_url = getImageUrl($item->featured_image_path);
+            }
+            
             $currentCategory = PostCategory::findOrFail($categoryId);
             
-            // Ambil kategori writings
             $writingsCategory = PostCategory::where('category_name', 'writings')->first();
             
-            // Sub kategori writings
             $subCategories = collect();
             if ($writingsCategory) {
                 $subCategories = PostCategory::where('parent_id', $writingsCategory->id_category)->get();
@@ -121,10 +163,8 @@ class WritingsController extends Controller
                 $subCategories = PostCategory::where('parent_id', 4)->get();
             }
             
-            // Search
             $search = $request->get('search');
             
-            // Query posts berdasarkan kategori yang dipilih
             $query = Post::with(['category', 'user'])
                 ->where('status', 'publish')
                 ->where('post_type', 'post')
@@ -138,7 +178,17 @@ class WritingsController extends Controller
             }
             
             $hotTopics = (clone $query)->orderBy('date_published', 'desc')->take(6)->get();
-            $posts = $query->orderBy('date_published', 'desc')->paginate(8);
+            
+            foreach ($hotTopics as $item) {
+                $item->image_url = getImageUrl($item->featured_image_path);
+            }
+            
+            // 🔥 DI HALAMAN KATEGORI TAMPILKAN 8 POSTINGAN TERBARU
+            $posts = $query->orderBy('date_published', 'desc')->take(8)->get();
+            
+            foreach ($posts as $item) {
+                $item->image_url = getImageUrl($item->featured_image_path);
+            }
             
             return view('writings.index', compact('carousel', 'subCategories', 'hotTopics', 'posts', 'search', 'currentCategory'));
             
@@ -147,7 +197,6 @@ class WritingsController extends Controller
         }
     }
     
-    // Detail postingan writings (dinamis)
     public function show($id)
     {
         try {
@@ -156,7 +205,12 @@ class WritingsController extends Controller
                 ->where('post_type', 'post')
                 ->findOrFail($id);
             
-            // Related posts berdasarkan kategori yang sama
+            $post->image_url = getImageUrl($post->featured_image_path);
+            
+            foreach ($post->gallery as $item) {
+                $item->image_url = getImageUrl($item->image_path);
+            }
+            
             $relatedPosts = Post::with(['category', 'user'])
                 ->where('status', 'publish')
                 ->where('post_type', 'post')
@@ -165,7 +219,10 @@ class WritingsController extends Controller
                 ->take(3)
                 ->get();
             
-            // Comments
+            foreach ($relatedPosts as $item) {
+                $item->image_url = getImageUrl($item->featured_image_path);
+            }
+            
             $comments = Comment::where('id_post', $id)
                 ->orderBy('tanggal', 'desc')
                 ->get();
@@ -176,20 +233,4 @@ class WritingsController extends Controller
             abort(404, 'Post not found');
         }
     }
-    // Tambahkan fungsi helper
-private function getImageUrl($path)
-{
-    if (!$path) return asset('assets/img/default-image.jpg');
-    
-    if (file_exists(storage_path('app/public/' . $path))) {
-        return asset('storage/' . $path);
-    }
-    if (file_exists(public_path($path))) {
-        return asset($path);
-    }
-    if (file_exists(public_path('assets/' . $path))) {
-        return asset('assets/' . $path);
-    }
-    return asset('assets/img/default-image.jpg');
-}
 }

@@ -17,17 +17,17 @@
         </div>
         
         <div class="mb-3">
-            <label class="form-label">Kategori <span class="text-danger">*</span></label>
-            <select name="id_post_category" class="form-select @error('id_post_category') is-invalid @enderror" required>
-                <option value="">Pilih Kategori</option>
-                @foreach($categories as $cat)
-                <option value="{{ $cat->id_category }}" {{ old('id_post_category') == $cat->id_category ? 'selected' : '' }}>
-                    {{ $cat->category_name }}
-                </option>
-                @endforeach
-            </select>
-            @error('id_post_category')<div class="invalid-feedback">{{ $message }}</div>@enderror
-        </div>
+    <label class="form-label">Kategori <span class="text-danger">*</span></label>
+    <select name="id_post_category" class="form-select @error('id_post_category') is-invalid @enderror" required>
+        <option value="">Pilih Kategori</option>
+        @foreach($categories as $cat)
+        <option value="{{ $cat->id_category }}" {{ old('id_post_category') == $cat->id_category ? 'selected' : '' }}>
+            {{ $cat->category_name }}
+        </option>
+        @endforeach
+    </select>
+    @error('id_post_category')<div class="invalid-feedback">{{ $message }}</div>@enderror
+</div>
         
         <div class="row">
             <div class="col-md-6">

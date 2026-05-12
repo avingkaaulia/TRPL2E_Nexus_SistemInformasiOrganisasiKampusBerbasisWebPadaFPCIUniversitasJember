@@ -10,11 +10,8 @@ use App\Models\Comment;
 
 class KegiatanController extends Controller
 {
-    // Halaman utama Event & Program
     public function index(Request $request)
     {
-        // 🔥 CAROUSEL KEGIATAN - khusus kategori carousel_kegiatan
-    // 🔥 CAROUSEL HOME - khusus kategori carousel_home
         $carousel = Post::where('status','publish')
             ->whereHas('category', function($q){
                 $q->where('category_name', 'carousel_kegiatan');
@@ -22,12 +19,11 @@ class KegiatanController extends Controller
             ->orderBy('date_published','desc')
             ->get();
         
-        // Proses gambar carousel agar bisa ditampilkan
+        // 🔥 GUNAKAN FUNGSI DARI HELPER
         foreach ($carousel as $item) {
-            $item->image_url = $this->getImageUrl($item->featured_image_path);
+            $item->image_url = getImageUrl($item->featured_image_path);
         }
         
-        // Jika tidak ada carousel khusus home, ambil dari carousel umum
         if ($carousel->isEmpty()) {
             $carousel = Post::where('status','publish')
                 ->whereHas('category', function($q){
@@ -36,19 +32,15 @@ class KegiatanController extends Controller
                 ->orderBy('date_published','desc')
                 ->get();
             foreach ($carousel as $item) {
-                $item->image_url = $this->getImageUrl($item->featured_image_path);
+                $item->image_url = getImageUrl($item->featured_image_path);
             }
         }
         
-        // 🔥 AMBIL KATEGORI EVENT DAN PROGRAM
-        $eventCategory = PostCategory::where('category_name', 'event')->first();
-        $programCategory = PostCategory::where('category_name', 'program')->first();
-        
-        // 🔥 SUB KATEGORI EVENT (Event Reguler & Event Unggulan)
+        // 🔥 SUB KATEGORI EVENT
         $eventReguler = PostCategory::where('category_name', 'Event Reguler')->first();
         $eventUnggulan = PostCategory::where('category_name', 'Event Unggulan')->first();
         
-        // 🔥 SUB KATEGORI PROGRAM (status)
+        // 🔥 SUB KATEGORI PROGRAM
         $programPlanned = PostCategory::where('category_name', 'Sedang Direncanakan')->first();
         $programOngoing = PostCategory::where('category_name', 'Sedang Berlangsung')->first();
         $programCompleted = PostCategory::where('category_name', 'Selesai')->first();
@@ -62,6 +54,10 @@ class KegiatanController extends Controller
             ->take(3)
             ->get();
         
+        foreach ($eventRegulerPosts as $item) {
+            $item->image_url = getImageUrl($item->featured_image_path);
+        }
+        
         // 🔥 EVENT UNGGULAN - 3 event terbaru
         $eventUnggulanPosts = Post::with(['category', 'gallery'])
             ->where('status', 'publish')
@@ -70,6 +66,10 @@ class KegiatanController extends Controller
             ->latest('date_published')
             ->take(3)
             ->get();
+        
+        foreach ($eventUnggulanPosts as $item) {
+            $item->image_url = getImageUrl($item->featured_image_path);
+        }
         
         // 🔥 PROGRAM SEDANG DIRENCANAKAN
         $programsPlanned = Post::with(['category', 'gallery'])
@@ -80,6 +80,10 @@ class KegiatanController extends Controller
             ->take(4)
             ->get();
         
+        foreach ($programsPlanned as $item) {
+            $item->image_url = getImageUrl($item->featured_image_path);
+        }
+        
         // 🔥 PROGRAM SEDANG BERLANGSUNG
         $programsOngoing = Post::with(['category', 'gallery'])
             ->where('status', 'publish')
@@ -89,6 +93,10 @@ class KegiatanController extends Controller
             ->take(4)
             ->get();
         
+        foreach ($programsOngoing as $item) {
+            $item->image_url = getImageUrl($item->featured_image_path);
+        }
+        
         // 🔥 PROGRAM SELESAI
         $programsCompleted = Post::with(['category', 'gallery'])
             ->where('status', 'publish')
@@ -97,6 +105,10 @@ class KegiatanController extends Controller
             ->latest('date_published')
             ->take(4)
             ->get();
+        
+        foreach ($programsCompleted as $item) {
+            $item->image_url = getImageUrl($item->featured_image_path);
+        }
         
         $currentSlide = $request->get('slide', 0);
         
@@ -123,6 +135,10 @@ class KegiatanController extends Controller
             ->latest('date_published')
             ->paginate(9);
         
+        foreach ($posts as $item) {
+            $item->image_url = getImageUrl($item->featured_image_path);
+        }
+        
         return view('kegiatan.all', compact('posts'));
     }
     
@@ -137,6 +153,10 @@ class KegiatanController extends Controller
             ->where('id_post_category', $eventUnggulan->id_category ?? 0)
             ->latest('date_published')
             ->paginate(9);
+        
+        foreach ($posts as $item) {
+            $item->image_url = getImageUrl($item->featured_image_path);
+        }
         
         return view('kegiatan.all', compact('posts'));
     }
@@ -160,6 +180,10 @@ class KegiatanController extends Controller
             ->latest('date_published')
             ->paginate(9);
         
+        foreach ($posts as $item) {
+            $item->image_url = getImageUrl($item->featured_image_path);
+        }
+        
         return view('kegiatan.all', compact('posts'));
     }
     
@@ -172,6 +196,12 @@ class KegiatanController extends Controller
                 ->where('post_type', 'post')
                 ->findOrFail($id);
             
+            $post->image_url = getImageUrl($post->featured_image_path);
+            
+            foreach ($post->gallery as $item) {
+                $item->image_url = getImageUrl($item->image_path);
+            }
+            
             $relatedPosts = Post::with(['category', 'user'])
                 ->where('status', 'publish')
                 ->where('post_type', 'post')
@@ -179,6 +209,10 @@ class KegiatanController extends Controller
                 ->where('id_post', '!=', $id)
                 ->take(3)
                 ->get();
+            
+            foreach ($relatedPosts as $item) {
+                $item->image_url = getImageUrl($item->featured_image_path);
+            }
             
             $comments = Comment::where('id_post', $id)
                 ->orderBy('tanggal', 'desc')
@@ -189,32 +223,5 @@ class KegiatanController extends Controller
         } catch (\Exception $e) {
             abort(404, 'Post not found');
         }
-    }
-    // Fungsi helper untuk mendapatkan URL gambar
-    private function getImageUrl($path)
-    {
-        if (!$path) {
-            return asset('assets/img/default-image.jpg');
-        }
-        
-        // Cek di storage
-        $storagePath = storage_path('app/public/' . $path);
-        if (file_exists($storagePath)) {
-            return asset('storage/' . $path);
-        }
-        
-        // Cek di public
-        $publicPath = public_path($path);
-        if (file_exists($publicPath)) {
-            return asset($path);
-        }
-        
-        // Cek di public/assets/img
-        $assetsPath = public_path('assets/' . $path);
-        if (file_exists($assetsPath)) {
-            return asset('assets/' . $path);
-        }
-        
-        return asset('assets/img/default-image.jpg');
     }
 }

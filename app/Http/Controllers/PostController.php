@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Log;
 
 class PostController extends Controller
 {
-    // 🔥 DETAIL POSTINGAN UNTUK SEMUA KATEGORI (Dinamis)
     public function show($id)
     {
         try {
@@ -18,7 +17,12 @@ class PostController extends Controller
                 ->where('post_type', 'post')
                 ->findOrFail($id);
             
-            // Related posts berdasarkan kategori yang sama
+            $post->image_url = getImageUrl($post->featured_image_path);
+            
+            foreach ($post->gallery as $item) {
+                $item->image_url = getImageUrl($item->image_path);
+            }
+            
             $relatedPosts = Post::with(['category', 'user'])
                 ->where('status', 'publish')
                 ->where('post_type', 'post')
@@ -27,7 +31,10 @@ class PostController extends Controller
                 ->take(3)
                 ->get();
             
-            // Comments
+            foreach ($relatedPosts as $item) {
+                $item->image_url = getImageUrl($item->featured_image_path);
+            }
+            
             $comments = Comment::where('id_post', $id)
                 ->orderBy('tanggal', 'desc')
                 ->get();

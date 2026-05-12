@@ -3,7 +3,7 @@
 @section('content')
 <link rel="stylesheet" href="{{ asset('assets/css/kegiatan.css') }}">
 
-<div class="container mt-5">
+<div class="container my-5">
     <div class="section-header">
         <h2>
             @if(request()->routeIs('kegiatan.event.reguler'))
@@ -25,27 +25,40 @@
 
     <div class="row g-4">
         @forelse($posts as $post)
-        <div class="col-md-4 mb-4">
+        <div class="col-md-4 col-sm-6 mb-4">
             <div class="card-kegiatan position-relative h-100">
-                <img src="{{ asset($post->featured_image_path) }}" alt="{{ $post->title }}">
+                <img src="{{ getImageUrl($post->featured_image_path) }}" alt="{{ $post->title }}" class="card-img-top">
                 <span class="category-badge">{{ $post->category->category_name ?? 'Uncategorized' }}</span>
                 <div class="card-body">
                     <h5>{{ Str::limit($post->title, 60) }}</h5>
                     <a href="{{ route('kegiatan.show', $post->id_post) }}" class="btn btn-main mt-2">
-                        Detail <i class="bi bi-info-circle ms-1"></i>
+                        Detail <i class="bi bi-arrow-right ms-1"></i>
                     </a>
                 </div>
             </div>
         </div>
         @empty
         <div class="col-12 text-center py-5">
-            <p>Belum ada data.</p>
+            <div class="empty-state">
+                <i class="bi bi-inbox" style="font-size: 48px; color: #ccc;"></i>
+                <h4 class="mt-3">Belum ada data</h4>
+                <p>Belum ada konten untuk kategori ini.</p>
+                <a href="{{ route('kegiatan.index') }}" class="btn btn-main mt-2">Kembali ke Events</a>
+            </div>
         </div>
         @endforelse
     </div>
 
-    <div class="d-flex justify-content-center mt-4">
-        {{ $posts->links() }}
+    @if($posts->hasPages())
+    <div class="d-flex justify-content-center mt-5">
+        {{ $posts->withQueryString()->links() }}
+    </div>
+    @endif
+
+    <div class="text-center mt-4">
+        <a href="{{ route('kegiatan.index') }}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left me-2"></i> Back to Events & Programs
+        </a>
     </div>
 </div>
 @endsection

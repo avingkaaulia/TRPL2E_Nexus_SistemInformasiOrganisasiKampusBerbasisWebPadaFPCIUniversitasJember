@@ -11,8 +11,12 @@ class PostGallery extends Model
     protected $primaryKey = 'id_gallery';
     public $timestamps = false;
 
+     protected $fillable = [
+        'id_post', 'image_path', 'description'
+    ];
     public function post()
     {
         return $this->belongsTo(Post::class, 'id_post');
     }
+    
 }

@@ -24,7 +24,7 @@
             <!-- Featured Image -->
             @if($post->featured_image_path)
             <div class="post-featured-image">
-                <img src="{{ asset($post->featured_image_path) }}" class="w-100" alt="{{ $post->title }}">
+                    <img src="{{ $post->image_url }}" class="w-100" alt="{{ $post->title }}">
             </div>
             @endif
             
@@ -41,7 +41,7 @@
                     @foreach($post->gallery as $image)
                     <div class="col-md-4 col-sm-6">
                         <div class="gallery-item">
-                            <img src="{{ asset($image->image_path) }}" class="img-fluid rounded w-100" alt="Gallery">
+                            <img src="{{ $image->image_url }}" class="img-fluid rounded w-100" alt="Gallery">
                             @if($image->description)
                             <div class="gallery-caption">{{ $image->description }}</div>
                             @endif

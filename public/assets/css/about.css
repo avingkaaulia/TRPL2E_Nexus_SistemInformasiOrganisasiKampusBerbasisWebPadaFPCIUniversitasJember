@@ -58,15 +58,16 @@
 
 .about-item {
     margin-bottom: 40px;
-    background: #F5F2E8;
-    border-radius: 24px;
+    background: white;
+    border-radius: 20px;
     padding: 35px;
     transition: all 0.4s ease;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
 }
 
 .about-item:hover {
     transform: translateY(-5px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    box-shadow: 0 20px 40px rgba(92,104,68,0.12);
 }
 
 .about-item h2 {

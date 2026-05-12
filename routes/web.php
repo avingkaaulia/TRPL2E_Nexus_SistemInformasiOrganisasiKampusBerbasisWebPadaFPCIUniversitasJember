@@ -50,6 +50,7 @@ Route::get('/events/{id}', [KegiatanController::class, 'show'])->name('kegiatan.
 
 // 🔥 WRITINGS ROUTES (Semua mengarah ke show.blade.php)
 Route::get('/writings', [WritingsController::class, 'index'])->name('writings');
+Route::get('/writings/all', [WritingsController::class, 'all'])->name('writings.all');
 Route::get('/writings/category/{categoryId}', [WritingsController::class, 'category'])->name('writings.category');
 Route::get('/writings/{id}', [WritingsController::class, 'show'])->name('writings.show');
 

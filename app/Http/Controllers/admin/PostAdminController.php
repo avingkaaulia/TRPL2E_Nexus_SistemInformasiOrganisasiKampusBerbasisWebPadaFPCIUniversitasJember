@@ -35,7 +35,30 @@ class PostAdminController extends Controller
         }
         
         $posts = $query->orderBy('date_published', 'desc')->paginate(15);
-        $categories = PostCategory::all();
+        
+        // 🔥 LOGIKA KATEGORI:
+        // 1. Parent yang memiliki sub-kategori (writings, event, program) -> TIDAK tampil, ganti dengan sub-kategorinya
+        // 2. Parent yang tidak memiliki sub-kategori (pengumuman, tentang, urgent, carousel, dll) -> TETAP tampil
+        
+        // Ambil semua parent kategori yang TIDAK memiliki sub-kategori (TETAP TAMPIL)
+        $parentWithoutChildren = PostCategory::whereNull('parent_id')
+            ->whereNotIn('id_category', function($query) {
+                $query->select('parent_id')
+                    ->from('post_category')
+                    ->whereNotNull('parent_id')
+                    ->distinct();
+            })
+            ->orderBy('category_name')
+            ->get();
+        
+        // Ambil semua sub-kategori (YANG TAMPIL menggantikan parent-nya)
+        $subCategories = PostCategory::whereNotNull('parent_id')
+            ->orderBy('category_name')
+            ->get();
+        
+        // Gabungkan: parent tanpa sub-kategori + sub-kategori
+        $categories = $parentWithoutChildren->merge($subCategories);
+        
         $statuses = ['publish', 'draft', 'pending'];
         $postTypes = ['post', 'page'];
         
@@ -44,7 +67,23 @@ class PostAdminController extends Controller
     
     public function create()
     {
-        $categories = PostCategory::all();
+        // 🔥 LOGIKA KATEGORI yang sama untuk form create
+        $parentWithoutChildren = PostCategory::whereNull('parent_id')
+            ->whereNotIn('id_category', function($query) {
+                $query->select('parent_id')
+                    ->from('post_category')
+                    ->whereNotNull('parent_id')
+                    ->distinct();
+            })
+            ->orderBy('category_name')
+            ->get();
+        
+        $subCategories = PostCategory::whereNotNull('parent_id')
+            ->orderBy('category_name')
+            ->get();
+        
+        $categories = $parentWithoutChildren->merge($subCategories);
+        
         $users = User::all();
         return view('admin.posts.create', compact('categories', 'users'));
     }
@@ -102,7 +141,24 @@ class PostAdminController extends Controller
     public function edit($id)
     {
         $post = Post::with('gallery')->findOrFail($id);
-        $categories = PostCategory::all();
+        
+        // 🔥 LOGIKA KATEGORI yang sama untuk form edit
+        $parentWithoutChildren = PostCategory::whereNull('parent_id')
+            ->whereNotIn('id_category', function($query) {
+                $query->select('parent_id')
+                    ->from('post_category')
+                    ->whereNotNull('parent_id')
+                    ->distinct();
+            })
+            ->orderBy('category_name')
+            ->get();
+        
+        $subCategories = PostCategory::whereNotNull('parent_id')
+            ->orderBy('category_name')
+            ->get();
+        
+        $categories = $parentWithoutChildren->merge($subCategories);
+        
         $users = User::all();
         return view('admin.posts.edit', compact('post', 'categories', 'users'));
     }

@@ -417,7 +417,570 @@
     color: #4a5637;
     text-decoration: underline;
 }
+/* assets/css/kegiatan.css */
+/* Halaman Events & Programs */
 
+/* ========== CARD UNTUK HALAMAN ALL ========== */
+.card-kegiatan {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    height: 100%;
+}
+
+.card-kegiatan:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(92,104,68,0.15);
+}
+
+.card-kegiatan img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.card-kegiatan:hover img {
+    transform: scale(1.05);
+}
+
+.card-kegiatan .category-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: #5C6844;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    z-index: 1;
+}
+
+.card-kegiatan .card-body {
+    padding: 20px;
+    text-align: center;
+}
+
+.card-kegiatan h5 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #1C150F;
+    line-height: 1.4;
+}
+
+/* ========== CARD EVENT ========== */
+.card-event {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    height: 100%;
+}
+
+.card-event:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(92,104,68,0.15);
+}
+
+.card-event .card-image {
+    position: relative;
+    overflow: hidden;
+    height: 200px;
+}
+
+.card-event .card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.card-event:hover .card-image img {
+    transform: scale(1.05);
+}
+
+.status-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    color: white;
+}
+
+.status-badge.sedang-direncanakan {
+    background: #f39c12;
+}
+
+.status-badge.sedang-berlangsung {
+    background: #3498db;
+}
+
+.status-badge.selesai {
+    background: #2ecc71;
+}
+
+.card-event .card-body {
+    padding: 20px;
+    text-align: center;
+}
+
+.card-event h5 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #1C150F;
+}
+
+.card-event .date {
+    font-size: 12px;
+    color: #999;
+    margin-bottom: 15px;
+}
+
+/* ========== CARD EVENT UNGGULAN ========== */
+.card-event-unggulan {
+    background: linear-gradient(135deg, #1C150F 0%, #5C6844 100%);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    height: 100%;
+    color: white;
+}
+
+.card-event-unggulan:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(92,104,68,0.3);
+}
+
+.card-event-unggulan .card-image {
+    position: relative;
+    overflow: hidden;
+    height: 200px;
+}
+
+.card-event-unggulan .card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+    opacity: 0.85;
+}
+
+.card-event-unggulan:hover .card-image img {
+    transform: scale(1.05);
+}
+
+.event-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.event-badge.reguler {
+    background: #3498db;
+    color: white;
+}
+
+.event-badge.unggulan {
+    background: #f39c12;
+    color: white;
+}
+
+.card-event-unggulan .card-body {
+    padding: 20px;
+    text-align: center;
+}
+
+.card-event-unggulan h5 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.card-event-unggulan .date {
+    font-size: 12px;
+    opacity: 0.8;
+    margin-bottom: 15px;
+}
+
+.btn-event-unggulan {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.5);
+    border-radius: 25px;
+    padding: 8px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-event-unggulan:hover {
+    background: white;
+    color: #5C6844;
+    transform: translateY(-2px);
+}
+
+.see-more-link-small {
+    display: inline-block;
+    margin-top: 15px;
+    color: #5C6844;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.see-more-link-small:hover {
+    text-decoration: underline;
+}
+
+/* ========== CARD PROGRAM ========== */
+.card-program {
+    background: linear-gradient(135deg, #5C6844 0%, #67898C 100%);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    height: 100%;
+    color: white;
+}
+
+.card-program:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(92,104,68,0.3);
+}
+
+.card-program .card-image {
+    position: relative;
+    overflow: hidden;
+    height: 200px;
+}
+
+.card-program .card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+    opacity: 0.85;
+}
+
+.card-program:hover .card-image img {
+    transform: scale(1.05);
+}
+
+.program-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: rgba(255,255,255,0.9);
+    color: #5C6844;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.card-program .card-body {
+    padding: 20px;
+    text-align: center;
+}
+
+.card-program h5 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.card-program .date {
+    font-size: 12px;
+    opacity: 0.8;
+    margin-bottom: 15px;
+}
+
+/* ========== STATUS CARDS ========== */
+.status-card {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    height: 100%;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+
+.status-card.planned {
+    border-top: 4px solid #f39c12;
+}
+
+.status-card.ongoing {
+    border-top: 4px solid #3498db;
+}
+
+.status-card.completed {
+    border-top: 4px solid #2ecc71;
+}
+
+.status-card h4 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #1C150F;
+}
+
+.status-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.status-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background: #F5F2E8;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.status-item:hover {
+    background: #5C6844;
+    transform: translateX(5px);
+}
+
+.status-item:hover .status-title {
+    color: white;
+}
+
+.status-item:hover .status-date {
+    color: rgba(255,255,255,0.8);
+}
+
+.status-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1C150F;
+}
+
+.status-date {
+    font-size: 11px;
+    color: #999;
+}
+
+/* ========== CARD PROGRAM SMALL ========== */
+.card-program-small {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    height: 200px;
+    cursor: pointer;
+}
+
+.card-program-small img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.card-program-small:hover img {
+    transform: scale(1.08);
+}
+
+.card-program-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.card-program-small:hover .card-program-overlay {
+    opacity: 1;
+}
+
+.card-program-overlay h5 {
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+/* ========== BUTTONS ========== */
+.btn-main {
+    background: #5C6844;
+    color: white;
+    border-radius: 25px;
+    padding: 8px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-main:hover {
+    background: #4a5637;
+    transform: translateY(-2px);
+    color: white;
+}
+
+.btn-event {
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 8px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-event:hover {
+    background: #2980b9;
+    transform: translateY(-2px);
+    color: white;
+}
+
+.btn-program {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.5);
+    border-radius: 25px;
+    padding: 8px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-program:hover {
+    background: white;
+    color: #5C6844;
+    transform: translateY(-2px);
+}
+
+/* ========== SECTION HEADER ========== */
+.section-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.section-header h2 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1C150F;
+    position: relative;
+    display: inline-block;
+}
+
+.section-header .section-line {
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, #5C6844, #67898C);
+    margin: 10px auto 0;
+    border-radius: 2px;
+}
+
+.see-more-link {
+    color: #5C6844;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.see-more-link:hover {
+    color: #4a5637;
+    text-decoration: underline;
+}
+
+/* ========== PAGINATION ========== */
+.pagination {
+    gap: 8px;
+    margin-top: 30px;
+}
+
+.pagination .page-link {
+    color: #5C6844;
+    border-radius: 8px;
+    border: 1px solid #E8E4D9;
+    padding: 8px 14px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.pagination .page-link:hover {
+    background: #5C6844;
+    border-color: #5C6844;
+    color: white;
+}
+
+.pagination .page-item.active .page-link {
+    background: #5C6844;
+    border-color: #5C6844;
+    color: white;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #ccc;
+    cursor: not-allowed;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+    .section-header h2 {
+        font-size: 24px;
+    }
+    
+    .card-event .card-image,
+    .card-program .card-image,
+    .card-kegiatan img {
+        height: 180px;
+    }
+    
+    .status-card h4 {
+        font-size: 1rem;
+    }
+    
+    .status-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 5px;
+    }
+    
+    .pagination .page-link {
+        padding: 5px 10px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 576px) {
+    .card-kegiatan .category-badge {
+        font-size: 9px;
+        padding: 3px 10px;
+    }
+    
+    .card-kegiatan h5 {
+        font-size: 0.9rem;
+    }
+    
+    .btn-main {
+        padding: 6px 15px;
+        font-size: 12px;
+    }
+}
 /* ==================== RESPONSIVE ==================== */
 @media (max-width: 768px) {
     .section-header h2 {

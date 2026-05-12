@@ -38,7 +38,7 @@
         <div class="col-md-4">
             <div class="card-event">
                 <div class="card-image">
-                    <img src="{{ asset($event->featured_image_path) }}" alt="{{ $event->title }}">
+                    <img src="{{ $event->image_url }}" alt="{{ $event->title }}">
                     <div class="event-badge reguler">Event Reguler</div>
                 </div>
                 <div class="card-body">
@@ -71,7 +71,7 @@
         <div class="col-md-4">
             <div class="card-event-unggulan">
                 <div class="card-image">
-                    <img src="{{ asset($event->featured_image_path) }}" alt="{{ $event->title }}">
+                    <img src="{{ $event->image_url }}" alt="{{ $event->title }}">
                     <div class="event-badge unggulan">Event Unggulan</div>
                 </div>
                 <div class="card-body">
