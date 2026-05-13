@@ -109,6 +109,8 @@ class PostAdminController extends Controller
             'id_user' => auth()->id() ?? 1,
             'date_published' => now(),
             'status' => $request->status,
+                        'featured_image_path' => null,
+
         ];
         
         if ($request->hasFile('featured_image')) {

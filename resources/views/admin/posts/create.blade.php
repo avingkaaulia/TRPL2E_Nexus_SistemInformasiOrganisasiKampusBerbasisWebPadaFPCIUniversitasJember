@@ -60,7 +60,7 @@
             </div>
         </div>
         
-        <!-- 🔥 GALLERY SECTION -->
+        <!-- 🔥 GALLERY SECTION - PERBAIKI -->
         <div class="mb-3">
             <label class="form-label">Gallery Images</label>
             <div id="galleryContainer">
@@ -73,7 +73,7 @@
                     </div>
                     <div class="col-md-2">
                         <button type="button" class="btn btn-danger remove-gallery" data-id="1">
-                            <i class="bi bi-trash"></i>
+                            <i class="bi bi-trash"></i> Hapus
                         </button>
                     </div>
                 </div>
@@ -133,14 +133,16 @@ document.querySelector('input[name="featured_image"]')?.addEventListener('change
     }
 });
 
-// Gallery dynamic add/remove
+// 🔥 GALLERY DYNAMIC ADD/REMOVE - PERBAIKI
 let galleryCount = 1;
 
-document.getElementById('addMoreGallery')?.addEventListener('click', function() {
+// Fungsi untuk menambah item gallery baru
+function addGalleryItem() {
     galleryCount++;
+    const newId = galleryCount;
     const newGalleryItem = document.createElement('div');
     newGalleryItem.className = 'gallery-item row mb-3';
-    newGalleryItem.id = 'galleryItem' + galleryCount;
+    newGalleryItem.id = 'galleryItem' + newId;
     newGalleryItem.innerHTML = `
         <div class="col-md-4">
             <input type="file" name="gallery_images[]" class="form-control gallery-input" accept="image/*">
@@ -149,17 +151,30 @@ document.getElementById('addMoreGallery')?.addEventListener('click', function() 
             <input type="text" name="gallery_descriptions[]" class="form-control" placeholder="Deskripsi gambar (opsional)">
         </div>
         <div class="col-md-2">
-            <button type="button" class="btn btn-danger remove-gallery" data-id="${galleryCount}">
-                <i class="bi bi-trash"></i>
+            <button type="button" class="btn btn-danger remove-gallery" data-id="${newId}">
+                <i class="bi bi-trash"></i> Hapus
             </button>
         </div>
     `;
     document.getElementById('galleryContainer').appendChild(newGalleryItem);
-});
+    
+    // Tambah event listener untuk tombol hapus yang baru
+    const removeBtn = newGalleryItem.querySelector('.remove-gallery');
+    removeBtn.addEventListener('click', function() {
+        newGalleryItem.remove();
+    });
+}
 
-$(document).on('click', '.remove-gallery', function() {
-    const id = $(this).data('id');
-    $('#galleryItem' + id).remove();
+// Event listener untuk tombol tambah gallery
+document.getElementById('addMoreGallery')?.addEventListener('click', addGalleryItem);
+
+// Event listener untuk tombol hapus awal (galleryItem1)
+document.querySelectorAll('.remove-gallery').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const id = this.getAttribute('data-id');
+        const item = document.getElementById('galleryItem' + id);
+        if (item) item.remove();
+    });
 });
 </script>
 @endsection

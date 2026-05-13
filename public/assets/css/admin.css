@@ -211,6 +211,74 @@ body {
     transform: translateY(-2px);
 }
 
+/* ========== BUTTON GROUP UNTUK AKSI ========== */
+.btn-group {
+    display: inline-flex;
+    gap: 5px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.btn-group .btn {
+    border-radius: 0;
+    margin: 0;
+}
+
+.btn-group .btn:first-child {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+.btn-group .btn:last-child {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+.btn-group .btn:hover {
+    transform: translateY(-2px);
+    z-index: 1;
+}
+
+/* Tombol Aksi Khusus */
+.btn-action-accept {
+    background: #28a745;
+    color: white;
+}
+
+.btn-action-accept:hover {
+    background: #218838;
+    transform: scale(1.05);
+}
+
+.btn-action-reject {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-action-reject:hover {
+    background: #c82333;
+    transform: scale(1.05);
+}
+
+.btn-action-view {
+    background: #17a2b8;
+    color: white;
+}
+
+.btn-action-view:hover {
+    background: #138496;
+    transform: scale(1.05);
+}
+
+.btn-action-delete {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-action-delete:hover {
+    background: #5a6268;
+    transform: scale(1.05);
+}
 /* ========== STATS CARDS ========== */
 .stats-row {
     display: grid;
@@ -318,6 +386,8 @@ body {
     padding: 12px 0;
     font-size: 13px;
     color: #333;
+    text-align: center;  /* 🔥 RATA TENGAH UNTUK SEMUA SEL */
+    vertical-align: middle; /* 🔥 TULISAN DI TENGAH SECARA VERTIKAL */
 }
 
 .admin-table td:last-child {
@@ -330,6 +400,7 @@ body {
     font-weight: 600;
     color: #1C150F;
     font-size: 13px;
+    text-align: center;
 }
 
 /* ========== BADGES ========== */

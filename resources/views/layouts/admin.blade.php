@@ -42,15 +42,14 @@
             </a>
             
             <div class="menu-group-title">MANAJEMEN</div>
-            <a href="#" class="menu-item">
-                <i class="bi bi-people"></i> Anggota
-            </a>
-            <a href="#" class="menu-item">
-                <i class="bi bi-person-plus"></i> Pendaftaran
-            </a>
-            <a href="#" class="menu-item">
-                <i class="bi bi-chat-dots"></i> Komentar
-            </a>
+<a href="{{ route('admin.pendaftaran.index') }}" class="menu-item {{ request()->routeIs('admin.pendaftaran*') ? 'active' : '' }}">
+    <i class="bi bi-person-plus"></i> Pendaftaran
+</a>
+<a href="{{ route('admin.anggota.index') }}" class="menu-item {{ request()->routeIs('admin.anggota*') ? 'active' : '' }}">
+    <i class="bi bi-people"></i> Anggota
+<a href="#" class="menu-item">
+    <i class="bi bi-chat-dots"></i> Komentar
+</a>
             
             <div class="menu-group-title">PENGATURAN</div>
             <a href="#" class="menu-item">
