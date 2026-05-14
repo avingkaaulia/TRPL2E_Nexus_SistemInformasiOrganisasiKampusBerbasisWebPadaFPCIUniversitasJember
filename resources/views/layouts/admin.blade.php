@@ -37,9 +37,12 @@
 <a href="{{ route('admin.posts.create') }}" class="menu-item">
     <i class="bi bi-plus-circle"></i> Tambah Post
 </a>
-            <a href="#" class="menu-item">
-                <i class="bi bi-tags"></i> Kategori
-            </a>
+<a href="{{ route('admin.pages.list') }}" class="menu-item">
+    <i class="bi bi-files"></i> Halaman (Pages)
+</a>
+            <a href="{{ route('admin.categories.index') }}" class="menu-item {{ request()->routeIs('admin.categories*') ? 'active' : '' }}">
+    <i class="bi bi-tags"></i> Kategori
+</a>
             
             <div class="menu-group-title">MANAJEMEN</div>
 <a href="{{ route('admin.pendaftaran.index') }}" class="menu-item {{ request()->routeIs('admin.pendaftaran*') ? 'active' : '' }}">
@@ -52,9 +55,9 @@
 </a>
             
             <div class="menu-group-title">PENGATURAN</div>
-            <a href="#" class="menu-item">
-                <i class="bi bi-gear"></i> Pengaturan
-            </a>
+            <a href="{{ route('admin.menu.index') }}" class="menu-item {{ request()->routeIs('admin.menu*') ? 'active' : '' }}">
+    <i class="bi bi-gear"></i> Menu Navigasi
+</a>
             <a href="#" class="menu-item">
                 <i class="bi bi-box-arrow-right"></i> Logout
             </a>

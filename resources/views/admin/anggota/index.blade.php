@@ -106,12 +106,7 @@
     </form>
 </div>
 
-<!-- Tombol Tambah Anggota -->
-<div class="mb-3">
-    <a href="{{ route('admin.anggota.create') }}" class="btn btn-success">
-        <i class="bi bi-plus-circle me-1"></i> Tambah Anggota Baru
-    </a>
-</div>
+<!-- 🔥 TOMBOL TAMBAH ANGGOTA DIHAPUS - ANGGOTA HANYA DARI KONVERSI PENDAFTARAN -->
 
 <!-- Daftar Anggota -->
 <div class="admin-card">
@@ -176,7 +171,7 @@
                 </tr>
                 @endforelse
             </tbody>
-        </td>
+        </table>
     </div>
     
     <div class="d-flex justify-content-center mt-4">

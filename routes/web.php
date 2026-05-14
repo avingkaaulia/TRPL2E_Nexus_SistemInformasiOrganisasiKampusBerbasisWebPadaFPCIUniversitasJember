@@ -6,6 +6,7 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\KegiatanController;
 use App\Http\Controllers\WritingsController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\ContactController;
@@ -14,6 +15,10 @@ use App\Http\Controllers\Admin\CarouselController;
 use App\Http\Controllers\Admin\PostAdminController;
 use App\Http\Controllers\Admin\AdminPendaftaranController;
 use App\Http\Controllers\Admin\AdminAnggotaController;
+use App\Http\Controllers\Admin\AdminPageController;
+use App\Http\Controllers\Admin\AdminMenuController;
+use App\Http\Controllers\Admin\AdminCategoryController;
+use App\Http\Controllers\SearchController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -33,7 +38,9 @@ Route::post('/post/{id_post}/comments', [CommentController::class, 'store'])->na
 // Route::get('/post/{id}', [App\Http\Controllers\CommentController::class, 'testShow'])->name('test.post');
 // Route::post('/post/{id_post}/comments', [App\Http\Controllers\CommentController::class, 'store'])->name('test.comments.store');
 Route::post('/post/{id_post}/comments', [CommentController::class, 'store'])->name('comments.store');
-
+// ========== ROUTE PENCARIAN ==========
+Route::get('/search', [SearchController::class, 'search'])->name('search');
+Route::get('/search/autocomplete', [SearchController::class, 'autocomplete'])->name('search.autocomplete');
 // Pendaftaran Routes
 Route::get('/pendaftaran', [PendaftaranController::class, 'index'])->name('pendaftaran');
 Route::post('/pendaftaran', [PendaftaranController::class, 'store'])->name('pendaftaran.store');
@@ -58,6 +65,10 @@ Route::get('/writings/{id}', [WritingsController::class, 'show'])->name('writing
 
 // 🔥 DETAIL POST UNTUK SEMUA KATEGORI (menggunakan show.blade.php)
 Route::get('/post/{id}', [PostController::class, 'show'])->name('post.show');
+// ========== PAGE ROUTES ==========
+// Halaman Page
+Route::get('/page/{id}', [PageController::class, 'show'])->name('page.show');
+Route::get('/pages', [PageController::class, 'all'])->name('pages.index');
 
 // Admin Routes
 Route::prefix('admin')->group(function () {
@@ -123,11 +134,32 @@ Route::prefix('admin')->group(function () {
 // Admin Anggota Routes
 Route::prefix('admin')->group(function () {
     Route::get('/anggota', [AdminAnggotaController::class, 'index'])->name('admin.anggota.index');
-    Route::get('/anggota/create', [AdminAnggotaController::class, 'create'])->name('admin.anggota.create');
-    Route::post('/anggota', [AdminAnggotaController::class, 'store'])->name('admin.anggota.store');
     Route::get('/anggota/{id}', [AdminAnggotaController::class, 'show'])->name('admin.anggota.show');
     Route::get('/anggota/{id}/edit', [AdminAnggotaController::class, 'edit'])->name('admin.anggota.edit');
     Route::put('/anggota/{id}', [AdminAnggotaController::class, 'update'])->name('admin.anggota.update');
     Route::delete('/anggota/{id}', [AdminAnggotaController::class, 'destroy'])->name('admin.anggota.destroy');
     Route::post('/anggota/convert/{id}', [AdminAnggotaController::class, 'convertFromPendaftaran'])->name('admin.anggota.convert');
+});
+
+// Admin Pages Routes
+Route::prefix('admin')->group(function () {
+    Route::get('/pages', [AdminPageController::class, 'index'])->name('admin.pages.list');
+});
+// Admin Menu Routes
+Route::prefix('admin')->group(function () {
+    Route::get('/menu', [AdminMenuController::class, 'index'])->name('admin.menu.index');
+    Route::get('/menu/create', [AdminMenuController::class, 'create'])->name('admin.menu.create');
+    Route::post('/menu', [AdminMenuController::class, 'store'])->name('admin.menu.store');
+    Route::get('/menu/{id}/edit', [AdminMenuController::class, 'edit'])->name('admin.menu.edit');
+    Route::put('/menu/{id}', [AdminMenuController::class, 'update'])->name('admin.menu.update');
+    Route::delete('/menu/{id}', [AdminMenuController::class, 'destroy'])->name('admin.menu.destroy');
+});
+// Admin Category Routes
+Route::prefix('admin')->group(function () {
+    Route::get('/categories', [AdminCategoryController::class, 'index'])->name('admin.categories.index');
+    Route::get('/categories/create', [AdminCategoryController::class, 'create'])->name('admin.categories.create');
+    Route::post('/categories', [AdminCategoryController::class, 'store'])->name('admin.categories.store');
+    Route::get('/categories/{id}/edit', [AdminCategoryController::class, 'edit'])->name('admin.categories.edit');
+    Route::put('/categories/{id}', [AdminCategoryController::class, 'update'])->name('admin.categories.update');
+    Route::delete('/categories/{id}', [AdminCategoryController::class, 'destroy'])->name('admin.categories.destroy');
 });

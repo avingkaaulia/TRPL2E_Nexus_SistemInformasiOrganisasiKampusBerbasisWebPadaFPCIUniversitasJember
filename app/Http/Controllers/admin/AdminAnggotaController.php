@@ -39,8 +39,7 @@ class AdminAnggotaController extends Controller
         $divisiList = Divisi::all();
         $periodeList = Anggota::select('periode')->distinct()->pluck('periode');
         
-        // 🔥 HANYA TAMPILKAN PENDAFTARAN DITERIMA YANG EMAILNYA BELUM ADA DI ANGGOTA
-        // Ambil semua email dari tabel anggota (melalui relasi user)
+        // Ambil semua email dari tabel anggota
         $emailAnggota = Anggota::with('user')->get()->pluck('user.email')->filter()->toArray();
         
         $pendaftaranDiterima = Pendaftaran::where('status', 'diterima')
@@ -50,60 +49,6 @@ class AdminAnggotaController extends Controller
         return view('admin.anggota.index', compact('anggota', 'divisiList', 'periodeList', 'pendaftaranDiterima'));
     }
     
-    // Form tambah anggota
-    public function create()
-    {
-        $divisiList = Divisi::all();
-        $periodeList = ['2024/2025', '2025/2026', '2026/2027'];
-        return view('admin.anggota.create', compact('divisiList', 'periodeList'));
-    }
-    
-    // Simpan anggota baru
-    public function store(Request $request)
-    {
-        $request->validate([
-            'nama' => 'required|string|max:100',
-            'email' => 'required|email|max:100|unique:users,email',
-            'username' => 'required|string|max:50|unique:users,username',
-            'password' => 'required|string|min:6',
-            'id_divisi' => 'required|exists:divisi,id_divisi',
-            'jabatan' => 'required|string|max:100',
-            'periode' => 'required|string|max:20',
-            'no_urut' => 'required|integer|unique:anggota,no_urut',
-            'link' => 'nullable|string|max:255',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:4048'
-        ]);
-        
-        $user = User::create([
-            'username' => $request->username,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'nama' => $request->nama,
-            'id_role' => 2,
-            'tanggal_daftar' => now()
-        ]);
-        
-        $fotoPath = null;
-        if ($request->hasFile('foto')) {
-            $file = $request->file('foto');
-            $filename = time() . '_' . $request->username . '.' . $file->getClientOriginalExtension();
-            $path = $file->storeAs('anggota', $filename, 'public');
-            $fotoPath = 'storage/' . $path;
-        }
-        
-        Anggota::create([
-            'id_user' => $user->id_user,
-            'id_divisi' => $request->id_divisi,
-            'jabatan' => $request->jabatan,
-            'periode' => $request->periode,
-            'foto' => $fotoPath,
-            'no_urut' => $request->no_urut,
-            'link' => $request->link
-        ]);
-        
-        return redirect()->route('admin.anggota.index')
-            ->with('success', 'Anggota berhasil ditambahkan');
-    }
     
     // Detail anggota
     public function show($id)
@@ -121,7 +66,7 @@ class AdminAnggotaController extends Controller
         return view('admin.anggota.edit', compact('anggota', 'divisiList', 'periodeList'));
     }
     
-    // Update anggota
+    // Update anggota - DIPERBAIKI
     public function update(Request $request, $id)
     {
         $anggota = Anggota::findOrFail($id);
@@ -161,12 +106,13 @@ class AdminAnggotaController extends Controller
             $anggota->foto = 'storage/' . $path;
         }
         
+        // 🔥 PERBAIKAN: Pastikan link tidak NULL, gunakan string kosong jika null
         $anggota->update([
             'id_divisi' => $request->id_divisi,
             'jabatan' => $request->jabatan,
             'periode' => $request->periode,
             'no_urut' => $request->no_urut,
-            'link' => $request->link
+            'link' => $request->link ?? ''  // 🔥 GANTI NULL DENGAN STRING KOSONG
         ]);
         
         return redirect()->route('admin.anggota.index')
@@ -189,12 +135,12 @@ class AdminAnggotaController extends Controller
             ->with('success', 'Anggota berhasil dihapus');
     }
     
-    // 🔥 KONVERSI PENDAFTAR MENJADI ANGGOTA - CEK EMAIL DI ANGGOTA
+    // Konversi pendaftar menjadi anggota
     public function convertFromPendaftaran($id)
     {
         $pendaftaran = Pendaftaran::findOrFail($id);
         
-        // 🔥 CEK APAKAH EMAIL SUDAH TERDAFTAR DI TABEL ANGGOTA (bukan hanya users)
+        // Cek apakah email sudah terdaftar di tabel anggota
         $existingAnggota = Anggota::whereHas('user', function($q) use ($pendaftaran) {
             $q->where('email', $pendaftaran->email);
         })->first();
@@ -203,13 +149,12 @@ class AdminAnggotaController extends Controller
             return redirect()->back()->with('error', 'Email ' . $pendaftaran->email . ' sudah terdaftar sebagai anggota! Tidak dapat dikonversi.');
         }
         
-        // 🔥 CEK APAKAH EMAIL SUDAH TERDAFTAR DI USERS TAPI BELUM JADI ANGGOTA
+        // Cek apakah email sudah terdaftar di users
         $existingUser = User::where('email', $pendaftaran->email)->first();
         if ($existingUser) {
-            // Jika user sudah ada tapi belum jadi anggota, bisa langsung dibuat anggota
             $user = $existingUser;
         } else {
-            // 🔥 BUAT USERNAME UNIK
+            // Buat username unik
             $username = strtolower(str_replace(' ', '', $pendaftaran->nama));
             $originalUsername = $username;
             $counter = 1;
@@ -218,7 +163,6 @@ class AdminAnggotaController extends Controller
                 $counter++;
             }
             
-            // Buat user baru
             $user = User::create([
                 'username' => $username,
                 'email' => $pendaftaran->email,
@@ -229,13 +173,9 @@ class AdminAnggotaController extends Controller
             ]);
         }
         
-        // Default foto
         $defaultFoto = 'assets/img/avatars/default-avatar.png';
-        
-        // 🔥 CEK NO URUT TERAKHIR
         $lastNoUrut = Anggota::max('no_urut') ?? 0;
         
-        // Buat anggota
         Anggota::create([
             'id_user' => $user->id_user,
             'id_divisi' => 1,
@@ -243,7 +183,7 @@ class AdminAnggotaController extends Controller
             'periode' => '2025/2026',
             'foto' => $defaultFoto,
             'no_urut' => $lastNoUrut + 1,
-            'link' => ''
+            'link' => ''  // 🔥 PASTIKAN TIDAK NULL
         ]);
         
         

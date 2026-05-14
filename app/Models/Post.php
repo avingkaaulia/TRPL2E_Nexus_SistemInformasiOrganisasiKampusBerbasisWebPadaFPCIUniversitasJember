@@ -5,6 +5,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+Use Illuminate\Support\Str;
 
 class Post extends Model
 {
@@ -68,5 +69,16 @@ public function getParentCategoryIdAttribute()
         return $this->category->parent->id_category;
     }
     return $this->category->id_category ?? null;
+}
+
+public function getSlugAttribute()
+{
+    return Str::slug($this->title);
+}
+
+// Untuk mendapatkan URL page
+public function getPageUrlAttribute()
+{
+    return route('page.show', $this->slug);
 }
 }

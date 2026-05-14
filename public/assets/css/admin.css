@@ -527,6 +527,219 @@ body {
     border-bottom: 3px solid #5C6844;
 }
 
+/* Page Card */
+.page-card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+}
+
+.page-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.page-card-header h4 {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0;
+    color: #1C150F;
+}
+
+/* Form Card */
+.form-card {
+    background: #fff;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.form-card-head {
+    padding: 20px 24px;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.form-card-head h6 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: #1C150F;
+}
+
+.form-card-body {
+    padding: 24px;
+}
+
+.form-label {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #1C150F;
+    display: block;
+}
+
+.form-control,
+.form-select {
+    border-radius: 10px;
+    padding: 12px;
+    border: 1px solid #dee2e6;
+    font-size: 13px;
+    width: 100%;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #5C6844;
+    box-shadow: none;
+    outline: none;
+}
+
+.btn-save {
+    background: #5C6844;
+    color: #fff;
+    border: none;
+    padding: 11px 22px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-save:hover {
+    background: #4a5637;
+    transform: translateY(-2px);
+}
+
+.btn-add {
+    background: #5C6844;
+    color: #fff;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-add:hover {
+    color: #fff;
+    background: #4c5739;
+    transform: translateY(-2px);
+}
+
+/* Admin Table untuk Menu */
+.admin-table-wrapper {
+    overflow-x: auto;
+    border-radius: 16px;
+    border: 1px solid #edf0f2;
+}
+
+.admin-table-menu {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-table-menu thead {
+    background: #1C150F;
+}
+
+.admin-table-menu thead th {
+    background: #1C150F;
+    color: #F3E7C8;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 18px 16px;
+    border: none;
+    letter-spacing: 0.3px;
+    text-align: left;
+}
+
+.admin-table-menu tbody td {
+    padding: 16px;
+    vertical-align: middle;
+    font-size: 13px;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.admin-table-menu tbody tr:hover {
+    background: #fafafa;
+}
+
+/* Badge Parent */
+.badge-parent {
+    background: #eef3ea;
+    color: #5C6844;
+    padding: 7px 12px;
+    border-radius: 30px;
+    font-size: 11px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+/* Action Buttons */
+.btn-action {
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-edit {
+    background: rgba(92, 104, 68, 0.12);
+    color: #5C6844;
+}
+
+.btn-edit:hover {
+    background: #5C6844;
+    color: white;
+    transform: scale(1.05);
+}
+
+.btn-delete {
+    background: rgba(220, 53, 69, 0.12);
+    color: #dc3545;
+}
+
+.btn-delete:hover {
+    background: #dc3545;
+    color: white;
+    transform: scale(1.05);
+}
+
+.action-group {
+    display: flex;
+    gap: 8px;
+}
+
+/* Menu Level Indent */
+.menu-level-1 {
+    margin-left: 20px;
+    display: inline-block;
+}
+
+.menu-level-1:before {
+    content: '↳';
+    margin-right: 8px;
+    color: #999;
+}
+
 /* ========== RESPONSIVE ========== */
 @media (max-width: 992px) {
     .stats-row {

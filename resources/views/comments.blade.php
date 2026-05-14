@@ -1,4 +1,4 @@
-{{-- resources/views/partials/comments.blade.php --}}
+{{-- resources/views/comments.blade.php --}}
 <div class="comments-section">
     <div class="container">
         <h3 class="comments-title">Comments ({{ $comments->count() }})</h3>

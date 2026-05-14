@@ -36,7 +36,7 @@ class AboutController extends Controller
             $item->image_url = getImageUrl($item->featured_image_path);
         }
         
-        // 🔥 Ambil SEMUA konten About dari database (urutan berdasarkan id_post)
+        // 🔥 Ambil SEMUA konten About dari database
         $aboutSections = Post::where('status', 'publish')
             ->where('post_type', 'post')
             ->whereHas('category', function($q) {
@@ -45,23 +45,29 @@ class AboutController extends Controller
             ->orderBy('id_post', 'asc')
             ->get();
         
-        // Pisahkan berdasarkan judul untuk kontrol yang lebih baik
         $tentang = $aboutSections->firstWhere('title', 'Tentang FPCI UNEJ');
         $sejarah = $aboutSections->firstWhere('title', 'Sejarah');
         $tujuan = $aboutSections->firstWhere('title', 'Tujuan');
         $visi = $aboutSections->firstWhere('title', 'Visi');
         $misi = $aboutSections->firstWhere('title', 'Misi');
         
-        // 🔥 Ambil POSTINGAN LAINNYA (selain yang sudah ditentukan di atas)
-        // Postingan baru akan masuk ke sini
         $otherSections = $aboutSections->filter(function($item) {
             return !in_array($item->title, ['Tentang FPCI UNEJ', 'Sejarah', 'Tujuan', 'Visi', 'Misi']);
         });
         
-        // 🔥 Ambil semua anggota untuk struktur organisasi
-        $anggota = Anggota::with(['user', 'divisi'])
+        // 🔥 FILTER ANGGOTA: HANYA YANG JABATANNYA PRESIDENT, VICE PRESIDENT, ATAU HEAD
+        // Ambil semua anggota, lalu filter berdasarkan jabatan
+        $allAnggota = Anggota::with(['user', 'divisi'])
             ->orderBy('no_urut')
             ->get();
+        
+        // Filter hanya yang jabatannya mengandung kata 'President', 'Vice President', atau 'Head'
+        $anggota = $allAnggota->filter(function($item) {
+            $jabatan = strtolower($item->jabatan);
+            return str_contains($jabatan, 'president') || 
+                   str_contains($jabatan, 'vice president') || 
+                   str_contains($jabatan, 'head');
+        });
         
         // 🔥 Ambil menu dan contact
         $menus = Menu::where('id_menu_parent', 0)->get();
@@ -70,7 +76,7 @@ class AboutController extends Controller
         return view('about.index', compact(
             'carousel', 
             'tentang', 'sejarah', 'tujuan', 'visi', 'misi',
-            'otherSections', // 🔥 KIRIMKAN KE VIEW
+            'otherSections',
             'anggota', 'menus', 'contact'
         ));
     }
