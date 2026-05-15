@@ -389,7 +389,353 @@ main {
     font-size: 24px;
     margin-bottom: 10px;
 }
+/* Tambahkan ke file style.css Anda */
 
+/* Search Results Page Styles */
+.search-results-page {
+    padding: 60px 0;
+    background: #D7CEAF;
+    min-height: 70vh;
+}
+
+/* Style untuk result badge dengan icon */
+.result-badge i {
+    margin-right: 5px;
+    font-size: 12px;
+}
+
+/* Style khusus untuk contact info di hasil pencarian */
+.contact-info {
+    margin-top: 10px;
+    background: #f9f9f9;
+    padding: 12px;
+    border-radius: 12px;
+}
+
+.contact-info div {
+    margin-bottom: 8px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.contact-info div:last-child {
+    margin-bottom: 0;
+}
+
+.contact-info i {
+    width: 20px;
+    color: #5C6844;
+    font-size: 14px;
+}
+
+.contact-info .social-links {
+    margin-top: 10px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding-top: 8px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.contact-info .social-links span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #5C6844;
+    background: rgba(92,104,68,0.1);
+    padding: 5px 12px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+.contact-info .social-links span:hover {
+    background: #5C6844;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.contact-info .social-links span i {
+    color: inherit;
+}
+
+/* Style untuk excerpt contact */
+.result-excerpt .contact-info {
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* Style untuk link di contact info */
+.contact-info a {
+    color: #5C6844;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.contact-info a:hover {
+    color: #3d482e;
+    text-decoration: underline;
+}
+
+/* Style untuk meta info contact */
+.result-meta i {
+    margin-right: 4px;
+}
+
+/* Animasi loading untuk search */
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.search-loading {
+    animation: pulse 1s ease-in-out infinite;
+}
+
+/* Style untuk tab yang aktif dengan icon */
+.search-tab i {
+    margin-right: 5px;
+    font-size: 14px;
+}
+
+/* Style untuk no results dengan suggestions yang lebih baik */
+.no-results .suggestions {
+    text-align: left;
+    display: inline-block;
+    margin-top: 30px;
+    padding: 25px;
+    background: #f9f9f9;
+    border-radius: 16px;
+    max-width: 400px;
+}
+
+.no-results .suggestions h5 {
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #1C150F;
+    font-size: 16px;
+}
+
+.no-results .suggestions ul {
+    margin: 0;
+    padding: 0;
+}
+
+.no-results .suggestions li {
+    margin-bottom: 10px;
+    color: #666;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.no-results .suggestions li i {
+    font-size: 14px;
+    color: #5C6844;
+    margin: 0;
+    width: auto;
+}
+
+/* Style untuk empty state image */
+.result-image i {
+    font-size: 40px;
+    color: #ccc;
+}
+
+/* Style untuk badge yang lebih menarik */
+.result-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 14px;
+    background: linear-gradient(135deg, #5C6844 0%, #4a5637 100%);
+    color: white;
+    border-radius: 25px;
+    font-size: 11px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    box-shadow: 0 2px 5px rgba(92,104,68,0.2);
+}
+
+/* Style untuk result title dengan hover effect */
+.result-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1C150F;
+    margin-bottom: 12px;
+    text-decoration: none;
+    display: block;
+    transition: all 0.3s ease;
+    line-height: 1.4;
+}
+
+.result-title:hover {
+    color: #5C6844;
+    transform: translateX(5px);
+}
+
+/* Style untuk excerpt */
+.result-excerpt {
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 12px;
+    font-size: 14px;
+}
+
+/* Style untuk meta info dengan icon */
+.result-meta {
+    color: #999;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.result-meta i {
+    margin-right: 3px;
+    font-size: 11px;
+}
+
+.separator {
+    margin: 0 5px;
+    color: #ddd;
+}
+
+/* Hover effect untuk result card */
+.result-card {
+    background: white;
+    border-radius: 20px;
+    padding: 25px;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    display: flex;
+    gap: 20px;
+    border: 1px solid transparent;
+}
+
+.result-card:hover {
+    transform: translateX(8px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    border-color: rgba(92,104,68,0.2);
+}
+
+/* Responsive untuk mobile */
+@media (max-width: 768px) {
+    .search-results-page {
+        padding: 30px 15px;
+    }
+    
+    .search-header {
+        padding: 25px 20px;
+    }
+    
+    .search-header h1 {
+        font-size: 24px;
+    }
+    
+    .result-card {
+        flex-direction: column;
+        padding: 20px;
+        gap: 15px;
+    }
+    
+    .result-image {
+        width: 100%;
+        height: 160px;
+    }
+    
+    .search-tabs {
+        gap: 8px;
+    }
+    
+    .search-tab {
+        padding: 6px 14px;
+        font-size: 12px;
+    }
+    
+    .result-title {
+        font-size: 18px;
+    }
+    
+    .contact-info .social-links {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .contact-info .social-links span {
+        font-size: 11px;
+        padding: 4px 10px;
+    }
+    
+    .contact-info div {
+        font-size: 12px;
+        flex-wrap: wrap;
+    }
+    
+    .no-results {
+        padding: 40px 20px;
+    }
+    
+    .no-results i {
+        font-size: 48px;
+    }
+    
+    .no-results h3 {
+        font-size: 20px;
+    }
+}
+/* Style untuk hasil pencarian pendaftaran */
+.result-badge i.bi-mortarboard {
+    margin-right: 5px;
+}
+
+.pendaftaran-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-left: 10px;
+}
+
+.pendaftaran-status.active {
+    background: #4CAF50;
+    color: white;
+}
+
+.pendaftaran-status.closed {
+    background: #f44336;
+    color: white;
+}
+
+.pendaftaran-info {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+}
+
+.pendaftaran-info span {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: #666;
+}
+
+.pendaftaran-info i {
+    font-size: 12px;
+    color: #5C6844;
+}
 /* Responsive */
 @media (max-width: 768px) {
     .search-input.active {
