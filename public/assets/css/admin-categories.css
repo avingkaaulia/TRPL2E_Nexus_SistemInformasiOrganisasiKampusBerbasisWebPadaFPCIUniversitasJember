@@ -1,0 +1,223 @@
+/* assets/css/admin-categories.css */
+
+/* Category Tree Styles */
+.category-tree {
+    padding: 15px;
+    background: #fff;
+    border-radius: 12px;
+}
+
+.tree-item {
+    margin-bottom: 12px;
+}
+
+.tree-root {
+    padding: 12px 15px;
+    background: linear-gradient(135deg, #F5F2E8 0%, #EDE8DC 100%);
+    border-radius: 10px;
+    margin-bottom: 8px;
+    border-left: 4px solid #5C6844;
+    transition: all 0.3s ease;
+}
+
+.tree-root:hover {
+    transform: translateX(5px);
+    box-shadow: 0 2px 8px rgba(92,104,68,0.15);
+}
+
+.tree-root i {
+    font-size: 18px;
+    color: #5C6844;
+}
+
+.tree-root strong {
+    font-size: 16px;
+    color: #1C150F;
+}
+
+.tree-children {
+    margin-left: 30px;
+    padding-left: 20px;
+    border-left: 2px dashed #5C6844;
+}
+
+.tree-child {
+    padding: 10px 15px;
+    margin: 8px 0;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #E8E4D9;
+    transition: all 0.3s ease;
+}
+
+.tree-child:hover {
+    background: #F5F2E8;
+    border-color: #5C6844;
+    transform: translateX(3px);
+}
+
+.tree-child .badge {
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: 20px;
+}
+
+.tree-child .badge-sub {
+    background: #17a2b8;
+    color: white;
+}
+
+.tree-child .badge-post {
+    background: #6c757d;
+    color: white;
+}
+
+.tree-child .badge-total {
+    background: #5C6844;
+    color: white;
+}
+
+/* Badge Parent */
+.badge-parent {
+    background: #eef3ea;
+    color: #5C6844;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+/* Table Styles */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-table th {
+    background: #F5F2E8;
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+    color: #1C150F;
+    border-bottom: 2px solid #5C6844;
+}
+
+.admin-table td {
+    padding: 12px;
+    border-bottom: 1px solid #E8E4D9;
+    vertical-align: middle;
+}
+
+.admin-table tr:hover {
+    background: #F5F2E8;
+}
+
+/* Action Buttons */
+.action-group {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-edit {
+    background: #ffc107;
+    color: #1C150F;
+}
+
+.btn-edit:hover {
+    background: #e0a800;
+    transform: translateY(-2px);
+}
+
+.btn-delete {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-delete:hover {
+    background: #c82333;
+    transform: translateY(-2px);
+}
+
+/* Form Card */
+.form-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+}
+
+.form-card-head {
+    background: #5C6844;
+    color: white;
+    padding: 15px 20px;
+}
+
+.form-card-head h6 {
+    margin: 0;
+    font-weight: 600;
+}
+
+.form-card-body {
+    padding: 25px;
+}
+
+.btn-save {
+    background: #5C6844;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-save:hover {
+    background: #4a5637;
+    transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .tree-children {
+        margin-left: 15px;
+        padding-left: 10px;
+    }
+    
+    .tree-root {
+        padding: 10px 12px;
+    }
+    
+    .tree-child {
+        padding: 8px 12px;
+    }
+    
+    .admin-table {
+        font-size: 12px;
+    }
+    
+    .admin-table th,
+    .admin-table td {
+        padding: 8px;
+    }
+    
+    .action-group {
+        gap: 5px;
+    }
+    
+    .btn-action {
+        width: 28px;
+        height: 28px;
+    }
+}

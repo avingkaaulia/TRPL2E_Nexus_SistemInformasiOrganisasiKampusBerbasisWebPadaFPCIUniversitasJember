@@ -58,11 +58,16 @@
             <a href="{{ route('admin.menu.index') }}" class="menu-item {{ request()->routeIs('admin.menu*') ? 'active' : '' }}">
     <i class="bi bi-gear"></i> Menu Navigasi
 </a>
-            <a href="#" class="menu-item">
-                <i class="bi bi-box-arrow-right"></i> Logout
-            </a>
-        </div>
-
+            <a href="{{ route('profile') }}" class="menu-item">
+    <i class="bi bi-person"></i> Profil Saya
+</a>
+<form action="{{ route('logout') }}" method="POST" id="admin-logout-form">
+    @csrf
+    <button type="submit" class="menu-item logout-btn" style="width: 100%; text-align: left; background: none; border: none; cursor: pointer;">
+        <i class="bi bi-box-arrow-right"></i> Logout
+    </button>
+</form>
+</div>
         <!-- MAIN CONTENT -->
         <div class="col-md-9 col-lg-10 main-content">
             <!-- Top Bar -->

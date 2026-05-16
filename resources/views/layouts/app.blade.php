@@ -89,8 +89,41 @@ $contact = DB::table('contact')->first();
     </div>
 </form>
         
-        <!-- LOGIN -->
-        <a class="btn btn-login ms-2">Login</a>
+        <!-- LOGIN - Hanya tampilkan Login, Register di dalam halaman login -->
+@auth
+    <div class="dropdown user-dropdown">
+        <button class="btn btn-login dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-person-circle me-1"></i> {{ Str::limit(Auth::user()->nama, 15) }}
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+            @if(Auth::user()->id_role == 1)
+                <li>
+                    <a class="dropdown-item" href="{{ route('admin.dashboard') }}">
+                        <i class="bi bi-speedometer2 me-2"></i> Dashboard Admin
+                    </a>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+            @endif
+            <li>
+                <a class="dropdown-item" href="{{ route('profile') }}">
+                    <i class="bi bi-person me-2"></i> Profil Saya
+                </a>
+            </li>
+            <li>
+                <form action="{{ route('logout') }}" method="POST" id="logout-form">
+                    @csrf
+                    <button type="submit" class="dropdown-item text-danger">
+                        <i class="bi bi-box-arrow-right me-2"></i> Logout
+                    </button>
+                </form>
+            </li>
+        </ul>
+    </div>
+@else
+    <a href="{{ route('login') }}" class="btn btn-login ms-2">
+        </i> Login
+    </a>
+@endauth
 
     </div>
 </nav>

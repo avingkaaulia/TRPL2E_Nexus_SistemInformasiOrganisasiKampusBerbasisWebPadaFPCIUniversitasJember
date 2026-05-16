@@ -739,7 +739,19 @@ body {
     margin-right: 8px;
     color: #999;
 }
+/* Logout button style */
+.logout-btn {
+    color: #dc3545 !important;
+}
 
+.logout-btn:hover {
+    background: #dc3545 !important;
+    color: white !important;
+}
+
+.logout-btn:hover i {
+    color: white !important;
+}
 /* ========== RESPONSIVE ========== */
 @media (max-width: 992px) {
     .stats-row {

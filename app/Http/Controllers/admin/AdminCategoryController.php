@@ -106,6 +106,20 @@ class AdminCategoryController extends Controller
             ->with('success', 'Kategori "' . $categoryName . '" berhasil dihapus');
     }
     
+    // Fungsi untuk menghitung total post termasuk semua sub-kategori
+    private function getTotalPostCount($categoryId, $categories)
+    {
+        $total = DB::table('posts')->where('id_post_category', $categoryId)->count();
+        
+        // Cari semua sub-kategori
+        $children = $categories->where('parent_id', $categoryId);
+        foreach ($children as $child) {
+            $total += $this->getTotalPostCount($child->id_category, $categories);
+        }
+        
+        return $total;
+    }
+    
     // Build tree view untuk kategori
     private function buildTree($categories, $parentId = null, $level = 0)
     {
@@ -113,6 +127,7 @@ class AdminCategoryController extends Controller
         foreach ($categories as $category) {
             if ($category->parent_id == $parentId) {
                 $category->level = $level;
+                $category->total_posts = $this->getTotalPostCount($category->id_category, $categories);
                 $category->children = $this->buildTree($categories, $category->id_category, $level + 1);
                 $result[] = $category;
             }

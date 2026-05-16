@@ -19,6 +19,8 @@ use App\Http\Controllers\Admin\AdminPageController;
 use App\Http\Controllers\Admin\AdminMenuController;
 use App\Http\Controllers\Admin\AdminCategoryController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProfileController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -31,6 +33,18 @@ use App\Http\Controllers\SearchController;
 */
 
 Route::get('/', [HomeController::class,'index']);
+// ========== ROUTE AUTHENTICATION ==========
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
+Route::post('/register', [AuthController::class, 'register'])->name('register.post');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// Profile routes (untuk user yang sudah login)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+});
 // routes/web.php
 Route::get('/post/{id_post}/comments', [CommentController::class, 'index'])->name('comments.index');
 Route::post('/post/{id_post}/comments', [CommentController::class, 'store'])->name('comments.store');

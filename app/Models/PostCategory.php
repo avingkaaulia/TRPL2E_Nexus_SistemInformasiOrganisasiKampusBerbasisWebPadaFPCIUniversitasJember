@@ -5,6 +5,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class PostCategory extends Model
 {
@@ -57,4 +58,25 @@ class PostCategory extends Model
     {
         return $this->hasMany(Post::class, 'id_post_category', 'id_category');
     }
+    // app/Models/PostCategory.php
+
+// Tambahkan method ini di dalam model PostCategory
+public static function getTotalPostCount($categoryId)
+{
+    $total = DB::table('posts')->where('id_post_category', $categoryId)->count();
+    
+    // Ambil semua sub-kategori
+    $children = self::where('parent_id', $categoryId)->get();
+    foreach ($children as $child) {
+        $total += self::getTotalPostCount($child->id_category);
+    }
+    
+    return $total;
+}
+
+// Atau sebagai attribute
+public function getTotalPostsCountAttribute()
+{
+    return self::getTotalPostCount($this->id_category);
+}
 }

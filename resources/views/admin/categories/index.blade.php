@@ -4,6 +4,10 @@
 @section('title', 'Kelola Kategori - Admin FPCI UNEJ')
 @section('page-title', 'Kelola Kategori')
 
+@push('styles')
+<link rel="stylesheet" href="{{ asset('assets/css/admin-categories.css') }}">
+@endpush
+
 @section('content')
 @if(session('success'))
 <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -85,7 +89,8 @@
                         @forelse($categories as $cat)
                         @php
                             $childCount = $categories->where('parent_id', $cat->id_category)->count();
-                            $postCount = DB::table('posts')->where('id_post_category', $cat->id_category)->count();
+                            // Hitung total post termasuk semua sub-kategori
+                            $totalPostCount = $cat->total_posts ?? \App\Models\PostCategory::getTotalPostCount($cat->id_category);
                         @endphp
                         <tr>
                             <td>{{ $cat->id_category }}</td>
@@ -113,7 +118,8 @@
                                 @endif
                             </td>
                             <td>
-                                <span class="badge bg-secondary">{{ $postCount }} postingan</span>
+                                <span class="badge bg-secondary">Direct: {{ DB::table('posts')->where('id_post_category', $cat->id_category)->count() }}</span>
+                                <span class="badge bg-success ms-1">Total: {{ $totalPostCount }}</span>
                             </td>
                             <td>
                                 <div class="action-group">
@@ -139,7 +145,7 @@
                             <td colspan="6" class="text-center py-5">
                                 <i class="bi bi-inbox" style="font-size: 32px; color: #ccc;"></i>
                                 <p class="mt-2 text-muted">Belum ada kategori</p>
-                             </td>
+                              </td>
                         </tr>
                         @endforelse
                     </tbody>
@@ -158,13 +164,17 @@
             <div class="card-body p-3">
                 <div class="category-tree">
                     @foreach($categories->where('parent_id', null) as $root)
+                        @php
+                            $totalRootPosts = $root->total_posts ?? \App\Models\PostCategory::getTotalPostCount($root->id_category);
+                        @endphp
                         <div class="tree-item">
                             <div class="tree-root">
                                 <i class="bi bi-folder-fill text-warning me-2"></i>
                                 <strong>{{ $root->category_name }}</strong>
-                                <span class="badge bg-secondary ms-2">{{ DB::table('posts')->where('id_post_category', $root->id_category)->count() }} post</span>
+                                <span class="badge bg-secondary ms-2">Direct: {{ DB::table('posts')->where('id_post_category', $root->id_category)->count() }}</span>
+                                <span class="badge bg-success ms-1">Total: {{ $totalRootPosts }} post</span>
                             </div>
-                            @include('admin.categories.partials.tree-children', ['children' => $categories->where('parent_id', $root->id_category), 'level' => 1])
+                            @include('admin.categories.partials.tree-children', ['children' => $categories->where('parent_id', $root->id_category), 'level' => 1, 'categories' => $categories])
                         </div>
                     @endforeach
                 </div>
@@ -173,42 +183,3 @@
     </div>
 </div>
 @endsection
-
-@push('styles')
-<style>
-.category-tree {
-    padding: 10px;
-}
-.tree-item {
-    margin-bottom: 10px;
-}
-.tree-root {
-    padding: 10px;
-    background: #F5F2E8;
-    border-radius: 8px;
-    margin-bottom: 5px;
-}
-.tree-children {
-    margin-left: 30px;
-    padding-left: 15px;
-    border-left: 2px dashed #5C6844;
-}
-.tree-child {
-    padding: 8px 12px;
-    margin: 5px 0;
-    background: white;
-    border-radius: 8px;
-    border: 1px solid #E8E4D9;
-}
-.tree-child:hover {
-    background: #F5F2E8;
-}
-.badge-parent {
-    background: #eef3ea;
-    color: #5C6844;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 11px;
-}
-</style>
-@endpush

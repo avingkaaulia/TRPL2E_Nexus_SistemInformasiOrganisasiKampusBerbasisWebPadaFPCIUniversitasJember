@@ -4,7 +4,8 @@
     @foreach($children as $child)
         @php
             $grandChildren = $categories->where('parent_id', $child->id_category);
-            $postCount = DB::table('posts')->where('id_post_category', $child->id_category)->count();
+            // Hitung total post termasuk semua sub-kategori
+            $totalPostCount = $child->total_posts ?? $child->getTotalPostCountAttribute();
         @endphp
         <div class="tree-child mb-2">
             <div class="d-flex justify-content-between align-items-center">
@@ -14,7 +15,8 @@
                     @if($grandChildren->count() > 0)
                         <span class="badge bg-info ms-2">{{ $grandChildren->count() }} sub</span>
                     @endif
-                    <span class="badge bg-secondary ms-1">{{ $postCount }} post</span>
+                    <span class="badge bg-secondary ms-1">Direct: {{ DB::table('posts')->where('id_post_category', $child->id_category)->count() }}</span>
+                    <span class="badge bg-success ms-1">Total: {{ $totalPostCount }} post</span>
                 </div>
                 <div>
                     <a href="{{ route('admin.categories.edit', $child->id_category) }}" class="btn btn-sm btn-warning">
@@ -23,7 +25,7 @@
                 </div>
             </div>
             @if($grandChildren->count() > 0)
-                @include('admin.categories.partials.tree-children', ['children' => $grandChildren, 'level' => $level + 1])
+                @include('admin.categories.partials.tree-children', ['children' => $grandChildren, 'level' => $level + 1, 'categories' => $categories])
             @endif
         </div>
     @endforeach
