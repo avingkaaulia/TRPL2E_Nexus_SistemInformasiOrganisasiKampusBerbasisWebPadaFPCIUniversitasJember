@@ -28,46 +28,49 @@
             </a>
             
             <div class="menu-group-title">MANAJEMEN KONTEN</div>
-<a href="{{ route('admin.carousel') }}" class="menu-item {{ request()->routeIs('admin.carousel*') ? 'active' : '' }}">
-    <i class="bi bi-images"></i> Carousel / Slider
-</a>
+            <a href="{{ route('admin.carousel') }}" class="menu-item {{ request()->routeIs('admin.carousel*') ? 'active' : '' }}">
+                <i class="bi bi-images"></i> Carousel / Slider
+            </a>
             <a href="{{ route('admin.posts.index') }}" class="menu-item {{ request()->routeIs('admin.posts*') ? 'active' : '' }}">
-    <i class="bi bi-file-post"></i> Semua Postingan
-</a>
-<a href="{{ route('admin.posts.create') }}" class="menu-item">
-    <i class="bi bi-plus-circle"></i> Tambah Post
-</a>
-<a href="{{ route('admin.pages.list') }}" class="menu-item">
-    <i class="bi bi-files"></i> Halaman (Pages)
-</a>
+                <i class="bi bi-file-post"></i> Semua Postingan
+            </a>
+            <a href="{{ route('admin.posts.create') }}" class="menu-item">
+                <i class="bi bi-plus-circle"></i> Tambah Post
+            </a>
+            <a href="{{ route('admin.pages.list') }}" class="menu-item">
+                <i class="bi bi-files"></i> Halaman (Pages)
+            </a>
             <a href="{{ route('admin.categories.index') }}" class="menu-item {{ request()->routeIs('admin.categories*') ? 'active' : '' }}">
-    <i class="bi bi-tags"></i> Kategori
-</a>
+                <i class="bi bi-tags"></i> Kategori
+            </a>
             
             <div class="menu-group-title">MANAJEMEN</div>
-<a href="{{ route('admin.pendaftaran.index') }}" class="menu-item {{ request()->routeIs('admin.pendaftaran*') ? 'active' : '' }}">
-    <i class="bi bi-person-plus"></i> Pendaftaran
-</a>
-<a href="{{ route('admin.anggota.index') }}" class="menu-item {{ request()->routeIs('admin.anggota*') ? 'active' : '' }}">
-    <i class="bi bi-people"></i> Anggota
-<a href="#" class="menu-item">
-    <i class="bi bi-chat-dots"></i> Komentar
-</a>
+            <a href="{{ route('admin.pendaftaran.index') }}" class="menu-item {{ request()->routeIs('admin.pendaftaran*') ? 'active' : '' }}">
+                <i class="bi bi-person-plus"></i> Pendaftaran
+            </a>
+            <a href="{{ route('admin.anggota.index') }}" class="menu-item {{ request()->routeIs('admin.anggota*') ? 'active' : '' }}">
+                <i class="bi bi-people"></i> Anggota
+            </a>
+            <a href="#" class="menu-item">
+                <i class="bi bi-chat-dots"></i> Komentar
+            </a>
             
             <div class="menu-group-title">PENGATURAN</div>
             <a href="{{ route('admin.menu.index') }}" class="menu-item {{ request()->routeIs('admin.menu*') ? 'active' : '' }}">
-    <i class="bi bi-gear"></i> Menu Navigasi
-</a>
+                <i class="bi bi-gear"></i> Menu Navigasi
+            </a>
             <a href="{{ route('profile') }}" class="menu-item">
-    <i class="bi bi-person"></i> Profil Saya
-</a>
-<form action="{{ route('logout') }}" method="POST" id="admin-logout-form">
-    @csrf
-    <button type="submit" class="menu-item logout-btn" style="width: 100%; text-align: left; background: none; border: none; cursor: pointer;">
-        <i class="bi bi-box-arrow-right"></i> Logout
-    </button>
-</form>
-</div>
+                <i class="bi bi-person"></i> Profil Saya
+            </a>
+            
+            <form action="{{ route('logout') }}" method="POST" id="admin-logout-form">
+                @csrf
+                <button type="submit" class="menu-item logout-btn" style="width: 100%; text-align: left; background: none; border: none; cursor: pointer;">
+                    <i class="bi bi-box-arrow-right"></i> Logout
+                </button>
+            </form>
+        </div>
+        
         <!-- MAIN CONTENT -->
         <div class="col-md-9 col-lg-10 main-content">
             <!-- Top Bar -->
@@ -78,9 +81,29 @@
                         <i class="bi bi-bell"></i>
                         <span class="notification-badge">0</span>
                     </div>
-                    <div class="admin-profile">
-                        <img src="{{ asset('assets/img/avatars/default-avatar.png') }}" alt="Admin">
-                        <span>Admin FPCI</span>
+                    <div class="admin-profile dropdown">
+                        <div class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            <div class="admin-avatar">
+                                <i class="bi bi-person-circle"></i>
+                            </div>
+                            <span>{{ Auth::user()->nama ?? 'Admin' }}</span>
+                        </div>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item" href="{{ route('profile') }}">
+                                    <i class="bi bi-person me-2"></i> Profil Saya
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form action="{{ route('logout') }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="dropdown-item text-danger">
+                                        <i class="bi bi-box-arrow-right me-2"></i> Logout
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
