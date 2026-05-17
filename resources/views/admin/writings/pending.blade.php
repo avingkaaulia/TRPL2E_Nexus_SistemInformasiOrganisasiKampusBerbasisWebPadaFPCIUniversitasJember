@@ -11,6 +11,7 @@
         <div class="stats-badges">
             <span class="badge bg-warning">Pending: {{ $totalPending }}</span>
             <span class="badge bg-success">Published: {{ $totalPublished }}</span>
+            <span class="badge bg-secondary">Draft: {{ $totalDraft ?? 0 }}</span>
         </div>
     </div>
     
@@ -78,28 +79,36 @@
                                 <i class="bi bi-eye"></i>
                             </a>
                             @if($post->status == 'pending')
-                            <form action="{{ route('admin.writings.approve', $post->id_post) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('PUT')
-                                <button type="submit" class="btn-action btn-approve" onclick="return confirm('Setujui karya ini?')" title="Setujui">
-                                    <i class="bi bi-check-lg"></i>
-                                </button>
-                            </form>
-                            <form action="{{ route('admin.writings.reject', $post->id_post) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn-action btn-reject" onclick="return confirm('Tolak dan hapus karya ini?')" title="Tolak">
-                                    <i class="bi bi-x-lg"></i>
-                                </button>
-                            </form>
+                                <form action="{{ route('admin.writings.approve', $post->id_post) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="submit" class="btn-action btn-approve" onclick="return confirm('Setujui karya ini?')" title="Setujui">
+                                        <i class="bi bi-check-lg"></i>
+                                    </button>
+                                </form>
+                                <form action="{{ route('admin.writings.reject', $post->id_post) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="submit" class="btn-action btn-reject" onclick="return confirm('Tolak karya ini?')" title="Tolak">
+                                        <i class="bi bi-x-lg"></i>
+                                    </button>
+                                </form>
+                            @elseif($post->status == 'draft')
+                                <form action="{{ route('admin.writings.force-delete', $post->id_post) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn-action btn-delete" onclick="return confirm('Hapus permanen karya ini?')" title="Hapus Permanen">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
                             @elseif($post->status == 'publish')
-                            <form action="{{ route('admin.writings.reject', $post->id_post) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn-action btn-delete" onclick="return confirm('Hapus karya ini?')" title="Hapus">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </form>
+                                <form action="{{ route('admin.writings.reject', $post->id_post) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="submit" class="btn-action btn-reject" onclick="return confirm('Tolak karya ini?')" title="Tolak">
+                                        <i class="bi bi-x-lg"></i>
+                                    </button>
+                                </form>
                             @endif
                         </div>
                     </td>

@@ -24,6 +24,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\AdminCommentController;
 use App\Http\Controllers\WritingsSubmitController;
 use App\Http\Controllers\Admin\AdminWritingsController;
+use App\Http\Controllers\Admin\AdminContactController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -192,5 +193,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/writings/pending', [AdminWritingsController::class, 'pending'])->name('writings.pending');
     Route::get('/writings/show/{id}', [AdminWritingsController::class, 'show'])->name('writings.show');
     Route::put('/writings/approve/{id}', [AdminWritingsController::class, 'approve'])->name('writings.approve');
-    Route::delete('/writings/reject/{id}', [AdminWritingsController::class, 'reject'])->name('writings.reject');
+    Route::put('/writings/reject/{id}', [AdminWritingsController::class, 'reject'])->name('writings.reject');
+    Route::delete('/writings/force-delete/{id}', [AdminWritingsController::class, 'forceDelete'])->name('writings.force-delete');
+});
+
+// Admin Contact Routes
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/contact', [AdminContactController::class, 'index'])->name('contact.index');
+    Route::get('/contact/edit', [AdminContactController::class, 'edit'])->name('contact.edit');
+    Route::put('/contact/update', [AdminContactController::class, 'update'])->name('contact.update');
 });

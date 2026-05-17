@@ -221,7 +221,16 @@
     font-size: 12px;
     color: #666;
 }
+/* FIX: Icon contact & social agar tidak tertimpa style lain */
+.contact-icon i {
+    color: white !important;
+    font-size: 20px;
+}
 
+.social-icon i {
+    color: white !important;
+    font-size: 22px;
+}
 /* Map Section */
 .map-section {
     padding: 0 0 80px 0;

@@ -41,8 +41,8 @@ class AdminWritingsController extends Controller
         if ($request->has('status') && $request->status != '') {
             $query->where('status', $request->status);
         } else {
-            // Default tampilkan semua status
-            $query->whereIn('status', ['pending', 'publish', 'draft']);
+            // Default tampilkan semua status yang ada
+            $query->whereIn('status', ['publish', 'draft', 'pending']);
         }
         
         if ($request->has('search') && $request->search != '') {
@@ -67,9 +67,14 @@ class AdminWritingsController extends Controller
             ->where('post_type', 'post')
             ->count();
         
+        $totalDraft = Post::whereIn('id_post_category', $categoryIds)
+            ->where('status', 'draft')
+            ->where('post_type', 'post')
+            ->count();
+        
         $statusFilter = $request->get('status', '');
         
-        return view('admin.writings.pending', compact('pendingPosts', 'totalPending', 'totalPublished', 'statusFilter'));
+        return view('admin.writings.pending', compact('pendingPosts', 'totalPending', 'totalPublished', 'totalDraft', 'statusFilter'));
     }
     
     public function approve($id)
@@ -81,7 +86,18 @@ class AdminWritingsController extends Controller
         return redirect()->back()->with('success', 'Karya "' . $post->title . '" berhasil disetujui dan dipublikasikan!');
     }
     
+    // 🔥 PERBAIKI: TOLAK KARYA - Ubah status menjadi 'draft' (karena 'rejected' tidak ada di ENUM)
     public function reject($id)
+    {
+        $post = Post::findOrFail($id);
+        $post->status = 'draft';  // Gunakan 'draft' sebagai status ditolak
+        $post->save();
+        
+        return redirect()->back()->with('success', 'Karya "' . $post->title . '" berhasil ditolak dan dipindahkan ke Draft!');
+    }
+    
+    // 🔥 FUNGSI BARU: Hapus permanen karya yang ditolak
+    public function forceDelete($id)
     {
         $post = Post::findOrFail($id);
         $title = $post->title;
@@ -101,16 +117,14 @@ class AdminWritingsController extends Controller
         $post->gallery()->delete();
         $post->delete();
         
-        return redirect()->back()->with('success', 'Karya "' . $title . '" berhasil ditolak dan dihapus!');
+        return redirect()->back()->with('success', 'Karya "' . $title . '" berhasil dihapus permanen!');
     }
     
-    // 🔥 PERBAIKI: Gunakan view show.blade.php yang sudah ada dengan getImageUrl
     public function show($id)
     {
         $post = Post::with(['category', 'user', 'gallery', 'comments'])
             ->findOrFail($id);
         
-        // 🔥 GUNAKAN FUNGSI getImageUrl SEPERTI DI POST CONTROLLER
         $post->image_url = getImageUrl($post->featured_image_path);
         
         foreach ($post->gallery as $item) {
@@ -133,7 +147,6 @@ class AdminWritingsController extends Controller
             ->orderBy('tanggal', 'desc')
             ->get();
         
-        // Gunakan view show.blade.php yang sudah ada
         return view('show', compact('post', 'relatedPosts', 'comments'));
     }
 }

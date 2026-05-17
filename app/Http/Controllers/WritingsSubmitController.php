@@ -92,7 +92,8 @@ class WritingsSubmitController extends Controller
             }
         }
         
-        return redirect()->route('writings')
+        // 🔥 PERBAIKAN: Redirect ke halaman submit dengan session success
+        return redirect()->route('writings.submit')
             ->with('success', 'Karya Anda berhasil dikirim dan menunggu persetujuan admin!');
     }
 }

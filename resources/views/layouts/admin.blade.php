@@ -69,6 +69,9 @@
             <a href="{{ route('admin.menu.index') }}" class="menu-item {{ request()->routeIs('admin.menu*') ? 'active' : '' }}">
                 <i class="bi bi-gear"></i> Menu Navigasi
             </a>
+            <a href="{{ route('admin.contact.index') }}" class="menu-item {{ request()->routeIs('admin.contact*') ? 'active' : '' }}">
+    <i class="bi bi-envelope"></i> Kontak & Sosmed
+</a>
             <a href="{{ route('profile') }}" class="menu-item">
                 <i class="bi bi-person"></i> Profil Saya
             </a>

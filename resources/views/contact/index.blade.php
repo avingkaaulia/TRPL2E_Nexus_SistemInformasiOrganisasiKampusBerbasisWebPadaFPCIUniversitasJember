@@ -68,43 +68,43 @@
         <div class="social-section">
             <h2>Follow Us</h2>
             <div class="social-grid">
-                @if($contact->instagram)
+                @if($contact && $contact->instagram)
                 <a href="https://instagram.com/{{ $contact->instagram }}" target="_blank" class="social-card">
                     <div class="social-icon instagram">
                         <i class="fab fa-instagram"></i>
                     </div>
                     <div class="social-info">
                         <h4>Instagram</h4>
-                        <p>@{{ $contact->instagram }}</p>
+                        <p>@<span>{{ $contact->instagram }}</span></p>
                     </div>
                 </a>
                 @endif
                 
-                @if($contact->linkedin)
+                @if($contact && $contact->linkedin)
                 <a href="https://linkedin.com/company/{{ $contact->linkedin }}" target="_blank" class="social-card">
                     <div class="social-icon linkedin">
                         <i class="fab fa-linkedin-in"></i>
                     </div>
                     <div class="social-info">
                         <h4>LinkedIn</h4>
-                        <p>FPCI Chapter UNEJ</p>
+                        <p>{{ $contact->linkedin }}</p>
                     </div>
                 </a>
                 @endif
                 
-                @if($contact->tiktok)
+                @if($contact && $contact->tiktok)
                 <a href="https://tiktok.com/@{{ $contact->tiktok }}" target="_blank" class="social-card">
                     <div class="social-icon tiktok">
                         <i class="fab fa-tiktok"></i>
                     </div>
                     <div class="social-info">
                         <h4>TikTok</h4>
-                        <p>@{{ $contact->tiktok }}</p>
+                        <p>@<span>{{ $contact->tiktok }}</span></p>
                     </div>
                 </a>
                 @endif
                 
-                @if($contact->youtube)
+                @if($contact && $contact->youtube)
                 <a href="https://youtube.com/{{ $contact->youtube }}" target="_blank" class="social-card">
                     <div class="social-icon youtube">
                         <i class="fab fa-youtube"></i>
@@ -116,14 +116,14 @@
                 </a>
                 @endif
                 
-                @if($contact->x)
+                @if($contact && $contact->x)
                 <a href="https://twitter.com/{{ $contact->x }}" target="_blank" class="social-card">
                     <div class="social-icon twitter">
                         <i class="fab fa-twitter"></i>
                     </div>
                     <div class="social-info">
                         <h4>Twitter / X</h4>
-                        <p>@{{ $contact->x }}</p>
+                        <p>@<span>{{ $contact->x }}</span></p>
                     </div>
                 </a>
                 @endif
