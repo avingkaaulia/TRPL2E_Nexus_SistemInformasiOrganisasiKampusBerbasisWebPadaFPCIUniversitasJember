@@ -838,7 +838,72 @@ body {
     border-top: 1px solid #E8E4D9;
 }
 
+/* Tombol Approve & Reject */
+.btn-approve {
+    background: #28a745;
+    color: white;
+}
 
+.btn-approve:hover {
+    background: #218838;
+    transform: scale(1.05);
+}
+
+.btn-reject {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-reject:hover {
+    background: #c82333;
+    transform: scale(1.05);
+}
+
+.btn-view {
+    background: #17a2b8;
+    color: white;
+}
+
+.btn-view:hover {
+    background: #138496;
+    transform: scale(1.05);
+}
+/* Stats Badges */
+.stats-badges {
+    display: flex;
+    gap: 10px;
+}
+
+.stats-badges .badge {
+    font-size: 12px;
+    padding: 5px 12px;
+}
+
+.filter-bar {
+    padding-bottom: 15px;
+    border-bottom: 1px solid #E8E4D9;
+}
+
+.btn-search, .btn-reset {
+    padding: 8px 20px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 500;
+}
+
+.btn-search {
+    background: #5C6844;
+    color: white;
+}
+
+.btn-reset {
+    background: #f8f9fa;
+    color: #1C150F;
+    border: 1px solid #ddd;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+}
 /* Button Login */
 .btn-login {
     border: 2px solid #5C6844 !important;

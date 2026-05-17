@@ -43,7 +43,13 @@
             <a href="{{ route('admin.categories.index') }}" class="menu-item {{ request()->routeIs('admin.categories*') ? 'active' : '' }}">
                 <i class="bi bi-tags"></i> Kategori
             </a>
-            
+            <a href="{{ route('admin.writings.pending') }}" class="menu-item {{ request()->routeIs('admin.writings*') ? 'active' : '' }}">
+    <i class="bi bi-journal-bookmark-fill"></i> Kelola Karya
+    @php $pendingWritings = App\Models\Post::where('status', 'pending')->where('post_type', 'post')->count(); @endphp
+    @if($pendingWritings > 0)
+        <span class="badge bg-warning ms-2">{{ $pendingWritings }}</span>
+    @endif
+</a>
             <div class="menu-group-title">MANAJEMEN</div>
             <a href="{{ route('admin.pendaftaran.index') }}" class="menu-item {{ request()->routeIs('admin.pendaftaran*') ? 'active' : '' }}">
                 <i class="bi bi-person-plus"></i> Pendaftaran

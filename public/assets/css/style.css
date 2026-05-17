@@ -1679,7 +1679,247 @@ hr {
     border: none;
     margin-bottom: 15px;
 }
+/* ========== SUBMIT WRITINGS PAGE ========== */
+.submit-container {
+    min-height: calc(100vh - 200px);
+    padding: 50px 0;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+}
 
+.submit-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 24px;
+    padding: 40px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+.submit-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.submit-header i {
+    font-size: 48px;
+    color: #5C6844;
+    margin-bottom: 15px;
+}
+
+.submit-header h2 {
+    font-size: 28px;
+    font-weight: 800;
+    color: #1C150F;
+    margin-bottom: 10px;
+}
+
+.submit-header p {
+    color: #666;
+}
+
+.alert-submit {
+    padding: 15px 20px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.alert-submit.success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-submit.error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.alert-submit.error ul {
+    margin: 5px 0 0 20px;
+}
+
+.submit-form .form-group {
+    margin-bottom: 25px;
+}
+
+.submit-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #1C150F;
+    font-size: 14px;
+}
+
+.submit-form label i {
+    margin-right: 8px;
+    color: #5C6844;
+}
+
+.submit-form .required {
+    color: #dc3545;
+}
+
+.submit-form .form-control {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #E8E4D9;
+    border-radius: 12px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.submit-form .form-control:focus {
+    outline: none;
+    border-color: #5C6844;
+    box-shadow: 0 0 0 3px rgba(92,104,68,0.1);
+}
+
+.submit-form .text-muted {
+    font-size: 11px;
+    color: #999;
+    margin-top: 5px;
+    display: block;
+}
+
+.form-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.btn-submit {
+    background: #5C6844;
+    color: white;
+    border: none;
+    padding: 12px 32px;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-submit:hover {
+    background: #4a5637;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(92,104,68,0.3);
+}
+
+.btn-cancel {
+    background: #f8f9fa;
+    color: #1C150F;
+    border: 1px solid #ddd;
+    padding: 12px 32px;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-cancel:hover {
+    background: #e9ecef;
+    transform: translateY(-2px);
+}
+
+.info-note {
+    margin-top: 25px;
+    padding: 15px;
+    background: #F5F2E8;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: #5C6844;
+}
+
+.info-note i {
+    font-size: 18px;
+}
+
+@media (max-width: 768px) {
+    .submit-wrapper {
+        padding: 25px;
+        margin: 0 15px;
+    }
+    
+    .submit-header h2 {
+        font-size: 24px;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .btn-submit, .btn-cancel {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Gallery Styles untuk Submit Page */
+.btn-add-gallery {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.btn-add-gallery:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+}
+
+.btn-remove-gallery {
+    background: #dc3545;
+    color: white;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-remove-gallery:hover {
+    background: #c82333;
+    transform: scale(1.05);
+}
+
+.gallery-item {
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    margin-bottom: 15px;
+}
+
+.invalid-feedback {
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.form-control.is-invalid {
+    border-color: #dc3545;
+}
 /* URGENT BOX */
 
 .urgent-box {

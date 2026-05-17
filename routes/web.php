@@ -22,6 +22,8 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\AdminCommentController;
+use App\Http\Controllers\WritingsSubmitController;
+use App\Http\Controllers\Admin\AdminWritingsController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -68,7 +70,9 @@ Route::get('/events/event/reguler', [KegiatanController::class, 'allEventReguler
 Route::get('/events/event/unggulan', [KegiatanController::class, 'allEventUnggulan'])->name('kegiatan.event.unggulan');
 Route::get('/events/programs/{status}', [KegiatanController::class, 'allPrograms'])->name('kegiatan.programs');
 Route::get('/events/{id}', [KegiatanController::class, 'show'])->name('kegiatan.show');
-
+// Writings Submit Routes (User)
+Route::get('/writings/submit', [WritingsSubmitController::class, 'create'])->name('writings.submit');
+Route::post('/writings/submit', [WritingsSubmitController::class, 'store'])->name('writings.submit.store');
 // 🔥 WRITINGS ROUTES (Semua mengarah ke show.blade.php)
 Route::get('/writings', [WritingsController::class, 'index'])->name('writings');
 Route::get('/writings/all', [WritingsController::class, 'all'])->name('writings.all');
@@ -182,4 +186,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::post('/comments/{id}/reply', [AdminCommentController::class, 'reply'])->name('comments.reply');
     Route::delete('/comments/{id}', [AdminCommentController::class, 'destroy'])->name('comments.destroy');
     Route::post('/comments/bulk', [AdminCommentController::class, 'bulkAction'])->name('comments.bulk');
+});
+// Admin Writings Routes
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/writings/pending', [AdminWritingsController::class, 'pending'])->name('writings.pending');
+    Route::get('/writings/show/{id}', [AdminWritingsController::class, 'show'])->name('writings.show');
+    Route::put('/writings/approve/{id}', [AdminWritingsController::class, 'approve'])->name('writings.approve');
+    Route::delete('/writings/reject/{id}', [AdminWritingsController::class, 'reject'])->name('writings.reject');
 });

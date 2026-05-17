@@ -126,8 +126,9 @@
         <div class="create-own-wrapper">
             <h3 class="create-own-title">Start Your Writing Journey</h3>
             <p class="create-own-subtitle">Share your thoughts, stories, and ideas with our community</p>
-            <a href="#" class="btn-create-own" onclick="alert('Coming Soon!')">Create Your Own Now! <i class="bi bi-arrow-right ms-2"></i></a>
+            <a href="{{ route('writings.submit') }}" class="btn-create-own">Create Your Own Now! <i class="bi bi-arrow-right ms-2"></i></a>
         </div>
     </div>
 </div>
+
 @endsection
