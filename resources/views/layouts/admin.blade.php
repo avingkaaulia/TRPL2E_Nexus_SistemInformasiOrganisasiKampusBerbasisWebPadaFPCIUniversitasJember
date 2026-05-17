@@ -51,9 +51,13 @@
             <a href="{{ route('admin.anggota.index') }}" class="menu-item {{ request()->routeIs('admin.anggota*') ? 'active' : '' }}">
                 <i class="bi bi-people"></i> Anggota
             </a>
-            <a href="#" class="menu-item">
-                <i class="bi bi-chat-dots"></i> Komentar
-            </a>
+            <a href="{{ route('admin.comments.index') }}" class="menu-item {{ request()->routeIs('admin.comments*') ? 'active' : '' }}">
+    <i class="bi bi-chat-dots"></i> Komentar
+    @php $pendingCount = App\Models\Comment::where('is_replied', 0)->count(); @endphp
+    @if($pendingCount > 0)
+        <span class="badge bg-danger ms-2">{{ $pendingCount }}</span>
+    @endif
+</a>
             
             <div class="menu-group-title">PENGATURAN</div>
             <a href="{{ route('admin.menu.index') }}" class="menu-item {{ request()->routeIs('admin.menu*') ? 'active' : '' }}">

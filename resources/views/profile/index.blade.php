@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.auth')
 
 @section('title', 'Profil Saya - FPCI UNEJ')
 @section('page-title', 'Profil Saya')

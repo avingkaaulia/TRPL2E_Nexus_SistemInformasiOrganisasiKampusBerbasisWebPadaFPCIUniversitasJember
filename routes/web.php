@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\AdminCategoryController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\AdminCommentController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -48,9 +49,6 @@ Route::middleware(['auth'])->group(function () {
 // routes/web.php
 Route::get('/post/{id_post}/comments', [CommentController::class, 'index'])->name('comments.index');
 Route::post('/post/{id_post}/comments', [CommentController::class, 'store'])->name('comments.store');
-// ROUTE UNTUK TESTING COMMENT (TANPA MENUNGGU TEMAN)
-// Route::get('/post/{id}', [App\Http\Controllers\CommentController::class, 'testShow'])->name('test.post');
-// Route::post('/post/{id_post}/comments', [App\Http\Controllers\CommentController::class, 'store'])->name('test.comments.store');
 Route::post('/post/{id_post}/comments', [CommentController::class, 'store'])->name('comments.store');
 // ========== ROUTE PENCARIAN ==========
 Route::get('/search', [SearchController::class, 'search'])->name('search');
@@ -176,4 +174,12 @@ Route::prefix('admin')->group(function () {
     Route::get('/categories/{id}/edit', [AdminCategoryController::class, 'edit'])->name('admin.categories.edit');
     Route::put('/categories/{id}', [AdminCategoryController::class, 'update'])->name('admin.categories.update');
     Route::delete('/categories/{id}', [AdminCategoryController::class, 'destroy'])->name('admin.categories.destroy');
+});
+
+// Admin Comment Routes
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/comments', [AdminCommentController::class, 'index'])->name('comments.index');
+    Route::post('/comments/{id}/reply', [AdminCommentController::class, 'reply'])->name('comments.reply');
+    Route::delete('/comments/{id}', [AdminCommentController::class, 'destroy'])->name('comments.destroy');
+    Route::post('/comments/bulk', [AdminCommentController::class, 'bulkAction'])->name('comments.bulk');
 });
