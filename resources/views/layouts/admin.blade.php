@@ -72,6 +72,9 @@
             <a href="{{ route('admin.contact.index') }}" class="menu-item {{ request()->routeIs('admin.contact*') ? 'active' : '' }}">
     <i class="bi bi-envelope"></i> Kontak & Sosmed
 </a>
+<a href="{{ route('admin.logo.index') }}" class="menu-item {{ request()->routeIs('admin.logo*') ? 'active' : '' }}">
+    <i class="bi bi-image"></i> Logo & Favicon
+</a>
             <a href="{{ route('profile') }}" class="menu-item">
                 <i class="bi bi-person"></i> Profil Saya
             </a>

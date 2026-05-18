@@ -25,6 +25,7 @@ use App\Http\Controllers\Admin\AdminCommentController;
 use App\Http\Controllers\WritingsSubmitController;
 use App\Http\Controllers\Admin\AdminWritingsController;
 use App\Http\Controllers\Admin\AdminContactController;
+use App\Http\Controllers\Admin\AdminLogoController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -202,4 +203,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/contact', [AdminContactController::class, 'index'])->name('contact.index');
     Route::get('/contact/edit', [AdminContactController::class, 'edit'])->name('contact.edit');
     Route::put('/contact/update', [AdminContactController::class, 'update'])->name('contact.update');
+});
+// Admin Logo Routes
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/logo', [AdminLogoController::class, 'index'])->name('logo.index');
+    Route::put('/logo/update', [AdminLogoController::class, 'updateLogo'])->name('logo.update');
+    Route::put('/logo/favicon', [AdminLogoController::class, 'updateFavicon'])->name('logo.favicon');
+    Route::get('/logo/reset', [AdminLogoController::class, 'resetLogo'])->name('logo.reset');
 });

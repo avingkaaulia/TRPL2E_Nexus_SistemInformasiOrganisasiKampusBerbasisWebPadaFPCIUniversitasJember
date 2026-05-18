@@ -1,6 +1,8 @@
 @php
 $menus = DB::table('menu')->get();
 $contact = DB::table('contact')->first();
+$logo = App\Models\Setting::get('site_logo', 'assets/img/logo.png');
+$favicon = App\Models\Setting::get('site_favicon', 'assets/img/favicon.ico');
 @endphp
 <!DOCTYPE html>
 <html>
@@ -8,6 +10,7 @@ $contact = DB::table('contact')->first();
     <title>FPCI UNEJ</title>
 
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+    <link rel="icon" type="image/x-icon" href="{{ asset($favicon) }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('assets/css/comments.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/pendaftaran.css') }}">
@@ -25,7 +28,7 @@ $contact = DB::table('contact')->first();
     <div class="container">
 
         <!-- LOGO -->
-        <img src="{{ asset('assets/img/logo.png') }}" width="90">
+        <img src="{{ asset($logo) }}" width="90" alt="Logo FPCI UNEJ">
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
@@ -139,7 +142,7 @@ $contact = DB::table('contact')->first();
             <div class="row footer-row">
 
                 <div class="col-md-4">
-                    <img src="{{ asset('assets/img/logo.png') }}" width="90">
+                    <img src="{{ asset($logo) }}" width="90" alt="Logo FPCI UNEJ">
                     <p>FPCI UNEJ fokus pada isu global & kepemudaan</p>
                 </div>
 
@@ -176,35 +179,47 @@ $contact = DB::table('contact')->first();
                     </div>
                 </div>
 
-                <div class="col-md-4">
+                 <div class="col-md-4">
                     <h5>Follow Us</h5>
 
-                    <div class="d-flex gap-3 mt-2">
+                    <div class="d-flex gap-3 mt-2 flex-wrap">
+                        <!-- Instagram -->
                         @if($contact && $contact->instagram)
-                        <a href="https://instagram.com/{{ $contact->instagram }}" target="_blank" class="social-icon">
+                        <a href="https://instagram.com/{{ $contact->instagram }}" target="_blank" class="social-icon" title="Instagram">
                             <i class="bi bi-instagram"></i>
                         </a>
                         @endif
 
+                        <!-- LinkedIn -->
                         @if($contact && $contact->linkedin)
-                        <a href="https://linkedin.com/in/{{ $contact->linkedin }}" target="_blank" class="social-icon">
+                        <a href="https://linkedin.com/company/{{ $contact->linkedin }}" target="_blank" class="social-icon" title="LinkedIn">
                             <i class="bi bi-linkedin"></i>
                         </a>
                         @endif
 
-                        <a href="https://tiktok.com" target="_blank" class="social-icon">
+                        <!-- TikTok -->
+                        @if($contact && $contact->tiktok)
+                        <a href="https://tiktok.com/@{{ $contact->tiktok }}" target="_blank" class="social-icon" title="TikTok">
                             <i class="bi bi-tiktok"></i>
                         </a>
+                        @endif
 
-                        <a href="https://youtube.com" target="_blank" class="social-icon">
+                        <!-- YouTube -->
+                        @if($contact && $contact->youtube)
+                        <a href="https://youtube.com/{{ $contact->youtube }}" target="_blank" class="social-icon" title="YouTube">
                             <i class="bi bi-youtube"></i>
                         </a>
+                        @endif
 
-                        <a href="https://x.com" target="_blank" class="social-icon">
+                        <!-- Twitter/X -->
+                        @if($contact && $contact->x)
+                        <a href="https://twitter.com/{{ $contact->x }}" target="_blank" class="social-icon" title="Twitter / X">
                             <i class="bi bi-twitter-x"></i>
                         </a>
+                        @endif
                     </div>
                 </div>
+
 
             </div>
         </div>

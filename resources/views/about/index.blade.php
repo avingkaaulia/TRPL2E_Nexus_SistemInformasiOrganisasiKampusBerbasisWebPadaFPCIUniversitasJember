@@ -124,7 +124,10 @@
     <div class="container">
         <h2>Our Logo</h2>
         <div class="logo-wrapper">
-            <img src="{{ asset('assets/img/logo.png') }}" class="main-logo" alt="FPCI UNEJ Logo">
+            @php
+                $logo = App\Models\Setting::get('site_logo', 'assets/img/logo.png');
+            @endphp
+            <img src="{{ asset($logo) }}" class="main-logo" alt="FPCI UNEJ Logo">
         </div>
     </div>
 </section>
