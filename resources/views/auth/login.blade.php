@@ -1,3 +1,4 @@
+{{-- resources/views/auth/login.blade.php --}}
 @extends('layouts.auth')
 
 @section('title', 'Login - FPCI UNEJ')
@@ -62,16 +63,13 @@
                     <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}>
                     <span>Ingat saya</span>
                 </label>
+                <a href="{{ route('password.request') }}" class="forgot-link">Lupa password?</a>
             </div>
             
             <button type="submit" class="btn-login-submit">
                 <i class="bi bi-box-arrow-in-right"></i> Login
             </button>
         </form>
-        
-        <div class="auth-footer">
-            <p>Belum punya akun? <a href="{{ route('register') }}">Daftar dulu</a></p>
-        </div>
     </div>
 </div>
 

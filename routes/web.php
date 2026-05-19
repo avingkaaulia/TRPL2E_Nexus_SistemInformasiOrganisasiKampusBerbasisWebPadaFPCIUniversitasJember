@@ -26,6 +26,8 @@ use App\Http\Controllers\WritingsSubmitController;
 use App\Http\Controllers\Admin\AdminWritingsController;
 use App\Http\Controllers\Admin\AdminContactController;
 use App\Http\Controllers\Admin\AdminLogoController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -211,3 +213,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::put('/logo/favicon', [AdminLogoController::class, 'updateFavicon'])->name('logo.favicon');
     Route::get('/logo/reset', [AdminLogoController::class, 'resetLogo'])->name('logo.reset');
 });
+// Forgot Password Routes
+// Password Reset Routes
+Route::get('/forgot-password', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'showForgotForm'])->name('password.request');
+Route::post('/forgot-password', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'sendResetLink'])->name('password.email');
+Route::get('/reset-password/{token}', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('/reset-password', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'resetPassword'])->name('password.update');

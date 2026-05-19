@@ -1,3 +1,4 @@
+{{-- resources/views/profile/index.blade.php --}}
 @extends('layouts.auth')
 
 @section('title', 'Profil Saya - FPCI UNEJ')
@@ -38,6 +39,12 @@
                     </div>
                 @endif
                 
+                @if(session('error'))
+                    <div class="alert alert-danger">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ session('error') }}
+                    </div>
+                @endif
+                
                 @if($errors->any())
                     <div class="alert alert-danger">
                         <i class="bi bi-exclamation-triangle-fill me-2"></i>
@@ -56,46 +63,76 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="nama">
-                                <i class="bi bi-person"></i> Nama Lengkap
+                                <i class="bi bi-person"></i> Nama Lengkap <span class="text-danger">*</span>
                             </label>
                             <input type="text" 
                                    name="nama" 
                                    id="nama" 
-                                   class="form-control" 
+                                   class="form-control @error('nama') is-invalid @enderror" 
                                    value="{{ old('nama', $user->nama) }}" 
                                    required>
+                            @error('nama')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         
                         <div class="form-group">
                             <label for="username">
-                                <i class="bi bi-person-badge"></i> Username
+                                <i class="bi bi-person-badge"></i> Username <span class="text-danger">*</span>
                             </label>
                             <input type="text" 
                                    name="username" 
                                    id="username" 
-                                   class="form-control" 
+                                   class="form-control @error('username') is-invalid @enderror" 
                                    value="{{ old('username', $user->username) }}" 
                                    required>
                             <small class="form-text text-muted">Username unik untuk login</small>
+                            @error('username')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                     
                     <div class="form-group">
                         <label for="email">
-                            <i class="bi bi-envelope"></i> Email
+                            <i class="bi bi-envelope"></i> Email <span class="text-danger">*</span>
                         </label>
                         <input type="email" 
                                name="email" 
                                id="email" 
-                               class="form-control" 
+                               class="form-control @error('email') is-invalid @enderror" 
                                value="{{ old('email', $user->email) }}" 
                                required>
+                        @error('email')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                     
                     <hr>
                     
                     <h5><i class="bi bi-lock me-2"></i> Ubah Password</h5>
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Isi form di bawah hanya jika ingin mengubah password. Password baru minimal 6 karakter.
+                    </div>
+                    
                     <div class="form-row">
+                        <div class="form-group">
+                            <label for="current_password">
+                                <i class="bi bi-key"></i> Password Saat Ini
+                            </label>
+                            <div class="password-wrapper">
+                                <input type="password" 
+                                       name="current_password" 
+                                       id="current_password" 
+                                       class="form-control @error('current_password') is-invalid @enderror">
+                                <i class="bi bi-eye-slash toggle-password" onclick="togglePassword('current_password')"></i>
+                            </div>
+                            @error('current_password')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        
                         <div class="form-group">
                             <label for="password">
                                 <i class="bi bi-key"></i> Password Baru
@@ -104,23 +141,29 @@
                                 <input type="password" 
                                        name="password" 
                                        id="password" 
-                                       class="form-control">
+                                       class="form-control @error('password') is-invalid @enderror">
                                 <i class="bi bi-eye-slash toggle-password" onclick="togglePassword('password')"></i>
                             </div>
-                            <small class="form-text text-muted">Kosongkan jika tidak ingin mengubah password</small>
+                            <small class="form-text text-muted">Minimal 6 karakter</small>
+                            @error('password')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         
                         <div class="form-group">
                             <label for="password_confirmation">
-                                <i class="bi bi-key"></i> Konfirmasi Password
+                                <i class="bi bi-key"></i> Konfirmasi Password Baru
                             </label>
                             <div class="password-wrapper">
                                 <input type="password" 
                                        name="password_confirmation" 
                                        id="password_confirmation" 
-                                       class="form-control">
+                                       class="form-control @error('password_confirmation') is-invalid @enderror">
                                 <i class="bi bi-eye-slash toggle-password" onclick="togglePassword('password_confirmation')"></i>
                             </div>
+                            @error('password_confirmation')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                     
@@ -142,7 +185,7 @@
 <script>
 function togglePassword(fieldId) {
     const password = document.getElementById(fieldId);
-    const toggle = document.querySelector(`#${fieldId} + .toggle-password`);
+    const toggle = password.nextElementSibling;
     if (password.type === 'password') {
         password.type = 'text';
         toggle.classList.remove('bi-eye-slash');

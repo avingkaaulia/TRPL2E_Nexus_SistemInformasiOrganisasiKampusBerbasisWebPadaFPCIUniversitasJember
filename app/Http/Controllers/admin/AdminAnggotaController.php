@@ -11,6 +11,8 @@ use App\Models\Divisi;
 use App\Models\Pendaftaran;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\AcceptedMemberMail;
 
 class AdminAnggotaController extends Controller
 {
@@ -119,17 +121,30 @@ class AdminAnggotaController extends Controller
             ->with('success', 'Anggota berhasil diupdate');
     }
     
-    // Hapus anggota
+        // 🔥 PERBAIKI: Hapus anggota - hapus anggota dulu baru user
     public function destroy($id)
     {
-        $anggota = Anggota::findOrFail($id);
+        $anggota = Anggota::with('user')->findOrFail($id);
         
-        if ($anggota->foto && file_exists(public_path($anggota->foto))) {
-            unlink(public_path($anggota->foto));
+        // Hapus foto jika ada
+        if ($anggota->foto && $anggota->foto != 'assets/img/avatars/default-avatar.png') {
+            $fotoPath = public_path($anggota->foto);
+            if (file_exists($fotoPath)) {
+                unlink($fotoPath);
+            }
         }
         
-        $anggota->user()->delete();
+        // Simpan id_user sebelum menghapus anggota
+        $idUser = $anggota->id_user;
+        
+        // 🔥 HAPUS ANGGOTA TERLEBIH DAHULU
         $anggota->delete();
+        
+        // 🔥 BARU HAPUS USER SETELAH ANGGOTA DIHAPUS
+        $user = User::find($idUser);
+        if ($user) {
+            $user->delete();
+        }
         
         return redirect()->route('admin.anggota.index')
             ->with('success', 'Anggota berhasil dihapus');
@@ -146,27 +161,34 @@ class AdminAnggotaController extends Controller
         })->first();
         
         if ($existingAnggota) {
-            return redirect()->back()->with('error', 'Email ' . $pendaftaran->email . ' sudah terdaftar sebagai anggota! Tidak dapat dikonversi.');
+            return redirect()->back()->with('error', 'Email ' . $pendaftaran->email . ' sudah terdaftar sebagai anggota!');
+        }
+        
+        // 🔥 BUAT USERNAME DAN PASSWORD MENGGUNAKAN NIM
+        $username = $pendaftaran->nim;
+        $password = $pendaftaran->nim; // Password default = NIM
+        
+        // Cek apakah username (NIM) sudah ada
+        $existingUser = User::where('username', $username)->first();
+        if ($existingUser) {
+            // Jika NIM sudah ada, tambahkan angka acak
+            $username = $pendaftaran->nim . rand(10, 99);
         }
         
         // Cek apakah email sudah terdaftar di users
-        $existingUser = User::where('email', $pendaftaran->email)->first();
-        if ($existingUser) {
-            $user = $existingUser;
+        $existingUserByEmail = User::where('email', $pendaftaran->email)->first();
+        
+        if ($existingUserByEmail) {
+            $user = $existingUserByEmail;
+            // Update username ke NIM jika belum
+            $user->username = $username;
+            $user->password = Hash::make($password);
+            $user->save();
         } else {
-            // Buat username unik
-            $username = strtolower(str_replace(' ', '', $pendaftaran->nama));
-            $originalUsername = $username;
-            $counter = 1;
-            while (User::where('username', $username)->exists()) {
-                $username = $originalUsername . $counter;
-                $counter++;
-            }
-            
             $user = User::create([
                 'username' => $username,
                 'email' => $pendaftaran->email,
-                'password' => Hash::make('password123'),
+                'password' => Hash::make($password),
                 'nama' => $pendaftaran->nama,
                 'id_role' => 2,
                 'tanggal_daftar' => now()
@@ -176,18 +198,40 @@ class AdminAnggotaController extends Controller
         $defaultFoto = 'assets/img/avatars/default-avatar.png';
         $lastNoUrut = Anggota::max('no_urut') ?? 0;
         
+        // Tentukan divisi dari pilihan pendaftar
+        $divisiId = 1; // default
+        if (!empty($pendaftaran->divisi)) {
+            $divisi = Divisi::where('nama_divisi', $pendaftaran->divisi)->first();
+            if ($divisi) {
+                $divisiId = $divisi->id_divisi;
+            }
+        }
+        
         Anggota::create([
             'id_user' => $user->id_user,
-            'id_divisi' => 1,
+            'id_divisi' => $divisiId,
             'jabatan' => 'Staff',
             'periode' => '2025/2026',
             'foto' => $defaultFoto,
             'no_urut' => $lastNoUrut + 1,
-            'link' => ''  // 🔥 PASTIKAN TIDAK NULL
+            'link' => ''
         ]);
         
-        
-        return redirect()->route('admin.anggota.index')
-            ->with('success', 'Pendaftar ' . $pendaftaran->nama . ' berhasil dikonversi menjadi anggota!');
+        // 🔥 KIRIM EMAIL KE CALON ANGGOTA
+        try {
+            Mail::to($pendaftaran->email)->send(new AcceptedMemberMail($pendaftaran, $username, $password));
+            
+            // Update status pendaftaran menjadi diterima
+            if ($pendaftaran->status != 'diterima') {
+                $pendaftaran->status = 'diterima';
+                $pendaftaran->save();
+            }
+            
+            return redirect()->route('admin.anggota.index')
+                ->with('success', 'Pendaftar ' . $pendaftaran->nama . ' berhasil dikonversi menjadi anggota! Email berhasil dikirim.');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.anggota.index')
+                ->with('success', 'Pendaftar ' . $pendaftaran->nama . ' berhasil dikonversi menjadi anggota! Namun email gagal dikirim. Error: ' . $e->getMessage());
+        }
     }
 }
