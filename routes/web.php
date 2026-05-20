@@ -75,8 +75,10 @@ Route::get('/events/event/unggulan', [KegiatanController::class, 'allEventUnggul
 Route::get('/events/programs/{status}', [KegiatanController::class, 'allPrograms'])->name('kegiatan.programs');
 Route::get('/events/{id}', [KegiatanController::class, 'show'])->name('kegiatan.show');
 // Writings Submit Routes (User)
-Route::get('/writings/submit', [WritingsSubmitController::class, 'create'])->name('writings.submit');
-Route::post('/writings/submit', [WritingsSubmitController::class, 'store'])->name('writings.submit.store');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/writings/submit', [WritingsSubmitController::class, 'create'])->name('writings.submit');
+    Route::post('/writings/submit', [WritingsSubmitController::class, 'store'])->name('writings.submit.store');
+});
 // 🔥 WRITINGS ROUTES (Semua mengarah ke show.blade.php)
 Route::get('/writings', [WritingsController::class, 'index'])->name('writings');
 Route::get('/writings/all', [WritingsController::class, 'all'])->name('writings.all');
@@ -91,97 +93,97 @@ Route::get('/page/{id}', [PageController::class, 'show'])->name('page.show');
 Route::get('/pages', [PageController::class, 'all'])->name('pages.index');
 
 // Admin Routes
-Route::prefix('admin')->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
     // Dashboard
-    Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
     
     // Carousel Routes
-    Route::get('/carousel', [CarouselController::class, 'index'])->name('admin.carousel');
-    Route::get('/carousel/create/{categoryId}', [CarouselController::class, 'create'])->name('admin.carousel.create');
-    Route::post('/carousel/store/{categoryId}', [CarouselController::class, 'store'])->name('admin.carousel.store');
-    Route::get('/carousel/edit/{id}', [CarouselController::class, 'edit'])->name('admin.carousel.edit');
-    Route::put('/carousel/update/{id}', [CarouselController::class, 'update'])->name('admin.carousel.update');
-    Route::delete('/carousel/destroy/{id}', [CarouselController::class, 'destroy'])->name('admin.carousel.destroy');
+    Route::get('/carousel', [CarouselController::class, 'index'])->name('carousel');
+    Route::get('/carousel/create/{categoryId}', [CarouselController::class, 'create'])->name('carousel.create');
+    Route::post('/carousel/store/{categoryId}', [CarouselController::class, 'store'])->name('carousel.store');
+    Route::get('/carousel/edit/{id}', [CarouselController::class, 'edit'])->name('carousel.edit');
+    Route::put('/carousel/update/{id}', [CarouselController::class, 'update'])->name('carousel.update');
+    Route::delete('/carousel/destroy/{id}', [CarouselController::class, 'destroy'])->name('carousel.destroy');
 });
 
 // Admin Post Routes
-Route::prefix('admin')->group(function () {
-    Route::get('/posts', [PostAdminController::class, 'index'])->name('admin.posts.index');
-    Route::get('/posts/create', [PostAdminController::class, 'create'])->name('admin.posts.create');
-    Route::post('/posts/store', [PostAdminController::class, 'store'])->name('admin.posts.store');
-    Route::get('/posts/edit/{id}', [PostAdminController::class, 'edit'])->name('admin.posts.edit');
-    Route::put('/posts/update/{id}', [PostAdminController::class, 'update'])->name('admin.posts.update');
-    Route::delete('/posts/destroy/{id}', [PostAdminController::class, 'destroy'])->name('admin.posts.destroy');
-    Route::delete('/posts/gallery/{id}', [PostAdminController::class, 'deleteGallery'])->name('admin.posts.gallery.delete');
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/posts', [PostAdminController::class, 'index'])->name('posts.index');
+    Route::get('/posts/create', [PostAdminController::class, 'create'])->name('posts.create');
+    Route::post('/posts/store', [PostAdminController::class, 'store'])->name('posts.store');
+    Route::get('/posts/edit/{id}', [PostAdminController::class, 'edit'])->name('posts.edit');
+    Route::put('/posts/update/{id}', [PostAdminController::class, 'update'])->name('posts.update');
+    Route::delete('/posts/destroy/{id}', [PostAdminController::class, 'destroy'])->name('posts.destroy');
+    Route::delete('/posts/gallery/{id}', [PostAdminController::class, 'deleteGallery'])->name('posts.gallery.delete');
 });
 
 // Admin Pendaftaran Routes
-Route::prefix('admin')->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
 
     // ✅ ROUTE SPESIFIK DULU (sebelum {id})
-    Route::get('/pendaftaran/config', [AdminPendaftaranController::class, 'config'])->name('admin.pendaftaran.config');
+    Route::get('/pendaftaran/config', [AdminPendaftaranController::class, 'config'])->name('pendaftaran.config');
     Route::put('/pendaftaran/config', [AdminPendaftaranController::class, 'updateConfig'])->name('admin.pendaftaran.config.update');
 
-    Route::get('/pendaftaran/periode', [AdminPendaftaranController::class, 'periode'])->name('admin.pendaftaran.periode');
-    Route::post('/pendaftaran/periode', [AdminPendaftaranController::class, 'storePeriode'])->name('admin.pendaftaran.periode.store');
-    Route::put('/pendaftaran/periode/{id}', [AdminPendaftaranController::class, 'updatePeriode'])->name('admin.pendaftaran.periode.update');
-    Route::delete('/pendaftaran/periode/{id}', [AdminPendaftaranController::class, 'destroyPeriode'])->name('admin.pendaftaran.periode.destroy');
+    Route::get('/pendaftaran/periode', [AdminPendaftaranController::class, 'periode'])->name('pendaftaran.periode');
+    Route::post('/pendaftaran/periode', [AdminPendaftaranController::class, 'storePeriode'])->name('pendaftaran.periode.store');
+    Route::put('/pendaftaran/periode/{id}', [AdminPendaftaranController::class, 'updatePeriode'])->name('pendaftaran.periode.update');
+    Route::delete('/pendaftaran/periode/{id}', [AdminPendaftaranController::class, 'destroyPeriode'])->name('pendaftaran.periode.destroy');
 
-    Route::get('/pendaftaran/form-fields', [AdminPendaftaranController::class, 'formFields'])->name('admin.pendaftaran.form-fields');
-    Route::post('/pendaftaran/form-fields', [AdminPendaftaranController::class, 'storeFormField'])->name('admin.pendaftaran.form-fields.store');
-    Route::put('/pendaftaran/form-fields/{id}', [AdminPendaftaranController::class, 'updateFormField'])->name('admin.pendaftaran.form-fields.update');
-    Route::delete('/pendaftaran/form-fields/{id}', [AdminPendaftaranController::class, 'destroyFormField'])->name('admin.pendaftaran.form-fields.destroy');
+    Route::get('/pendaftaran/form-fields', [AdminPendaftaranController::class, 'formFields'])->name('pendaftaran.form-fields');
+    Route::post('/pendaftaran/form-fields', [AdminPendaftaranController::class, 'storeFormField'])->name('pendaftaran.form-fields.store');
+    Route::put('/pendaftaran/form-fields/{id}', [AdminPendaftaranController::class, 'updateFormField'])->name('pendaftaran.form-fields.update');
+    Route::delete('/pendaftaran/form-fields/{id}', [AdminPendaftaranController::class, 'destroyFormField'])->name('pendaftaran.form-fields.destroy');
 
-    Route::get('/pendaftaran/jenis-berkas', [AdminPendaftaranController::class, 'jenisBerkas'])->name('admin.pendaftaran.jenis-berkas');
-    Route::post('/pendaftaran/jenis-berkas', [AdminPendaftaranController::class, 'storeJenisBerkas'])->name('admin.pendaftaran.jenis-berkas.store');
-    Route::put('/pendaftaran/jenis-berkas/{id}', [AdminPendaftaranController::class, 'updateJenisBerkas'])->name('admin.pendaftaran.jenis-berkas.update');
-    Route::delete('/pendaftaran/jenis-berkas/{id}', [AdminPendaftaranController::class, 'destroyJenisBerkas'])->name('admin.pendaftaran.jenis-berkas.destroy');
+    Route::get('/pendaftaran/jenis-berkas', [AdminPendaftaranController::class, 'jenisBerkas'])->name('pendaftaran.jenis-berkas');
+    Route::post('/pendaftaran/jenis-berkas', [AdminPendaftaranController::class, 'storeJenisBerkas'])->name('pendaftaran.jenis-berkas.store');
+    Route::put('/pendaftaran/jenis-berkas/{id}', [AdminPendaftaranController::class, 'updateJenisBerkas'])->name('pendaftaran.jenis-berkas.update');
+    Route::delete('/pendaftaran/jenis-berkas/{id}', [AdminPendaftaranController::class, 'destroyJenisBerkas'])->name('pendaftaran.jenis-berkas.destroy');
 
-    Route::get('/pendaftaran/download-berkas/{id}', [AdminPendaftaranController::class, 'downloadBerkas'])->name('admin.pendaftaran.download-berkas');
+    Route::get('/pendaftaran/download-berkas/{id}', [AdminPendaftaranController::class, 'downloadBerkas'])->name('pendaftaran.download-berkas');
 
     // ✅ ROUTE INDEX
-    Route::get('/pendaftaran', [AdminPendaftaranController::class, 'index'])->name('admin.pendaftaran.index');
+    Route::get('/pendaftaran', [AdminPendaftaranController::class, 'index'])->name('pendaftaran.index');
 
     // ⚠️ ROUTE {id} HARUS PALING BAWAH
-    Route::get('/pendaftaran/{id}', [AdminPendaftaranController::class, 'show'])->name('admin.pendaftaran.show');
-    Route::put('/pendaftaran/update-status/{id}', [AdminPendaftaranController::class, 'updateStatus'])->name('admin.pendaftaran.update-status');
-    Route::delete('/pendaftaran/{id}', [AdminPendaftaranController::class, 'destroy'])->name('admin.pendaftaran.destroy');
+    Route::get('/pendaftaran/{id}', [AdminPendaftaranController::class, 'show'])->name('pendaftaran.show');
+    Route::put('/pendaftaran/update-status/{id}', [AdminPendaftaranController::class, 'updateStatus'])->name('pendaftaran.update-status');
+    Route::delete('/pendaftaran/{id}', [AdminPendaftaranController::class, 'destroy'])->name('pendaftaran.destroy');
     // 🔥 TAMBAH ROUTE UNTUK DITERIMA DAN DITOLAK
-    Route::put('/pendaftaran/accept/{id}', [AdminPendaftaranController::class, 'accept'])->name('admin.pendaftaran.accept');
-    Route::put('/pendaftaran/reject/{id}', [AdminPendaftaranController::class, 'reject'])->name('admin.pendaftaran.reject');
+    Route::put('/pendaftaran/accept/{id}', [AdminPendaftaranController::class, 'accept'])->name('pendaftaran.accept');
+    Route::put('/pendaftaran/reject/{id}', [AdminPendaftaranController::class, 'reject'])->name('pendaftaran.reject');
 });
 
 // Admin Anggota Routes
-Route::prefix('admin')->group(function () {
-    Route::get('/anggota', [AdminAnggotaController::class, 'index'])->name('admin.anggota.index');
-    Route::get('/anggota/{id}', [AdminAnggotaController::class, 'show'])->name('admin.anggota.show');
-    Route::get('/anggota/{id}/edit', [AdminAnggotaController::class, 'edit'])->name('admin.anggota.edit');
-    Route::put('/anggota/{id}', [AdminAnggotaController::class, 'update'])->name('admin.anggota.update');
-    Route::delete('/anggota/{id}', [AdminAnggotaController::class, 'destroy'])->name('admin.anggota.destroy');
-    Route::post('/anggota/convert/{id}', [AdminAnggotaController::class, 'convertFromPendaftaran'])->name('admin.anggota.convert');
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/anggota', [AdminAnggotaController::class, 'index'])->name('anggota.index');
+    Route::get('/anggota/{id}', [AdminAnggotaController::class, 'show'])->name('anggota.show');
+    Route::get('/anggota/{id}/edit', [AdminAnggotaController::class, 'edit'])->name('anggota.edit');
+    Route::put('/anggota/{id}', [AdminAnggotaController::class, 'update'])->name('anggota.update');
+    Route::delete('/anggota/{id}', [AdminAnggotaController::class, 'destroy'])->name('anggota.destroy');
+    Route::post('/anggota/convert/{id}', [AdminAnggotaController::class, 'convertFromPendaftaran'])->name('anggota.convert');
 });
 
 // Admin Pages Routes
-Route::prefix('admin')->group(function () {
-    Route::get('/pages', [AdminPageController::class, 'index'])->name('admin.pages.list');
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/pages', [AdminPageController::class, 'index'])->name('pages.list');
 });
 // Admin Menu Routes
-Route::prefix('admin')->group(function () {
-    Route::get('/menu', [AdminMenuController::class, 'index'])->name('admin.menu.index');
-    Route::get('/menu/create', [AdminMenuController::class, 'create'])->name('admin.menu.create');
-    Route::post('/menu', [AdminMenuController::class, 'store'])->name('admin.menu.store');
-    Route::get('/menu/{id}/edit', [AdminMenuController::class, 'edit'])->name('admin.menu.edit');
-    Route::put('/menu/{id}', [AdminMenuController::class, 'update'])->name('admin.menu.update');
-    Route::delete('/menu/{id}', [AdminMenuController::class, 'destroy'])->name('admin.menu.destroy');
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/menu', [AdminMenuController::class, 'index'])->name('menu.index');
+    Route::get('/menu/create', [AdminMenuController::class, 'create'])->name('menu.create');
+    Route::post('/menu', [AdminMenuController::class, 'store'])->name('menu.store');
+    Route::get('/menu/{id}/edit', [AdminMenuController::class, 'edit'])->name('menu.edit');
+    Route::put('/menu/{id}', [AdminMenuController::class, 'update'])->name('menu.update');
+    Route::delete('/menu/{id}', [AdminMenuController::class, 'destroy'])->name('menu.destroy');
 });
 // Admin Category Routes
-Route::prefix('admin')->group(function () {
-    Route::get('/categories', [AdminCategoryController::class, 'index'])->name('admin.categories.index');
-    Route::get('/categories/create', [AdminCategoryController::class, 'create'])->name('admin.categories.create');
-    Route::post('/categories', [AdminCategoryController::class, 'store'])->name('admin.categories.store');
-    Route::get('/categories/{id}/edit', [AdminCategoryController::class, 'edit'])->name('admin.categories.edit');
-    Route::put('/categories/{id}', [AdminCategoryController::class, 'update'])->name('admin.categories.update');
-    Route::delete('/categories/{id}', [AdminCategoryController::class, 'destroy'])->name('admin.categories.destroy');
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/categories', [AdminCategoryController::class, 'index'])->name('categories.index');
+    Route::get('/categories/create', [AdminCategoryController::class, 'create'])->name('categories.create');
+    Route::post('/categories', [AdminCategoryController::class, 'store'])->name('categories.store');
+    Route::get('/categories/{id}/edit', [AdminCategoryController::class, 'edit'])->name('categories.edit');
+    Route::put('/categories/{id}', [AdminCategoryController::class, 'update'])->name('categories.update');
+    Route::delete('/categories/{id}', [AdminCategoryController::class, 'destroy'])->name('categories.destroy');
 });
 
 // Admin Writings Routes

@@ -337,7 +337,53 @@
     color: #1C150F;
     transform: translateY(-3px);
 }
+.alert-custom {
+    padding: 15px 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 14px;
+}
 
+.alert-warning-custom {
+    background: rgba(255, 193, 7, 0.2);
+    border: 1px solid #ffc107;
+    color: #ffc107;
+}
+/* tambahkan di style.css */
+.btn-reset {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 30px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.btn-reset:hover {
+    background: #5a6268;
+    color: white;
+}
+
+.result-info {
+    font-size: 13px;
+    background: #f8f9fa;
+    padding: 8px 15px;
+    border-radius: 20px;
+    display: inline-block;
+}
+
+.date-meta {
+    font-size: 12px;
+    color: #999;
+    margin: 8px 0;
+}
 /* Detail Post */
 .post-detail-header {
     background: white;

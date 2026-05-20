@@ -7,7 +7,8 @@
 <div class="auth-container">
     <div class="auth-card">
         <div class="auth-header">
-            <img src="{{ asset('assets/img/logo.png') }}" width="80" alt="Logo">
+            @php $logo = App\Models\Setting::get('site_logo', 'assets/img/logo.png'); @endphp
+            <img src="{{ asset($logo) }}" width="80" alt="Logo">
             <h2>Login</h2>
             <p>Masuk ke akun FPCI UNEJ Anda</p>
         </div>

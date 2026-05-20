@@ -121,7 +121,23 @@ class WritingsController extends Controller
                       ->orWhere('content', 'like', '%' . $search . '%');
                 });
             }
-            
+            // 🔥 SORTING
+            $sort = $request->get('sort', 'terbaru');
+            switch ($sort) {
+                case 'terlama':
+                    $query->orderBy('date_published', 'asc');
+                    break;
+                case 'az':
+                    $query->orderBy('title', 'asc');
+                    break;
+                case 'za':
+                    $query->orderBy('title', 'desc');
+                    break;
+                case 'terbaru':
+                default:
+                    $query->orderBy('date_published', 'desc');
+                    break;
+            }
             // 🔥 PAGINATION UNTUK HALAMAN ALL (9 PER HALAMAN)
             $posts = $query->orderBy('date_published', 'desc')->paginate(9);
             
@@ -129,7 +145,7 @@ class WritingsController extends Controller
                 $item->image_url = getImageUrl($item->featured_image_path);
             }
             
-            return view('writings.all', compact('posts', 'search'));
+            return view('writings.all', compact('posts', 'search', 'sort'));
             
         } catch (\Exception $e) {
             Log::error('WritingsController@all error: ' . $e->getMessage());

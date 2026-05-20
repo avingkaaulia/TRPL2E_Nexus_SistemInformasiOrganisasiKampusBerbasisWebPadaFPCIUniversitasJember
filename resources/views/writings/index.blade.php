@@ -49,15 +49,6 @@
     </div>
     @endif
 
-    <!-- Search Form -->
-    <div class="row mb-4">
-        <div class="col-md-6 mx-auto">
-            <form action="{{ isset($currentCategory) ? route('writings.category', $currentCategory->id_category) : route('writings') }}" method="GET" class="search-wrapper d-flex">
-                <input type="text" name="search" class="search-input flex-grow-1" placeholder="Search writings..." value="{{ $search ?? '' }}">
-                <button type="submit" class="btn-search-submit"><i class="bi bi-search"></i> Search</button>
-            </form>
-        </div>
-    </div>
 
     <!-- Hot Topics -->
     <div class="hot-topics">
@@ -120,13 +111,44 @@
 
 </div>
 
-<!-- Create Your Own Section -->
+<!-- 🔥 CREATE YOUR OWN SECTION - HANYA UNTUK ANGGOTA YANG LOGIN -->
 <div class="create-own-section mt-5 mb-5">
     <div class="container">
         <div class="create-own-wrapper">
-            <h3 class="create-own-title">Start Your Writing Journey</h3>
-            <p class="create-own-subtitle">Share your thoughts, stories, and ideas with our community</p>
-            <a href="{{ route('writings.submit') }}" class="btn-create-own">Create Your Own Now! <i class="bi bi-arrow-right ms-2"></i></a>
+            @auth
+                @if(Auth::user()->id_role == 2 || Auth::user()->id_role == 1)
+                    {{-- User adalah anggota atau admin --}}
+                    <h3 class="create-own-title">Start Your Writing Journey</h3>
+                    <p class="create-own-subtitle">Share your thoughts, stories, and ideas with our community</p>
+                    <a href="{{ route('writings.submit') }}" class="btn-create-own">
+                        Create Your Own Now! <i class="bi bi-arrow-right ms-2"></i>
+                    </a>
+                @else
+                    {{-- User login tapi bukan anggota (role tidak dikenali) --}}
+                    <h3 class="create-own-title">Start Your Writing Journey</h3>
+                    <p class="create-own-subtitle">Only registered members can submit writings</p>
+                    <div class="alert-custom alert-warning-custom">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        Anda tidak memiliki akses untuk submit karya. Hanya anggota yang dapat submit karya.
+                    </div>
+                    <a href="{{ route('profile') }}" class="btn-create-own-secondary">
+                        <i class="bi bi-person me-2"></i> Cek Profil Anda
+                    </a>
+                @endif
+            @else
+                {{-- User belum login --}}
+                <h3 class="create-own-title">Start Your Writing Journey</h3>
+                <p class="create-own-subtitle">Login to share your thoughts, stories, and ideas with our community</p>
+                <div class="alert-custom alert-warning-custom">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>
+                    Silakan login terlebih dahulu untuk dapat submit karya.
+                </div>
+                <div class="d-flex gap-3 justify-content-center mt-3">
+                    <a href="{{ route('login') }}" class="btn-create-own">
+                        <i class="bi bi-box-arrow-in-right me-2"></i> Login
+                    </a>
+                </div>
+            @endauth
         </div>
     </div>
 </div>

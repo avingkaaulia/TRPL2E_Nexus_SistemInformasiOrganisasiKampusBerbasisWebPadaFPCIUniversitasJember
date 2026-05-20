@@ -11,6 +11,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('assets/css/admin.css') }}">
+    @php
+        $logo = App\Models\Setting::get('site_logo', 'assets/img/logo.png');
+        $favicon = App\Models\Setting::get('site_favicon', 'assets/img/favicon.ico');
+    @endphp
+    <link rel="icon" type="image/x-icon" href="{{ asset($favicon) }}">
 </head>
 <body>
 
@@ -19,7 +24,7 @@
         <!-- SIDEBAR -->
         <div class="col-md-3 col-lg-2 px-0 sidebar">
             <div class="logo-area">
-                <img src="{{ asset('assets/img/logo.png') }}" alt="Logo">
+                <img src="{{ asset($logo) }}" alt="Logo">
                 <h5>FPCI UNEJ Admin</h5>
             </div>
             
@@ -57,11 +62,18 @@
             <a href="{{ route('admin.anggota.index') }}" class="menu-item {{ request()->routeIs('admin.anggota*') ? 'active' : '' }}">
                 <i class="bi bi-people"></i> Anggota
             </a>
-            <a href="{{ route('admin.comments.index') }}" class="menu-item {{ request()->routeIs('admin.comments*') ? 'active' : '' }}">
+           <a href="{{ route('admin.comments.index') }}" class="menu-item {{ request()->routeIs('admin.comments*') ? 'active' : '' }}">
     <i class="bi bi-chat-dots"></i> Komentar
-    @php $pendingCount = App\Models\Comment::where('is_replied', 0)->count(); @endphp
-    @if($pendingCount > 0)
-        <span class="badge bg-danger ms-2">{{ $pendingCount }}</span>
+    @php 
+        // 🔥 HITUNG KOMENTAR YANG PERLU DITINDAKLANJUTI:
+        // 1. Komentar dengan status pending (perlu approve/reject)
+        // 2. Komentar dengan status approved tapi belum dibalas (is_replied = 0)
+        $pendingComments = App\Models\Comment::where('status', 'pending')->count();
+        $unrepliedComments = App\Models\Comment::where('status', 'approved')->where('is_replied', 0)->count();
+        $totalNeedAction = $pendingComments + $unrepliedComments;
+    @endphp
+    @if($totalNeedAction > 0)
+        <span class="badge bg-danger ms-2">{{ $totalNeedAction }}</span>
     @endif
 </a>
             

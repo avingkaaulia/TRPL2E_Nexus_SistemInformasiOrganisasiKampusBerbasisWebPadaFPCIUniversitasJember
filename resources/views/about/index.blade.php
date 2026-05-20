@@ -106,7 +106,7 @@
             @foreach($anggota as $a)
             <div class="anggota-card">
                 <div class="anggota-foto-wrapper">
-                    <img src="{{ asset($a->foto ?? 'assets/img/avatars/default-avatar.png') }}" 
+                    <img src="{{ asset($a->foto ?? 'assets/avatar.png') }}" 
                          class="anggota-foto" 
                          alt="{{ $a->divisi->nama_divisi ?? 'Member' }}">
                 </div>

@@ -13,6 +13,10 @@
             <span class="badge bg-warning">Pending: {{ $pendingComments }}</span>
             <span class="badge bg-success">Disetujui: {{ $approvedComments }}</span>
             <span class="badge bg-danger">Ditolak: {{ $rejectedComments }}</span>
+            <!-- 🔥 BADGE UNTUK YANG BELUM DIBALES -->
+            @if($unrepliedComments > 0)
+                <span class="badge bg-info">Belum Dibalas: {{ $unrepliedComments }}</span>
+            @endif
         </div>
     </div>
     
@@ -50,6 +54,7 @@
                             <th>Komentar</th>
                             <th>Tanggal</th>
                             <th>Status</th>
+                            <th>Balasan</th>
                             <th width="200">Aksi</th>
                         </tr>
                     </thead>
@@ -69,6 +74,13 @@
                             </td>
                             <td>
                                 <div class="comment-preview">{{ Str::limit($comment->isi_komentar, 50) }}</div>
+                                @if($comment->is_replied && $comment->reply)
+                                    <div class="reply-preview mt-1">
+                                        <small class="text-success">
+                                            <i class="bi bi-reply-fill"></i> Balasan: {{ Str::limit($comment->reply, 40) }}
+                                        </small>
+                                    </div>
+                                @endif
                             </td>
                             <td>{{ \Carbon\Carbon::parse($comment->tanggal)->format('d M Y H:i') }}</td>
                             <td>
@@ -78,6 +90,21 @@
                                     <span class="badge bg-warning">Pending</span>
                                 @else
                                     <span class="badge bg-danger">Ditolak</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if($comment->status == 'approved')
+                                    @if($comment->is_replied)
+                                        <span class="badge bg-success">
+                                            <i class="bi bi-check-circle"></i> Sudah Dibalas
+                                        </span>
+                                    @else
+                                        <span class="badge bg-warning">
+                                            <i class="bi bi-clock-history"></i> Belum Dibalas
+                                        </span>
+                                    @endif
+                                @else
+                                    <span class="badge bg-secondary">-</span>
                                 @endif
                             </td>
                             <td>
@@ -97,15 +124,23 @@
                                         </form>
                                     @endif
                                     
-                                    <button type="button" class="btn-action btn-reply" 
-                                            data-bs-toggle="modal" 
-                                            data-bs-target="#replyModal"
-                                            data-id="{{ $comment->id_comment }}"
-                                            data-name="{{ $comment->nama_pengunjung }}"
-                                            data-comment="{{ $comment->isi_komentar }}"
-                                            title="Balas">
-                                        <i class="bi bi-reply"></i>
-                                    </button>
+                                    <!-- 🔥 TOMBOL BALAS - TAMPIL UNTUK KOMENTAR YANG SUDAH DISETUJUI -->
+                                    @if($comment->status == 'approved')
+                                        <button type="button" class="btn-action btn-reply" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#replyModal"
+                                                data-id="{{ $comment->id_comment }}"
+                                                data-name="{{ $comment->nama_pengunjung }}"
+                                                data-comment="{{ $comment->isi_komentar }}"
+                                                data-reply="{{ $comment->reply }}"
+                                                data-is-replied="{{ $comment->is_replied }}"
+                                                title="{{ $comment->is_replied ? 'Edit Balasan' : 'Balas Komentar' }}">
+                                            <i class="bi bi-reply"></i>
+                                            @if(!$comment->is_replied)
+                                                <span class="badge-reply">!</span>
+                                            @endif
+                                        </button>
+                                    @endif
                                     
                                     <form action="{{ route('admin.comments.destroy', $comment->id_comment) }}" method="POST" class="d-inline">
                                         @csrf
@@ -119,7 +154,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="8" class="text-center py-5">
+                            <td colspan="9" class="text-center py-5">
                                 <i class="bi bi-inbox" style="font-size: 48px; color: #ccc;"></i>
                                 <p class="mt-2">Belum ada komentar</p>
                             </td>
@@ -146,14 +181,14 @@
     </div>
 </div>
 
-<!-- Modal Reply -->
+<!-- Modal Reply - UPDATE DENGAN EDIT BALASAN -->
 <div class="modal fade" id="replyModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <form action="" method="POST" id="replyForm">
                 @csrf
                 <div class="modal-header">
-                    <h5 class="modal-title">Balas Komentar</h5>
+                    <h5 class="modal-title" id="replyModalTitle">Balas Komentar</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -164,11 +199,12 @@
                     <div class="form-group">
                         <label for="reply">Balasan Anda:</label>
                         <textarea name="reply" id="reply" class="form-control" rows="5" required></textarea>
+                        <small class="text-muted">Balasan akan langsung ditampilkan di halaman postingan.</small>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn-cancel" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn-save">Kirim Balasan</button>
+                    <button type="submit" class="btn-save" id="btnSubmitReply">Kirim Balasan</button>
                 </div>
             </form>
         </div>
@@ -190,14 +226,62 @@ if (replyModal) {
         const commentId = button.getAttribute('data-id');
         const commenterName = button.getAttribute('data-name');
         const originalComment = button.getAttribute('data-comment');
+        const existingReply = button.getAttribute('data-reply');
+        const isReplied = button.getAttribute('data-is-replied') === '1';
         
         const form = document.getElementById('replyForm');
         form.action = `/admin/comments/${commentId}/reply`;
         
         document.getElementById('commenterName').textContent = commenterName;
         document.getElementById('originalComment').textContent = originalComment;
+        
+        const replyTextarea = document.getElementById('reply');
+        const modalTitle = document.getElementById('replyModalTitle');
+        const submitBtn = document.getElementById('btnSubmitReply');
+        
+        if (isReplied && existingReply) {
+            replyTextarea.value = existingReply;
+            modalTitle.textContent = 'Edit Balasan Komentar';
+            submitBtn.textContent = 'Update Balasan';
+        } else {
+            replyTextarea.value = '';
+            modalTitle.textContent = 'Balas Komentar';
+            submitBtn.textContent = 'Kirim Balasan';
+        }
     });
 }
 </script>
+@endpush
+
+@push('styles')
+<style>
+.reply-preview {
+    background: #e8f5e9;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    margin-top: 8px;
+}
+
+.badge-reply {
+    background: #dc3545;
+    color: white;
+    border-radius: 50%;
+    font-size: 10px;
+    padding: 2px 5px;
+    margin-left: 5px;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.btn-reply {
+    position: relative;
+}
+</style>
 @endpush
 @endsection

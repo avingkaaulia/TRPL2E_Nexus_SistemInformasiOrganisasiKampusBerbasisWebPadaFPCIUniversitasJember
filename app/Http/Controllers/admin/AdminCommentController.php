@@ -34,8 +34,6 @@ class AdminCommentController extends Controller
             }
         }
         
-        // 🔥 PERBAIKI: Urutkan berdasarkan id_comment ASC (yang lama di atas, baru di bawah)
-        // Ini untuk menghindari masalah token CSRF pada baris pertama
         $comments = $query->orderBy('id_comment', 'asc')->paginate(20);
         
         $totalComments = Comment::count();
@@ -43,26 +41,21 @@ class AdminCommentController extends Controller
         $approvedComments = Comment::where('status', 'approved')->count();
         $rejectedComments = Comment::where('status', 'rejected')->count();
         
-        return view('admin.comments.index', compact('comments', 'totalComments', 'pendingComments', 'approvedComments', 'rejectedComments'));
+        // 🔥 HITUNG KOMENTAR YANG BELUM DIBALAS (approved tapi is_replied = 0)
+        $unrepliedComments = Comment::where('status', 'approved')->where('is_replied', 0)->count();
+        
+        return view('admin.comments.index', compact('comments', 'totalComments', 'pendingComments', 'approvedComments', 'rejectedComments', 'unrepliedComments'));
     }
     
-    // 🔥 APPROVE - Method POST
     public function approve($id)
     {
         try {
-            Log::info('Approve comment ID: ' . $id . ' - Method: ' . $_SERVER['REQUEST_METHOD']);
-            
-            // Cari komentar berdasarkan ID
             $comment = Comment::find($id);
             
             if (!$comment) {
                 return redirect()->back()->with('error', 'Komentar tidak ditemukan!');
             }
             
-            // Log status saat ini
-            Log::info('Komentar ID ' . $id . ' - Nama: ' . $comment->nama_pengunjung . ' - Status saat ini: ' . $comment->status);
-            
-            // Cek status saat ini
             if ($comment->status == 'approved') {
                 return redirect()->back()->with('error', 'Komentar sudah disetujui sebelumnya!');
             }
@@ -71,11 +64,8 @@ class AdminCommentController extends Controller
                 return redirect()->back()->with('error', 'Komentar sudah ditolak sebelumnya!');
             }
             
-            // Update status menggunakan model
             $comment->status = 'approved';
             $comment->save();
-            
-            Log::info('Komentar ID ' . $id . ' berhasil disetujui. Status baru: ' . $comment->status);
             
             return redirect()->back()->with('success', 'Komentar dari "' . $comment->nama_pengunjung . '" berhasil disetujui!');
             
@@ -85,23 +75,15 @@ class AdminCommentController extends Controller
         }
     }
     
-    // 🔥 REJECT - Method POST
     public function reject($id)
     {
         try {
-            Log::info('Reject comment ID: ' . $id . ' - Method: ' . $_SERVER['REQUEST_METHOD']);
-            
-            // Cari komentar berdasarkan ID
             $comment = Comment::find($id);
             
             if (!$comment) {
                 return redirect()->back()->with('error', 'Komentar tidak ditemukan!');
             }
             
-            // Log status saat ini
-            Log::info('Komentar ID ' . $id . ' - Nama: ' . $comment->nama_pengunjung . ' - Status saat ini: ' . $comment->status);
-            
-            // Cek status saat ini
             if ($comment->status == 'approved') {
                 return redirect()->back()->with('error', 'Komentar sudah disetujui sebelumnya!');
             }
@@ -110,11 +92,8 @@ class AdminCommentController extends Controller
                 return redirect()->back()->with('error', 'Komentar sudah ditolak sebelumnya!');
             }
             
-            // Update status menggunakan model
             $comment->status = 'rejected';
             $comment->save();
-            
-            Log::info('Komentar ID ' . $id . ' berhasil ditolak. Status baru: ' . $comment->status);
             
             return redirect()->back()->with('success', 'Komentar dari "' . $comment->nama_pengunjung . '" berhasil ditolak!');
             

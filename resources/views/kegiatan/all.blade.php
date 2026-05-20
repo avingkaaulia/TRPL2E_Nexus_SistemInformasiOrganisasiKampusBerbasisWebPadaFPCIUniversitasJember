@@ -23,6 +23,30 @@
         <div class="section-line"></div>
     </div>
 
+    <!-- Search & Sorting Form -->
+    <div class="row mb-4">
+        <div class="col-md-8 mx-auto">
+            <form action="{{ url()->current() }}" method="GET" class="d-flex gap-2 flex-wrap justify-content-center">
+                <select name="sort" class="form-select" style="width: auto;">
+                    <option value="terbaru" {{ request('sort') == 'terbaru' ? 'selected' : '' }}>Terbaru</option>
+                    <option value="terlama" {{ request('sort') == 'terlama' ? 'selected' : '' }}>Terlama</option>
+                    <option value="az" {{ request('sort') == 'az' ? 'selected' : '' }}>A-Z</option>
+                    <option value="za" {{ request('sort') == 'za' ? 'selected' : '' }}>Z-A</option>
+                </select>
+                <button type="submit" class="btn-search-submit"><i class="bi bi-sort-down"></i> Urutkan</button>
+                @if(request('sort'))
+                <a href="{{ url()->current() }}" class="btn-reset">Reset</a>
+                @endif
+            </form>
+        </div>
+    </div>
+
+    <!-- Result Info -->
+    @if($posts->total() > 0)
+    <div class="result-info mb-3 text-muted text-center">
+        Menampilkan {{ $posts->firstItem() }} - {{ $posts->lastItem() }} dari {{ $posts->total() }} data
+    </div>
+    @endif
     <div class="row g-4">
         @forelse($posts as $post)
         <div class="col-md-4 col-sm-6 mb-4">

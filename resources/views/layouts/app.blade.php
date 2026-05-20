@@ -143,7 +143,7 @@ $favicon = App\Models\Setting::get('site_favicon', 'assets/img/favicon.ico');
 
                 <div class="col-md-4">
                     <img src="{{ asset($logo) }}" width="90" alt="Logo FPCI UNEJ">
-                    <p>FPCI UNEJ fokus pada isu global & kepemudaan</p>
+                    <p>{{ $contact->alamat ?? 'Jl. Kalimantan No.37, Tegal Boto Lor, Sumbersari, Kec. Sumbersari, Kabupaten Jember, Jawa Timur 68121' }}</p>
                 </div>
 
                 <div class="col-md-4">

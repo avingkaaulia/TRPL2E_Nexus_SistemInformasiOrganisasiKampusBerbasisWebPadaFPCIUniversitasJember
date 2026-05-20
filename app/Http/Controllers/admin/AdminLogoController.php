@@ -22,7 +22,7 @@ class AdminLogoController extends Controller
     public function updateLogo(Request $request)
     {
         $request->validate([
-            'logo' => 'required|image|mimes:jpeg,png,jpg,svg|max:2048'
+            'logo' => 'required|image|mimes:jpeg,png,jpg,svg|max:5048'
         ]);
         
         $oldLogo = Setting::get('site_logo', 'assets/img/logo.png');
