@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Comment;
 use App\Models\Post;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class CommentController extends Controller
 {
@@ -33,15 +34,24 @@ class CommentController extends Controller
                 ->with('error', 'Tunggu 1 menit sebelum mengirim komentar lagi.');
         }
 
-        Comment::create([
-            'id_post' => $id_post,
-            'nama_pengunjung' => $request->nama,
-            'email' => $request->email,
-            'isi_komentar' => trim($request->isi_komentar),
-            'tanggal' => now(),
-            'is_replied' => 0
-        ]);
-
-        return back()->with('success', 'Komentar berhasil ditambahkan!');
+        // 🔥 SIMPAN KOMENTAR DENGAN STATUS PENDING
+        try {
+            $comment = Comment::create([
+                'id_post' => $id_post,
+                'nama_pengunjung' => $request->nama,
+                'email' => $request->email,
+                'isi_komentar' => trim($request->isi_komentar),
+                'tanggal' => now(),
+                'is_replied' => 0,
+                'status' => 'pending'
+            ]);
+            
+            Log::info('Komentar baru disimpan dengan ID: ' . $comment->id_comment . ', Status: ' . $comment->status);
+            
+            return back()->with('success', 'Komentar berhasil ditambahkan dan menunggu persetujuan admin!');
+        } catch (\Exception $e) {
+            Log::error('Gagal menyimpan komentar: ' . $e->getMessage());
+            return back()->with('error', 'Gagal menyimpan komentar. Silahkan coba lagi.');
+        }
     }
 }

@@ -1,10 +1,33 @@
 {{-- resources/views/comments.blade.php --}}
 <div class="comments-section">
     <div class="container">
-        <h3 class="comments-title">Comments ({{ $comments->count() }})</h3>
+        <h3 class="comments-title">Comments ({{ $comments->where('status', 'approved')->count() }})</h3>
         
         {{-- Form Tambah Komentar --}}
         <div class="comment-form-wrapper">
+            @if(session('success'))
+                <div class="alert alert-success">
+                    <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
+                </div>
+            @endif
+            
+            @if(session('error'))
+                <div class="alert alert-danger">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ session('error') }}
+                </div>
+            @endif
+            
+            @if($errors->any())
+                <div class="alert alert-danger">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <ul class="mb-0 mt-1">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            
             <form action="{{ route('comments.store', $post->id_post) }}" method="POST" class="comment-form">
                 @csrf
                 <div class="form-group">
@@ -21,12 +44,29 @@
                         required>{{ old('isi_komentar') }}</textarea>
                 </div>
                 <button type="submit" class="btn-publish">Publish Comment</button>
+                <div class="info-message mt-2">
+                    <i class="bi bi-info-circle"></i>
+                    <span>Komentar Anda akan ditampilkan setelah disetujui oleh admin.</span>
+                </div>
             </form>
         </div>
         
-        {{-- Daftar Komentar --}}
+        {{-- 🔥 PESAN UNTUK KOMENTAR PENDING DARI USER YANG SAMA --}}
+        @php
+            $userEmail = old('email', request()->get('email'));
+            $userPendingComments = $comments->where('email', $userEmail)->where('status', 'pending');
+        @endphp
+        
+        @if($userPendingComments->count() > 0)
+            <div class="alert alert-warning mt-3">
+                <i class="bi bi-clock-history me-2"></i>
+                <strong>Menunggu Persetujuan!</strong> Anda memiliki {{ $userPendingComments->count() }} komentar yang sedang menunggu persetujuan admin. Komentar akan muncul setelah disetujui.
+            </div>
+        @endif
+        
+        {{-- Daftar Komentar yang sudah disetujui --}}
         <div class="comments-list">
-            @forelse($comments as $comment)
+            @forelse($comments->where('status', 'approved') as $comment)
                 <div class="comment-item {{ $comment->is_replied ? 'has-reply' : '' }}">
                     <div class="comment-avatar">
                         <i class="bi bi-person-circle avatar-icon"></i>
@@ -54,64 +94,10 @@
             @empty
                 <div class="no-comments">
                     <i class="bi bi-chat-dots"></i>
-                    <p>Belum ada komentar. Jadilah yang pertama berkomentar!</p>
+                    <p>Jadilah yang pertama berkomentar!</p>
+                    <small class="text-muted">Komentar Anda akan muncul setelah disetujui admin.</small>
                 </div>
             @endforelse
         </div>
     </div>
 </div>
-
-@push('styles')
-<style>
-/* Admin Reply Styles */
-.admin-reply {
-    background: #F0F4E8;
-    border-left: 4px solid #5C6844;
-    padding: 15px 20px;
-    margin-top: 15px;
-    border-radius: 12px;
-}
-
-.reply-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-.reply-header i {
-    color: #5C6844;
-    font-size: 16px;
-}
-
-.reply-author {
-    font-weight: 700;
-    color: #5C6844;
-    font-size: 13px;
-}
-
-.reply-date {
-    color: #999;
-    font-size: 11px;
-}
-
-.reply-text {
-    color: #333;
-    font-size: 14px;
-    line-height: 1.6;
-    margin: 0;
-}
-
-.avatar-icon {
-    font-size: 45px;
-    color: #5C6844;
-    background: #F5F2E8;
-    border-radius: 50%;
-    padding: 5px;
-}
-
-.comment-item.has-reply {
-    border-bottom-color: #E0E8D4;
-}
-</style>
-@endpush

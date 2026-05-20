@@ -21,7 +21,8 @@ class Comment extends Model
         'reply',
         'reply_by',
         'reply_date',
-        'is_replied'
+        'is_replied',
+        'status'
     ];
     
     protected $casts = [
@@ -32,5 +33,23 @@ class Comment extends Model
     public function post() 
     {
         return $this->belongsTo(Post::class, 'id_post');
+    }
+    
+    // 🔥 SCOPE UNTUK KOMENTAR YANG DISETUJUI
+    public function scopeApproved($query)
+    {
+        return $query->where('status', 'approved');
+    }
+    
+    // 🔥 SCOPE UNTUK KOMENTAR PENDING
+    public function scopePending($query)
+    {
+        return $query->where('status', 'pending');
+    }
+    
+    // 🔥 SCOPE UNTUK KOMENTAR DITOLAK
+    public function scopeRejected($query)
+    {
+        return $query->where('status', 'rejected');
     }
 }

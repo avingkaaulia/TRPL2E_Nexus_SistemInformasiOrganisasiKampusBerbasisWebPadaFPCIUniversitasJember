@@ -184,13 +184,6 @@ Route::prefix('admin')->group(function () {
     Route::delete('/categories/{id}', [AdminCategoryController::class, 'destroy'])->name('admin.categories.destroy');
 });
 
-// Admin Comment Routes
-Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
-    Route::get('/comments', [AdminCommentController::class, 'index'])->name('comments.index');
-    Route::post('/comments/{id}/reply', [AdminCommentController::class, 'reply'])->name('comments.reply');
-    Route::delete('/comments/{id}', [AdminCommentController::class, 'destroy'])->name('comments.destroy');
-    Route::post('/comments/bulk', [AdminCommentController::class, 'bulkAction'])->name('comments.bulk');
-});
 // Admin Writings Routes
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/writings/pending', [AdminWritingsController::class, 'pending'])->name('writings.pending');
@@ -212,6 +205,17 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::put('/logo/update', [AdminLogoController::class, 'updateLogo'])->name('logo.update');
     Route::put('/logo/favicon', [AdminLogoController::class, 'updateFavicon'])->name('logo.favicon');
     Route::get('/logo/reset', [AdminLogoController::class, 'resetLogo'])->name('logo.reset');
+});
+// routes/web.php - Admin Comment Routes
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/comments', [AdminCommentController::class, 'index'])->name('comments.index');
+    Route::post('/comments/bulk', [AdminCommentController::class, 'bulkAction'])->name('comments.bulk');
+    Route::post('/comments/{id}/reply', [AdminCommentController::class, 'reply'])->name('comments.reply');
+    Route::delete('/comments/{id}', [AdminCommentController::class, 'destroy'])->name('comments.destroy');
+    
+    // 🔥 Approve & Reject - Method POST (BUKAN PUT)
+    Route::post('/comments/{id}/approve', [AdminCommentController::class, 'approve'])->name('comments.approve');
+    Route::post('/comments/{id}/reject', [AdminCommentController::class, 'reject'])->name('comments.reject');
 });
 // Forgot Password Routes
 // Password Reset Routes
