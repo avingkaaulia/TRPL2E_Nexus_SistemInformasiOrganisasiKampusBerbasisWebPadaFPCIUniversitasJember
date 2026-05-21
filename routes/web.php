@@ -27,6 +27,7 @@ use App\Http\Controllers\Admin\AdminWritingsController;
 use App\Http\Controllers\Admin\AdminContactController;
 use App\Http\Controllers\Admin\AdminLogoController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Admin\AdminUserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -211,13 +212,20 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
 // routes/web.php - Admin Comment Routes
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/comments', [AdminCommentController::class, 'index'])->name('comments.index');
-    Route::post('/comments/bulk', [AdminCommentController::class, 'bulkAction'])->name('comments.bulk');
     Route::post('/comments/{id}/reply', [AdminCommentController::class, 'reply'])->name('comments.reply');
     Route::delete('/comments/{id}', [AdminCommentController::class, 'destroy'])->name('comments.destroy');
     
-    // 🔥 Approve & Reject - Method POST (BUKAN PUT)
+    // 🔥 Approve & Reject - Method POST
     Route::post('/comments/{id}/approve', [AdminCommentController::class, 'approve'])->name('comments.approve');
     Route::post('/comments/{id}/reject', [AdminCommentController::class, 'reject'])->name('comments.reject');
+});
+// Admin User Routes
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
+    Route::get('/users/{id}/edit', [AdminUserController::class, 'edit'])->name('users.edit');
+    Route::put('/users/{id}', [AdminUserController::class, 'update'])->name('users.update');
+    Route::put('/users/{id}/role', [AdminUserController::class, 'updateRole'])->name('users.update-role');
+    Route::delete('/users/{id}', [AdminUserController::class, 'destroy'])->name('users.destroy');
 });
 // Forgot Password Routes
 // Password Reset Routes

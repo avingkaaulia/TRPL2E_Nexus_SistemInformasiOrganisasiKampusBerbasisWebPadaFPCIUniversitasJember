@@ -125,8 +125,9 @@
         </table>
     </div>
     
-    <div class="d-flex justify-content-center mt-4">
-        {{ $pendingPosts->appends(request()->query())->links() }}
+    {{-- 🔥 PAGINATION DENGAN CSS CUSTOM --}}
+    <div class="pagination-wrapper">
+        {{ $pendingPosts->appends(request()->query())->links('vendor.pagination.custom') }}
     </div>
 </div>
 @endsection

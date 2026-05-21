@@ -30,8 +30,9 @@ class PendaftaranController extends Controller
     
     public function store(Request $request)
     {
-         // 🔥 LOG UNTUK DEBUG
+        // 🔥 LOG UNTUK DEBUG
         Log::info('Pendaftaran store method called');
+        
         // 🔥 VALIDASI DINAMIS BERDASARKAN DATABASE
         $rules = [];
         
@@ -64,6 +65,8 @@ class PendaftaranController extends Controller
             
             if ($field->field_name == 'nim') {
                 $fieldRules[] = 'unique:pendaftaran,nim';
+                // 🔥 TAMBAHKAN VALIDASI NIM HARUS DIAWALI "240" (Khusus Mahasiswa UNEJ)
+                $fieldRules[] = 'regex:/^240/';
             }
             
             $rules[$field->field_name] = $fieldRules;
@@ -80,15 +83,14 @@ class PendaftaranController extends Controller
             
             $berkasRules[] = 'file';
             $berkasRules[] = 'mimes:' . $berkas->file_type;
-            // 🔥 PERBAIKAN: max harus diikuti angka (dalam kilobyte)
-            $berkasRules[] = 'max:' . $berkas->max_size; // max_size sudah dalam KB
+            $berkasRules[] = 'max:' . $berkas->max_size;
             
             $rules['berkas_' . $berkas->id_jenis] = $berkasRules;
         }
         
         $rules['id_periode'] = 'required|exists:periode_pendaftaran,id_periode';
         
-        // Custom error messages untuk file size
+        // Custom error messages
         $messages = [];
         foreach ($jenisBerkas as $berkas) {
             $maxSizeMB = round($berkas->max_size / 1024, 2);
@@ -96,6 +98,10 @@ class PendaftaranController extends Controller
             $messages['berkas_' . $berkas->id_jenis . '.mimes'] = 'Format file ' . $berkas->nama_jenis . ' harus .' . $berkas->file_type;
             $messages['berkas_' . $berkas->id_jenis . '.required'] = 'File ' . $berkas->nama_jenis . ' wajib diupload.';
         }
+        
+        // 🔥 TAMBAHKAN PESAN ERROR UNTUK VALIDASI NIM
+        $messages['nim.regex'] = 'NIM harus diawali dengan 240 (khusus mahasiswa UNEJ).';
+        $messages['nim.unique'] = 'NIM sudah terdaftar, silahkan gunakan NIM lain.';
         
         try {
             $request->validate($rules, $messages);
@@ -105,7 +111,7 @@ class PendaftaranController extends Controller
         
         // 🔥 CEK PERIODE AKTIF
         $periode = PeriodePendaftaran::find($request->id_periode);
-        if (!$periode->isAktif()) {
+        if (!$periode || !$periode->isAktif()) {
             return redirect()->back()->with('error', 'Periode pendaftaran sudah berakhir!')->withInput();
         }
         
@@ -133,7 +139,6 @@ class PendaftaranController extends Controller
             if ($request->hasFile($fieldName)) {
                 $file = $request->file($fieldName);
                 
-                // Cek ukuran file manual (opsional)
                 $fileSizeKB = round($file->getSize() / 1024);
                 if ($fileSizeKB > $berkas->max_size) {
                     $maxSizeMB = round($berkas->max_size / 1024, 2);

@@ -42,16 +42,6 @@
             </select>
         </div>
         <div class="col-md-2">
-            <select name="post_type" class="form-select">
-                <option value="">Semua Tipe</option>
-                @foreach($postTypes as $type)
-                <option value="{{ $type }}" {{ request('post_type') == $type ? 'selected' : '' }}>
-                    {{ ucfirst($type) }}
-                </option>
-                @endforeach
-            </select>
-        </div>
-        <div class="col-md-2">
             <button type="submit" class="btn btn-primary w-100">
                 <i class="bi bi-search me-1"></i> Filter
             </button>
@@ -171,8 +161,8 @@
         </table>
     </div>
     
-    <div class="d-flex justify-content-center mt-4">
-        {{ $posts->links() }}
-    </div>
+    <div class="pagination-wrapper">
+    {{ $posts->appends(request()->query())->links('vendor.pagination.custom') }}
+</div>
 </div>
 @endsection

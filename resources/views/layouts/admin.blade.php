@@ -62,6 +62,9 @@
             <a href="{{ route('admin.anggota.index') }}" class="menu-item {{ request()->routeIs('admin.anggota*') ? 'active' : '' }}">
                 <i class="bi bi-people"></i> Anggota
             </a>
+            <a href="{{ route('admin.users.index') }}" class="menu-item {{ request()->routeIs('admin.users*') ? 'active' : '' }}">
+    <i class="bi bi-person-badge"></i> Kelola User & Role
+</a>
            <a href="{{ route('admin.comments.index') }}" class="menu-item {{ request()->routeIs('admin.comments*') ? 'active' : '' }}">
     <i class="bi bi-chat-dots"></i> Komentar
     @php 

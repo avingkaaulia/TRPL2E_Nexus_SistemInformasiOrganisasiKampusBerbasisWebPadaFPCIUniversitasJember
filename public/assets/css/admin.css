@@ -1157,7 +1157,138 @@ body {
 .input-group .form-control {
     border-radius: 0 12px 12px 0;
 }
+/* Tombol Role */
+.btn-role {
+    background: #17a2b8;
+    color: white;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
 
+.btn-role:hover {
+    background: #138496;
+    transform: scale(1.05);
+}
+
+/* Badge Role */
+.badge-role-admin {
+    background: #5C6844;
+    color: white;
+}
+
+.badge-role-anggota {
+    background: #17a2b8;
+    color: white;
+}
+
+/* ========== PAGINATION STYLES ========== */
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+.pagination {
+    display: inline-flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.pagination li {
+    display: inline-block;
+}
+
+.pagination .page-item {
+    display: inline-block;
+}
+
+.pagination .page-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 12px;
+    background: white;
+    border: 1px solid #E8E4D9;
+    border-radius: 10px;
+    color: #1C150F;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.pagination .page-link:hover {
+    background: #5C6844;
+    border-color: #5C6844;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(92,104,68,0.2);
+}
+
+.pagination .active .page-link {
+    background: #5C6844;
+    border-color: #5C6844;
+    color: white;
+    cursor: default;
+    box-shadow: 0 2px 8px rgba(92,104,68,0.3);
+}
+
+.pagination .active .page-link:hover {
+    transform: none;
+}
+
+.pagination .disabled .page-link {
+    background: #f8f9fa;
+    border-color: #E8E4D9;
+    color: #ccc;
+    cursor: not-allowed;
+}
+
+.pagination .disabled .page-link:hover {
+    transform: none;
+    background: #f8f9fa;
+    color: #ccc;
+}
+
+/* Pagination Info */
+.pagination-info {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 13px;
+    color: #888;
+}
+
+.pagination-info i {
+    margin-right: 5px;
+    color: #5C6844;
+}
+
+/* Responsive Pagination */
+@media (max-width: 768px) {
+    .pagination .page-link {
+        min-width: 35px;
+        height: 35px;
+        padding: 0 8px;
+        font-size: 12px;
+    }
+    
+    .pagination {
+        gap: 5px;
+    }
+}
 
 /* Responsive Contact */
 @media (max-width: 768px) {

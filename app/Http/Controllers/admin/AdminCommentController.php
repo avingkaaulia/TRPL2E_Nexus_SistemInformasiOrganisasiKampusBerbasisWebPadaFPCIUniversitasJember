@@ -34,27 +34,34 @@ class AdminCommentController extends Controller
             }
         }
         
-        $comments = $query->orderBy('id_comment', 'asc')->paginate(20);
+        $comments = $query->orderBy('id_comment', 'desc')->paginate(15);
         
         $totalComments = Comment::count();
         $pendingComments = Comment::where('status', 'pending')->count();
         $approvedComments = Comment::where('status', 'approved')->count();
         $rejectedComments = Comment::where('status', 'rejected')->count();
         
-        // 🔥 HITUNG KOMENTAR YANG BELUM DIBALAS (approved tapi is_replied = 0)
         $unrepliedComments = Comment::where('status', 'approved')->where('is_replied', 0)->count();
         
         return view('admin.comments.index', compact('comments', 'totalComments', 'pendingComments', 'approvedComments', 'rejectedComments', 'unrepliedComments'));
     }
     
-    public function approve($id)
+    // 🔥 PERBAIKI: APPROVE dengan debug
+    public function approve(Request $request, $id)
     {
         try {
+            Log::info('Approve comment attempt - ID: ' . $id);
+            Log::info('Request method: ' . $request->method());
+            Log::info('CSRF token: ' . $request->session()->token());
+            
             $comment = Comment::find($id);
             
             if (!$comment) {
+                Log::error('Comment not found - ID: ' . $id);
                 return redirect()->back()->with('error', 'Komentar tidak ditemukan!');
             }
+            
+            Log::info('Comment found - Status: ' . $comment->status);
             
             if ($comment->status == 'approved') {
                 return redirect()->back()->with('error', 'Komentar sudah disetujui sebelumnya!');
@@ -64,10 +71,19 @@ class AdminCommentController extends Controller
                 return redirect()->back()->with('error', 'Komentar sudah ditolak sebelumnya!');
             }
             
-            $comment->status = 'approved';
-            $comment->save();
+            // 🔥 UPDATE STATUS LANGSUNG DENGAN DB FACADE
+            $affected = DB::table('comments')
+                ->where('id_comment', $id)
+                ->where('status', 'pending')
+                ->update(['status' => 'approved']);
             
-            return redirect()->back()->with('success', 'Komentar dari "' . $comment->nama_pengunjung . '" berhasil disetujui!');
+            if ($affected) {
+                Log::info('Comment approved successfully - ID: ' . $id);
+                return redirect()->back()->with('success', 'Komentar dari "' . $comment->nama_pengunjung . '" berhasil disetujui!');
+            } else {
+                Log::warning('No rows updated - Comment ID: ' . $id);
+                return redirect()->back()->with('error', 'Gagal menyetujui komentar. Tidak ada perubahan.');
+            }
             
         } catch (\Exception $e) {
             Log::error('Error approve komentar: ' . $e->getMessage());
@@ -75,14 +91,20 @@ class AdminCommentController extends Controller
         }
     }
     
-    public function reject($id)
+    // 🔥 PERBAIKI: REJECT dengan debug
+    public function reject(Request $request, $id)
     {
         try {
+            Log::info('Reject comment attempt - ID: ' . $id);
+            
             $comment = Comment::find($id);
             
             if (!$comment) {
+                Log::error('Comment not found - ID: ' . $id);
                 return redirect()->back()->with('error', 'Komentar tidak ditemukan!');
             }
+            
+            Log::info('Comment found - Status: ' . $comment->status);
             
             if ($comment->status == 'approved') {
                 return redirect()->back()->with('error', 'Komentar sudah disetujui sebelumnya!');
@@ -92,10 +114,19 @@ class AdminCommentController extends Controller
                 return redirect()->back()->with('error', 'Komentar sudah ditolak sebelumnya!');
             }
             
-            $comment->status = 'rejected';
-            $comment->save();
+            // 🔥 UPDATE STATUS LANGSUNG DENGAN DB FACADE
+            $affected = DB::table('comments')
+                ->where('id_comment', $id)
+                ->where('status', 'pending')
+                ->update(['status' => 'rejected']);
             
-            return redirect()->back()->with('success', 'Komentar dari "' . $comment->nama_pengunjung . '" berhasil ditolak!');
+            if ($affected) {
+                Log::info('Comment rejected successfully - ID: ' . $id);
+                return redirect()->back()->with('success', 'Komentar dari "' . $comment->nama_pengunjung . '" berhasil ditolak!');
+            } else {
+                Log::warning('No rows updated - Comment ID: ' . $id);
+                return redirect()->back()->with('error', 'Gagal menolak komentar. Tidak ada perubahan.');
+            }
             
         } catch (\Exception $e) {
             Log::error('Error reject komentar: ' . $e->getMessage());
@@ -129,30 +160,5 @@ class AdminCommentController extends Controller
         
         return redirect()->route('admin.comments.index')
             ->with('success', 'Komentar dari "' . $nama . '" berhasil dihapus!');
-    }
-    
-    public function bulkAction(Request $request)
-    {
-        $ids = $request->input('ids');
-        $action = $request->input('action');
-        
-        if (empty($ids)) {
-            return redirect()->back()->with('error', 'Tidak ada komentar yang dipilih!');
-        }
-        
-        if ($action == 'approve') {
-            $updated = Comment::whereIn('id_comment', $ids)->where('status', 'pending')->update(['status' => 'approved']);
-            $message = $updated . ' komentar terpilih berhasil disetujui!';
-        } elseif ($action == 'reject') {
-            $updated = Comment::whereIn('id_comment', $ids)->where('status', 'pending')->update(['status' => 'rejected']);
-            $message = $updated . ' komentar terpilih berhasil ditolak!';
-        } elseif ($action == 'delete') {
-            $deleted = Comment::whereIn('id_comment', $ids)->delete();
-            $message = $deleted . ' komentar terpilih berhasil dihapus!';
-        } else {
-            return redirect()->back()->with('error', 'Aksi tidak dikenal!');
-        }
-        
-        return redirect()->back()->with('success', $message);
     }
 }

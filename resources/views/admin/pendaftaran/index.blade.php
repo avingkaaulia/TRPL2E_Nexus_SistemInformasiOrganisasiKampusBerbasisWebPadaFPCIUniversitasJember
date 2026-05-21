@@ -148,8 +148,8 @@
         </table>
     </div>
     
-    <div class="d-flex justify-content-center mt-4">
-        {{ $pendaftaran->links() }}
+    <div class="pagination-wrapper">
+        {{ $pendaftaran->appends(request()->query())->links('vendor.pagination.custom') }}
     </div>
 </div>
 @endsection

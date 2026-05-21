@@ -1381,7 +1381,20 @@ main {
 .alert-danger ul {
     padding-left: 20px;
 }
+/* Error message styling */
+.error-message {
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 5px;
+}
 
+.form-control.is-invalid {
+    border-color: #dc3545;
+}
+
+.nim-error-message {
+    display: block;
+}
 /* Divider */
 hr {
     margin: 25px 0;

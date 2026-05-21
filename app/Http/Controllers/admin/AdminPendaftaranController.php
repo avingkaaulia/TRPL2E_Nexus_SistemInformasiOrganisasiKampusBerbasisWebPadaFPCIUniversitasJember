@@ -274,22 +274,26 @@ class AdminPendaftaranController extends Controller
         return view('admin.pendaftaran.form-fields', compact('formFields'));
     }
     
+    // 🔥 PERBAIKI: STORE FORM FIELD
     public function storeFormField(Request $request)
     {
         $request->validate([
             'field_name' => 'required|string|max:50|unique:form_fields,field_name',
             'field_label' => 'required|string|max:100',
             'field_type' => 'required|in:text,email,tel,textarea,number,date',
-            'is_required' => 'boolean',
+            'is_required' => 'nullable|boolean',
             'placeholder' => 'nullable|string|max:255',
             'sort_order' => 'integer'
         ]);
+        
+        // 🔥 PERBAIKAN: Jika checkbox tidak dicentang, nilainya 0 (tidak wajib)
+        $isRequired = $request->has('is_required') ? 1 : 0;
         
         FormField::create([
             'field_name' => $request->field_name,
             'field_label' => $request->field_label,
             'field_type' => $request->field_type,
-            'is_required' => $request->is_required ?? 1,
+            'is_required' => $isRequired,
             'placeholder' => $request->placeholder,
             'sort_order' => $request->sort_order ?? 0,
             'is_active' => 1
@@ -301,6 +305,7 @@ class AdminPendaftaranController extends Controller
             ->with('success', 'Form field berhasil ditambahkan');
     }
     
+    // 🔥 PERBAIKI: UPDATE FORM FIELD
     public function updateFormField(Request $request, $id)
     {
         $field = FormField::findOrFail($id);
@@ -313,6 +318,7 @@ class AdminPendaftaranController extends Controller
             'sort_order' => 'integer',
         ]);
         
+        // 🔥 PERBAIKAN: Jika checkbox tidak dicentang, nilainya 0 (tidak wajib)
         $isRequired = $request->has('is_required') ? 1 : 0;
         $isActive = $request->has('is_active') ? 1 : 0;
         

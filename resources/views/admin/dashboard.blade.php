@@ -7,7 +7,7 @@
 @section('content')
 <!-- STATS CARDS -->
 <div class="stats-row">
-    <div class="stat-card">
+    <a href="{{ route('admin.posts.index') }}" class="stat-card text-decoration-none">
         <div class="stat-info">
             <h2>{{ $totalPosts }}</h2>
             <p>Total Postingan</p>
@@ -15,8 +15,8 @@
         <div class="stat-icon">
             <i class="bi bi-file-post"></i>
         </div>
-    </div>
-    <div class="stat-card">
+    </a>
+    <a href="{{ route('admin.writings.pending') }}" class="stat-card text-decoration-none">
         <div class="stat-info">
             <h2>{{ $totalKarya }}</h2>
             <p>Total Karya</p>
@@ -24,8 +24,8 @@
         <div class="stat-icon">
             <i class="bi bi-book"></i>
         </div>
-    </div>
-    <div class="stat-card">
+    </a>
+    <a href="{{ route('admin.anggota.index') }}" class="stat-card text-decoration-none">
         <div class="stat-info">
             <h2>{{ $totalAnggota }}</h2>
             <p>Total Anggota</p>
@@ -33,8 +33,8 @@
         <div class="stat-icon">
             <i class="bi bi-people"></i>
         </div>
-    </div>
-    <div class="stat-card">
+    </a>
+    <a href="{{ route('admin.comments.index') }}" class="stat-card text-decoration-none">
         <div class="stat-info">
             <h2>{{ $totalComments }}</h2>
             <p>Total Komentar</p>
@@ -42,7 +42,7 @@
         <div class="stat-icon">
             <i class="bi bi-chat-dots"></i>
         </div>
-    </div>
+    </a>
 </div>
 
 <!-- TWO COLUMNS -->
@@ -51,12 +51,12 @@
     <div class="admin-card">
         <div class="admin-card-header">
             <h4><i class="bi bi-clock-history me-2"></i> Postingan Terbaru</h4>
-            <a href="#">Lihat Semua →</a>
+            <a href="{{ route('admin.posts.index') }}">Lihat Semua →</a>
         </div>
         <table class="admin-table">
             @forelse($recentPosts as $post)
             <tr>
-                <td>{{ Str::limit($post->title, 40) }}</td>
+                <td><a href="{{ route('admin.posts.edit', $post->id_post) }}" class="text-decoration-none">{{ Str::limit($post->title, 40) }}</a></td>
                 <td>
                     @php
                         $class = 'badge-publish';
@@ -67,7 +67,7 @@
                 </td>
             </tr>
             @empty
-            <tr><td colspan="2" class="text-center">Belum ada postingan</td><tr>
+            <tr><td colspan="2" class="text-center">Belum ada postingan</td></tr>
             @endforelse
         </table>
     </div>
@@ -76,7 +76,7 @@
     <div class="admin-card">
         <div class="admin-card-header">
             <h4><i class="bi bi-chat me-2"></i> Komentar Terbaru</h4>
-            <a href="#">Lihat Semua →</a>
+            <a href="{{ route('admin.comments.index') }}">Lihat Semua →</a>
         </div>
         <table class="admin-table">
             @forelse($recentComments as $comment)
@@ -85,7 +85,7 @@
                 <td><small>{{ $comment->nama_pengunjung }}</small></td>
             </tr>
             @empty
-            <td><td colspan="2" class="text-center">Belum ada komentar</td></tr>
+            <tr><td colspan="2" class="text-center">Belum ada komentar</td></tr>
             @endforelse
         </table>
     </div>
@@ -97,11 +97,13 @@
     <div class="admin-card">
         <div class="admin-card-header">
             <h4><i class="bi bi-tags me-2"></i> Postingan per Kategori</h4>
-            <a href="#">Kelola →</a>
+            <a href="{{ route('admin.categories.index') }}">Kelola →</a>
         </div>
         @forelse($categoryStats as $cat)
         <div class="category-item">
-            <span class="category-name">{{ $cat->category_name }}</span>
+            <a href="{{ route('admin.posts.index') }}?category={{ $cat->id_category }}" class="text-decoration-none category-name">
+                {{ $cat->category_name }}
+            </a>
             <span class="category-count">{{ $cat->posts_count }} postingan</span>
         </div>
         @empty
@@ -113,7 +115,7 @@
     <div class="admin-card">
         <div class="admin-card-header">
             <h4><i class="bi bi-person-plus me-2"></i> Pendaftaran Anggota</h4>
-            <a href="{{ route('pendaftaran') }}">Kelola →</a>
+            <a href="{{ route('admin.pendaftaran.index') }}">Kelola →</a>
         </div>
         <table class="admin-table">
             <tr>
@@ -129,6 +131,53 @@
                 <td>{{ $totalPendaftaran - $pendingPendaftaran }}</td>
             </tr>
         </table>
+        <div class="mt-3">
+            <a href="{{ route('admin.pendaftaran.index') }}?status=menunggu" class="btn btn-sm btn-warning">Lihat Menunggu</a>
+            <a href="{{ route('admin.pendaftaran.periode') }}" class="btn btn-sm btn-info">Atur Periode</a>
+        </div>
+    </div>
+</div>
+
+<!-- USER STATS (Tambahan) -->
+<div class="admin-card mt-4">
+    <div class="admin-card-header">
+        <h4><i class="bi bi-people me-2"></i> Statistik User</h4>
+        <a href="{{ route('admin.users.index') }}">Kelola User →</a>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="stat-small">
+                <div class="stat-small-icon">
+                    <i class="bi bi-shield-lock"></i>
+                </div>
+                <div class="stat-small-info">
+                    <h3>{{ $totalAdmin }}</h3>
+                    <p>Admin</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-small">
+                <div class="stat-small-icon">
+                    <i class="bi bi-person"></i>
+                </div>
+                <div class="stat-small-info">
+                    <h3>{{ $totalAnggotaUser }}</h3>
+                    <p>Anggota (User)</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-small">
+                <div class="stat-small-icon">
+                    <i class="bi bi-person-plus"></i>
+                </div>
+                <div class="stat-small-info">
+                    <h3>{{ $totalPendaftaran }}</h3>
+                    <p>Calon Anggota</p>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 @endsection

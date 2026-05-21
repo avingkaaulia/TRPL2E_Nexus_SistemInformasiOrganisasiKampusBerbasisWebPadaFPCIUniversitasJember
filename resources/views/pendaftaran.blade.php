@@ -151,5 +151,47 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+// 🔥 VALIDASI NIM REAL-TIME (hanya boleh diawali 240)
+document.addEventListener('DOMContentLoaded', function() {
+    const nimInput = document.querySelector('input[name="nim"]');
+    if (nimInput) {
+        nimInput.addEventListener('input', function() {
+            const value = this.value;
+            if (value.length > 0 && !value.startsWith('240')) {
+                this.setCustomValidity('NIM harus diawali dengan 240 (khusus mahasiswa UNEJ)');
+                this.style.borderColor = '#dc3545';
+            } else {
+                this.setCustomValidity('');
+                this.style.borderColor = '';
+            }
+        });
+        
+        nimInput.addEventListener('blur', function() {
+            const value = this.value;
+            if (value.length > 0 && !value.startsWith('240')) {
+                this.setCustomValidity('NIM salah bukan mahasiswa UNEJ');
+                this.style.borderColor = '#dc3545';
+                
+                // Tampilkan pesan error
+                let errorDiv = this.parentElement.querySelector('.nim-error-message');
+                if (!errorDiv) {
+                    errorDiv = document.createElement('div');
+                    errorDiv.className = 'error-message nim-error-message';
+                    errorDiv.style.color = '#dc3545';
+                    errorDiv.style.fontSize = '12px';
+                    errorDiv.style.marginTop = '5px';
+                    this.parentElement.appendChild(errorDiv);
+                }
+                errorDiv.textContent = 'NIM salah bukan mahasiswa UNEJ';
+            } else {
+                this.setCustomValidity('');
+                this.style.borderColor = '';
+                const errorDiv = this.parentElement.querySelector('.nim-error-message');
+                if (errorDiv) errorDiv.remove();
+            }
+        });
+    }
+});
+
 </script>
 @endsection

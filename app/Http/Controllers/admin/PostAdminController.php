@@ -14,9 +14,10 @@ use Illuminate\Support\Str;
 
 class PostAdminController extends Controller
 {
+    // 🔥 HANYA MENAMPILKAN POST (post_type = 'post') untuk halaman "Semua Postingan"
     public function index(Request $request)
     {
-        $query = Post::with(['category', 'user']);
+        $query = Post::with(['category', 'user'])->where('post_type', 'post');
         
         if ($request->has('status') && $request->status != '') {
             $query->where('status', $request->status);
@@ -26,21 +27,12 @@ class PostAdminController extends Controller
             $query->where('id_post_category', $request->category);
         }
         
-        if ($request->has('post_type') && $request->post_type != '') {
-            $query->where('post_type', $request->post_type);
-        }
-        
         if ($request->has('search') && $request->search != '') {
             $query->where('title', 'like', '%' . $request->search . '%');
         }
         
         $posts = $query->orderBy('date_published', 'desc')->paginate(15);
         
-        // 🔥 LOGIKA KATEGORI:
-        // 1. Parent yang memiliki sub-kategori (writings, event, program) -> TIDAK tampil, ganti dengan sub-kategorinya
-        // 2. Parent yang tidak memiliki sub-kategori (pengumuman, tentang, urgent, carousel, dll) -> TETAP tampil
-        
-        // Ambil semua parent kategori yang TIDAK memiliki sub-kategori (TETAP TAMPIL)
         $parentWithoutChildren = PostCategory::whereNull('parent_id')
             ->whereNotIn('id_category', function($query) {
                 $query->select('parent_id')
@@ -51,23 +43,19 @@ class PostAdminController extends Controller
             ->orderBy('category_name')
             ->get();
         
-        // Ambil semua sub-kategori (YANG TAMPIL menggantikan parent-nya)
         $subCategories = PostCategory::whereNotNull('parent_id')
             ->orderBy('category_name')
             ->get();
         
-        // Gabungkan: parent tanpa sub-kategori + sub-kategori
         $categories = $parentWithoutChildren->merge($subCategories);
         
         $statuses = ['publish', 'draft', 'pending'];
-        $postTypes = ['post', 'page'];
         
-        return view('admin.posts.index', compact('posts', 'categories', 'statuses', 'postTypes'));
+        return view('admin.posts.index', compact('posts', 'categories', 'statuses'));
     }
     
     public function create()
     {
-        // 🔥 LOGIKA KATEGORI yang sama untuk form create
         $parentWithoutChildren = PostCategory::whereNull('parent_id')
             ->whereNotIn('id_category', function($query) {
                 $query->select('parent_id')
@@ -109,8 +97,7 @@ class PostAdminController extends Controller
             'id_user' => auth()->id() ?? 1,
             'date_published' => now(),
             'status' => $request->status,
-                        'featured_image_path' => null,
-
+            'featured_image_path' => null,
         ];
         
         if ($request->hasFile('featured_image')) {
@@ -122,7 +109,6 @@ class PostAdminController extends Controller
         
         $post = Post::create($data);
         
-        // Upload gallery images
         if ($request->hasFile('gallery_images')) {
             foreach ($request->file('gallery_images') as $key => $file) {
                 $filename = time() . '_gallery_' . $key . '.' . $file->getClientOriginalExtension();
@@ -136,6 +122,12 @@ class PostAdminController extends Controller
             }
         }
         
+        // Redirect berdasarkan post_type
+        if ($request->post_type == 'page') {
+            return redirect()->route('admin.pages.list')
+                ->with('success', 'Halaman berhasil ditambahkan');
+        }
+        
         return redirect()->route('admin.posts.index')
             ->with('success', 'Postingan berhasil ditambahkan');
     }
@@ -144,7 +136,6 @@ class PostAdminController extends Controller
     {
         $post = Post::with('gallery')->findOrFail($id);
         
-        // 🔥 LOGIKA KATEGORI yang sama untuk form edit
         $parentWithoutChildren = PostCategory::whereNull('parent_id')
             ->whereNotIn('id_category', function($query) {
                 $query->select('parent_id')
@@ -200,7 +191,6 @@ class PostAdminController extends Controller
         
         $post->update($data);
         
-        // Upload new gallery images
         if ($request->hasFile('gallery_images')) {
             foreach ($request->file('gallery_images') as $key => $file) {
                 $filename = time() . '_gallery_' . $key . '_' . $file->getClientOriginalName();
@@ -214,11 +204,15 @@ class PostAdminController extends Controller
             }
         }
         
+        if ($post->post_type == 'page') {
+            return redirect()->route('admin.pages.list')
+                ->with('success', 'Halaman berhasil diupdate');
+        }
+        
         return redirect()->route('admin.posts.index')
             ->with('success', 'Postingan berhasil diupdate');
     }
     
-    // Hapus gallery image
     public function deleteGallery($id)
     {
         $gallery = PostGallery::findOrFail($id);
@@ -242,7 +236,6 @@ class PostAdminController extends Controller
             Storage::disk('public')->delete($post->featured_image_path);
         }
         
-        // Delete gallery images
         foreach ($post->gallery as $gallery) {
             if ($gallery->image_path) {
                 Storage::disk('public')->delete($gallery->image_path);
@@ -251,6 +244,11 @@ class PostAdminController extends Controller
         
         $post->gallery()->delete();
         $post->delete();
+        
+        if ($post->post_type == 'page') {
+            return redirect()->route('admin.pages.list')
+                ->with('success', 'Halaman berhasil dihapus');
+        }
         
         return redirect()->route('admin.posts.index')
             ->with('success', 'Postingan berhasil dihapus');

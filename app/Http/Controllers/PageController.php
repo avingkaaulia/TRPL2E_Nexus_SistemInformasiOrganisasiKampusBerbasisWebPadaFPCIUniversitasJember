@@ -8,27 +8,31 @@ use Illuminate\Http\Request;
 
 class PageController extends Controller
 {
-    // Menampilkan halaman page berdasarkan ID atau slug
     public function show($id)
     {
-        $page = Post::where('post_type', 'page')
+        $page = Post::with(['user', 'category', 'gallery'])
+            ->where('post_type', 'page')
             ->where('status', 'publish')
-            ->where('id_post', $id)
-            ->firstOrFail();
+            ->findOrFail($id);
         
+        // Set image URL menggunakan helper
         $page->image_url = getImageUrl($page->featured_image_path);
+        
+        // Set image URL untuk gallery
+        foreach ($page->gallery as $item) {
+            $item->image_url = getImageUrl($item->image_path);
+        }
         
         return view('page.show', compact('page'));
     }
     
-    // Menampilkan semua page (opsional)
     public function all()
     {
         $pages = Post::where('post_type', 'page')
             ->where('status', 'publish')
-            ->orderBy('title')
-            ->get();
+            ->orderBy('title', 'asc')
+            ->paginate(12);
         
-        return view('page.index', compact('pages'));
+        return view('pages.index', compact('pages'));
     }
 }
