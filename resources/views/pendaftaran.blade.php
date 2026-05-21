@@ -1,10 +1,10 @@
+{{-- resources/views/pendaftaran.blade.php --}}
 @extends('layouts.app')
 
 @section('content')
 <div class="pendaftaran-page">
     <div class="container">
         
-        <!-- 🔥 TAMPILAN ALERT SUCCESS/ERROR -->
         @if(session('success'))
             <div class="alert alert-success-custom alert-dismissible fade show" role="alert">
                 <i class="bi bi-check-circle-fill"></i> 
@@ -39,7 +39,8 @@
             <p>Isi data diri Anda dengan lengkap dan benar</p>
         </div>
 
-        @if($periodeAktif && isset($config) && $config->is_open)
+        {{-- 🔥 CEK: Harus ada periode aktif DAN config is_open = 1 --}}
+        @if($periodeAktif && isset($config) && $config->is_open == 1)
         <div class="pendaftaran-card">
             <div class="pendaftaran-info">
                 <div class="alert-info">
@@ -54,73 +55,42 @@
                 @csrf
                 <input type="hidden" name="id_periode" value="{{ $periodeAktif->id_periode }}">
                 
-                <!-- 🔥 FORM FIELD DINAMIS DARI DATABASE -->
+                <!-- FORM FIELD DINAMIS -->
                 <div class="form-section">
                     <h3>Data Diri</h3>
-                    
                     @foreach($formFields as $field)
                     <div class="form-group">
                         <label>
                             {{ $field->field_label }}
-                            @if($field->is_required)
-                                <span class="required-star">*</span>
-                            @endif
+                            @if($field->is_required) <span class="required-star">*</span> @endif
                         </label>
-                        
                         @if($field->field_type == 'textarea')
-                            <textarea name="{{ $field->field_name }}" 
-                                      class="form-control" 
-                                      rows="4"
-                                      placeholder="{{ $field->placeholder }}"
-                                      {{ $field->is_required ? 'required' : '' }}>{{ old($field->field_name) }}</textarea>
+                            <textarea name="{{ $field->field_name }}" class="form-control" rows="4" placeholder="{{ $field->placeholder }}" {{ $field->is_required ? 'required' : '' }}>{{ old($field->field_name) }}</textarea>
                         @else
-                            <input type="{{ $field->field_type }}" 
-                                   name="{{ $field->field_name }}" 
-                                   class="form-control" 
-                                   placeholder="{{ $field->placeholder }}"
-                                   value="{{ old($field->field_name) }}"
-                                   {{ $field->is_required ? 'required' : '' }}>
+                            <input type="{{ $field->field_type }}" name="{{ $field->field_name }}" class="form-control" placeholder="{{ $field->placeholder }}" value="{{ old($field->field_name) }}" {{ $field->is_required ? 'required' : '' }}>
                         @endif
-                        
-                        @error($field->field_name)
-                            <div class="error-message">{{ $message }}</div>
-                        @enderror
+                        @error($field->field_name) <div class="error-message">{{ $message }}</div> @enderror
                     </div>
                     @endforeach
                 </div>
                 
-                <!-- 🔥 UPLOAD BERKAS DINAMIS DARI DATABASE -->
+                <!-- UPLOAD BERKAS -->
                 <div class="form-section">
                     <h3>Upload Berkas Pendaftaran</h3>
                     <p class="text-muted mb-3">Silahkan upload berkas yang diperlukan</p>
-                    
                     @foreach($jenisBerkas as $berkas)
                     <div class="form-group">
                         <label>
                             {{ $berkas->nama_jenis }}
-                            @if($berkas->is_required)
-                                <span class="required-star">*</span>
-                            @else
-                                <span class="optional-text">(Opsional)</span>
-                            @endif
+                            @if($berkas->is_required) <span class="required-star">*</span> @else <span class="optional-text">(Opsional)</span> @endif
                         </label>
                         <div class="file-upload-wrapper">
-                            <input type="file" 
-                                   name="berkas_{{ $berkas->id_jenis }}" 
-                                   class="file-upload-input" 
-                                   accept=".{{ $berkas->file_type }}"
-                                   data-max-size="{{ $berkas->max_size }}"
-                                   {{ $berkas->is_required ? 'required' : '' }}>
+                            <input type="file" name="berkas_{{ $berkas->id_jenis }}" class="file-upload-input" accept=".{{ $berkas->file_type }}" data-max-size="{{ $berkas->max_size }}" {{ $berkas->is_required ? 'required' : '' }}>
                             <div class="file-upload-info">
-                                <small class="text-muted">
-                                    Format: {{ strtoupper($berkas->file_type) }} | 
-                                    Maksimal: {{ $berkas->max_size >= 1024 ? round($berkas->max_size/1024,1).' MB' : $berkas->max_size.' KB' }}
-                                </small>
+                                <small class="text-muted">Format: {{ strtoupper($berkas->file_type) }} | Maksimal: {{ $berkas->max_size >= 1024 ? round($berkas->max_size/1024,1).' MB' : $berkas->max_size.' KB' }}</small>
                             </div>
                         </div>
-                        @error('berkas_' . $berkas->id_jenis)
-                            <div class="error-message">{{ $message }}</div>
-                        @enderror
+                        @error('berkas_' . $berkas->id_jenis) <div class="error-message">{{ $message }}</div> @enderror
                     </div>
                     @endforeach
                 </div>
@@ -129,9 +99,7 @@
                     <button type="submit" class="btn-submit" id="btnSubmit">
                         <i class="bi bi-check-circle"></i> Daftar Sekarang
                     </button>
-                    <a href="/" class="btn-cancel">
-                        <i class="bi bi-x-circle"></i> Batal
-                    </a>
+                    <a href="/" class="btn-cancel"><i class="bi bi-x-circle"></i> Batal</a>
                 </div>
             </form>
         </div>
@@ -149,7 +117,6 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Auto hide alert after 5 seconds
     setTimeout(function() {
         const alerts = document.querySelectorAll('.alert-success-custom, .alert-error-custom');
         alerts.forEach(alert => {
@@ -159,7 +126,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }, 5000);
 
-    // File size validation
     const fileInputs = document.querySelectorAll('.file-upload-input');
     fileInputs.forEach(input => {
         input.addEventListener('change', function(e) {
@@ -167,7 +133,6 @@ document.addEventListener('DOMContentLoaded', function() {
             if (file) {
                 const maxSizeKB = parseInt(this.getAttribute('data-max-size'));
                 const fileSizeKB = file.size / 1024;
-                
                 if (fileSizeKB > maxSizeKB) {
                     const maxSizeMB = (maxSizeKB / 1024).toFixed(2);
                     alert(`Ukuran file terlalu besar! Maksimal ${maxSizeMB} MB`);
@@ -177,10 +142,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Prevent double submit
     const form = document.getElementById('formPendaftaran');
     const submitBtn = document.getElementById('btnSubmit');
-    
     if (form) {
         form.addEventListener('submit', function() {
             submitBtn.disabled = true;

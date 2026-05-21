@@ -12,9 +12,31 @@
 </div>
 @endif
 
+@if(session('error'))
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ session('error') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+@endif
+
+<!-- 🔥 INFO STATUS PENDAFTARAN -->
+<div class="alert {{ ($config->is_open ?? 0) == 1 ? 'alert-info' : 'alert-warning' }} mb-4">
+    <i class="bi {{ ($config->is_open ?? 0) == 1 ? 'bi-unlock' : 'bi-lock' }} me-2"></i>
+    <strong>Status Pendaftaran:</strong> 
+    {{ ($config->is_open ?? 0) == 1 ? '🔓 TERBUKA' : '🔒 TERTUTUP' }}
+    @if(($config->is_open ?? 0) == 1)
+        <small class="d-block mt-1">✅ Pendaftaran sedang terbuka. Silakan aktifkan periode yang sesuai.</small>
+    @else
+        <small class="d-block mt-1">⚠️ Pendaftaran sedang ditutup. Silakan buka pendaftaran di menu Konfigurasi terlebih dahulu.</small>
+    @endif
+</div>
+
 <div class="mb-3">
     <a href="{{ route('admin.pendaftaran.index') }}" class="btn btn-secondary">
         <i class="bi bi-arrow-left me-1"></i> Kembali ke Pendaftaran
+    </a>
+    <a href="{{ route('admin.pendaftaran.config') }}" class="btn btn-primary">
+        <i class="bi bi-gear me-1"></i> Konfigurasi Pendaftaran
     </a>
 </div>
 
@@ -35,13 +57,19 @@
                     <label>Nama Periode <span class="text-danger">*</span></label>
                     <input type="text" name="nama_periode" class="form-control" required placeholder="Gelombang 1">
                 </div>
-                <div class="mb-3">
-                    <label>Tanggal Mulai <span class="text-danger">*</span></label>
-                    <input type="date" name="tanggal_mulai" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label>Tanggal Selesai <span class="text-danger">*</span></label>
-                    <input type="date" name="tanggal_selesai" class="form-control" required>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label>Tanggal Mulai <span class="text-danger">*</span></label>
+                            <input type="date" name="tanggal_mulai" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label>Tanggal Selesai <span class="text-danger">*</span></label>
+                            <input type="date" name="tanggal_selesai" class="form-control" required>
+                        </div>
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label>Kuota <span class="text-danger">*</span></label>
@@ -51,6 +79,14 @@
                     <label>Deskripsi</label>
                     <textarea name="deskripsi" class="form-control" rows="3" placeholder="Deskripsi periode pendaftaran"></textarea>
                 </div>
+                
+                @if(($config->is_open ?? 0) == 0)
+                <div class="alert alert-warning">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Pendaftaran sedang ditutup. Periode baru akan ditambahkan dalam status tidak aktif.
+                </div>
+                @endif
+                
                 <button type="submit" class="btn btn-success w-100">
                     <i class="bi bi-save me-1"></i> Simpan Periode
                 </button>
@@ -161,12 +197,20 @@
                     <div class="mb-3">
                         <div class="form-check form-switch">
                             <input type="checkbox" name="is_active" value="1" class="form-check-input" 
-                                   id="is_active_checkbox_{{ $p->id_periode }}" {{ $p->is_active ? 'checked' : '' }}>
+                                   id="is_active_checkbox_{{ $p->id_periode }}" 
+                                   {{ $p->is_active ? 'checked' : '' }}
+                                   {{ ($config->is_open ?? 0) == 0 ? 'disabled' : '' }}>
                             <label class="form-check-label fw-bold" for="is_active_checkbox_{{ $p->id_periode }}">
                                 Aktifkan periode ini
                             </label>
                         </div>
-                        <small class="text-muted">Hanya satu periode yang boleh aktif dalam satu waktu</small>
+                        <small class="text-muted">
+                            @if(($config->is_open ?? 0) == 0)
+                                ⚠️ Pendaftaran sedang ditutup. Buka konfigurasi pendaftaran terlebih dahulu.
+                            @else
+                                Hanya satu periode yang boleh aktif dalam satu waktu
+                            @endif
+                        </small>
                     </div>
                     <div class="mb-3">
                         <label>Deskripsi</label>

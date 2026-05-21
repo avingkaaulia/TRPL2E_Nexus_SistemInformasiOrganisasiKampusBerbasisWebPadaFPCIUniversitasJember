@@ -54,7 +54,6 @@ class AdminPendaftaranController extends Controller
         return view('admin.pendaftaran.show', compact('pendaftaran', 'formFields', 'jenisBerkas'));
     }
     
-    // Update status pendaftaran
     public function updateStatus(Request $request, $id)
     {
         $pendaftaran = Pendaftaran::findOrFail($id);
@@ -64,7 +63,6 @@ class AdminPendaftaranController extends Controller
         return redirect()->back()->with('success', 'Status pendaftaran berhasil diupdate');
     }
     
-    // Hapus pendaftaran
     public function destroy($id)
     {
         $pendaftaran = Pendaftaran::findOrFail($id);
@@ -82,26 +80,25 @@ class AdminPendaftaranController extends Controller
         return redirect()->route('admin.pendaftaran.index')
             ->with('success', 'Data pendaftaran berhasil dihapus');
     }
-    // 🔥 TERIMA PENDAFTARAN
-public function accept($id)
-{
-    $pendaftaran = Pendaftaran::findOrFail($id);
-    $pendaftaran->status = 'diterima';
-    $pendaftaran->save();
     
-    return redirect()->back()->with('success', 'Pendaftar ' . $pendaftaran->nama . ' telah DITERIMA');
-}
-
-// 🔥 TOLAK PENDAFTARAN
-public function reject($id)
-{
-    $pendaftaran = Pendaftaran::findOrFail($id);
-    $pendaftaran->status = 'ditolak';
-    $pendaftaran->save();
+    public function accept($id)
+    {
+        $pendaftaran = Pendaftaran::findOrFail($id);
+        $pendaftaran->status = 'diterima';
+        $pendaftaran->save();
+        
+        return redirect()->back()->with('success', 'Pendaftar ' . $pendaftaran->nama . ' telah DITERIMA');
+    }
     
-    return redirect()->back()->with('success', 'Pendaftar ' . $pendaftaran->nama . ' telah DITOLAK');
-}
-    // Download berkas
+    public function reject($id)
+    {
+        $pendaftaran = Pendaftaran::findOrFail($id);
+        $pendaftaran->status = 'ditolak';
+        $pendaftaran->save();
+        
+        return redirect()->back()->with('success', 'Pendaftar ' . $pendaftaran->nama . ' telah DITOLAK');
+    }
+    
     public function downloadBerkas($id)
     {
         $berkas = BerkasPendaftaran::findOrFail($id);
@@ -118,40 +115,49 @@ public function reject($id)
     public function config()
     {
         $config = DB::table('pendaftaran_config')->first();
-        return view('admin.pendaftaran.config', compact('config'));
+        $periodeAktif = PeriodePendaftaran::where('is_active', 1)->first();
+        
+        return view('admin.pendaftaran.config', compact('config', 'periodeAktif'));
     }
     
-    // 🔥 UPDATE KONFIGURASI PENDAFTARAN - Pastikan checkbox bekerja
-public function updateConfig(Request $request)
-{
-    $request->validate([
-        'is_open' => 'nullable|boolean',
-        'welcome_text' => 'nullable|string',
-        'closing_text' => 'nullable|string'
-    ]);
-    
-    // Nilai is_open: jika checkbox tidak dicentang, nilainya null/absent
-    $isOpen = $request->has('is_open') ? 1 : 0;
-    
-    DB::table('pendaftaran_config')->updateOrInsert(
-        ['id_config' => 1],
-        [
-            'is_open' => $isOpen,
-            'welcome_text' => $request->welcome_text,
-            'closing_text' => $request->closing_text,
-            'updated_at' => now()
-        ]
-    );
-    
-    return redirect()->route('admin.pendaftaran.config')
-        ->with('success', 'Konfigurasi pendaftaran berhasil diupdate');
-}
+    // 🔥 UPDATE KONFIGURASI - SINKRON DENGAN PERIODE
+    public function updateConfig(Request $request)
+    {
+        $request->validate([
+            'is_open' => 'nullable|boolean',
+            'welcome_text' => 'nullable|string',
+            'closing_text' => 'nullable|string'
+        ]);
+        
+        $isOpen = $request->has('is_open') ? 1 : 0;
+        
+        // Update config
+        DB::table('pendaftaran_config')->updateOrInsert(
+            ['id_config' => 1],
+            [
+                'is_open' => $isOpen,
+                'welcome_text' => $request->welcome_text,
+                'closing_text' => $request->closing_text,
+                'updated_at' => now()
+            ]
+        );
+        
+        // 🔥 SINKRON: Jika config is_open = 0, nonaktifkan semua periode
+        if ($isOpen == 0) {
+            PeriodePendaftaran::where('is_active', 1)->update(['is_active' => 0]);
+        }
+        
+        return redirect()->route('admin.pendaftaran.config')
+            ->with('success', 'Konfigurasi pendaftaran berhasil diupdate');
+    }
     
     // 🔥 HALAMAN PERIODE PENDAFTARAN
     public function periode()
     {
         $periode = PeriodePendaftaran::orderBy('tanggal_mulai', 'desc')->get();
-        return view('admin.pendaftaran.periode', compact('periode'));
+        $config = DB::table('pendaftaran_config')->first();
+        
+        return view('admin.pendaftaran.periode', compact('periode', 'config'));
     }
     
     // 🔥 TAMBAH PERIODE PENDAFTARAN
@@ -166,12 +172,18 @@ public function updateConfig(Request $request)
             'deskripsi' => 'nullable|string'
         ]);
         
+        // Cek apakah ada periode aktif sebelumnya
+        $config = DB::table('pendaftaran_config')->first();
+        
+        // Jika config is_open = 0, periode baru tidak bisa diaktifkan
+        $isActive = ($config->is_open ?? 0) == 1 ? 0 : 0;
+        
         PeriodePendaftaran::create([
             'tahun_ajaran' => $request->tahun_ajaran,
             'nama_periode' => $request->nama_periode,
             'tanggal_mulai' => $request->tanggal_mulai,
             'tanggal_selesai' => $request->tanggal_selesai,
-            'is_active' => 0,
+            'is_active' => $isActive,
             'kuota' => $request->kuota,
             'deskripsi' => $request->deskripsi
         ]);
@@ -180,49 +192,76 @@ public function updateConfig(Request $request)
             ->with('success', 'Periode pendaftaran berhasil ditambahkan');
     }
     
-    // 🔥 UPDATE PERIODE PENDAFTARAN
-public function updatePeriode(Request $request, $id)
-{
-    $periode = PeriodePendaftaran::findOrFail($id);
-    
-    $request->validate([
-        'tahun_ajaran' => 'required|string|max:20',
-        'nama_periode' => 'required|string|max:50',
-        'tanggal_mulai' => 'required|date',
-        'tanggal_selesai' => 'required|date|after:tanggal_mulai',
-        'kuota' => 'required|integer|min:1',
-        'deskripsi' => 'nullable|string'
-    ]);
-    
-    // 🔥 AMBIL NILAI CHECKBOX - jika tidak ada, bernilai 0
-    $isActive = $request->has('is_active') ? 1 : 0;
-    
-    $periode->update([
-        'tahun_ajaran' => $request->tahun_ajaran,
-        'nama_periode' => $request->nama_periode,
-        'tanggal_mulai' => $request->tanggal_mulai,
-        'tanggal_selesai' => $request->tanggal_selesai,
-        'is_active' => $isActive,
-        'kuota' => $request->kuota,
-        'deskripsi' => $request->deskripsi
-    ]);
-    
-    // Jika periode ini diaktifkan, nonaktifkan periode lain yang aktif
-    if ($isActive == 1) {
-        PeriodePendaftaran::where('id_periode', '!=', $id)
-            ->where('is_active', 1)
-            ->update(['is_active' => 0]);
+    // 🔥 UPDATE PERIODE - SINKRON DENGAN CONFIG
+    public function updatePeriode(Request $request, $id)
+    {
+        $periode = PeriodePendaftaran::findOrFail($id);
+        $config = DB::table('pendaftaran_config')->first();
+        
+        $request->validate([
+            'tahun_ajaran' => 'required|string|max:20',
+            'nama_periode' => 'required|string|max:50',
+            'tanggal_mulai' => 'required|date',
+            'tanggal_selesai' => 'required|date|after:tanggal_mulai',
+            'kuota' => 'required|integer|min:1',
+            'deskripsi' => 'nullable|string'
+        ]);
+        
+        $isActive = $request->has('is_active') ? 1 : 0;
+        
+        // 🔥 SINKRON: Jika config is_open = 0, periode tidak bisa diaktifkan
+        if (($config->is_open ?? 0) == 0 && $isActive == 1) {
+            return redirect()->back()->with('error', 'Pendaftaran sedang ditutup. Aktifkan konfigurasi pendaftaran terlebih dahulu.');
+        }
+        
+        $periode->update([
+            'tahun_ajaran' => $request->tahun_ajaran,
+            'nama_periode' => $request->nama_periode,
+            'tanggal_mulai' => $request->tanggal_mulai,
+            'tanggal_selesai' => $request->tanggal_selesai,
+            'is_active' => $isActive,
+            'kuota' => $request->kuota,
+            'deskripsi' => $request->deskripsi
+        ]);
+        
+        // Jika periode ini diaktifkan, nonaktifkan periode lain
+        if ($isActive == 1) {
+            PeriodePendaftaran::where('id_periode', '!=', $id)
+                ->where('is_active', 1)
+                ->update(['is_active' => 0]);
+        }
+        
+        // 🔥 SINKRON: Jika ada periode yang aktif, pastikan config is_open = 1
+        $hasActivePeriode = PeriodePendaftaran::where('is_active', 1)->exists();
+        if ($hasActivePeriode) {
+            DB::table('pendaftaran_config')->updateOrInsert(
+                ['id_config' => 1],
+                ['is_open' => 1, 'updated_at' => now()]
+            );
+        } else {
+            DB::table('pendaftaran_config')->updateOrInsert(
+                ['id_config' => 1],
+                ['is_open' => 0, 'updated_at' => now()]
+            );
+        }
+        
+        return redirect()->route('admin.pendaftaran.periode')
+            ->with('success', 'Periode pendaftaran berhasil diupdate');
     }
     
-    return redirect()->route('admin.pendaftaran.periode')
-        ->with('success', 'Periode pendaftaran berhasil diupdate');
-}
-    
-    // 🔥 HAPUS PERIODE PENDAFTARAN
     public function destroyPeriode($id)
     {
         $periode = PeriodePendaftaran::findOrFail($id);
         $periode->delete();
+        
+        // Cek apakah masih ada periode aktif
+        $hasActivePeriode = PeriodePendaftaran::where('is_active', 1)->exists();
+        if (!$hasActivePeriode) {
+            DB::table('pendaftaran_config')->updateOrInsert(
+                ['id_config' => 1],
+                ['is_open' => 0, 'updated_at' => now()]
+            );
+        }
         
         return redirect()->route('admin.pendaftaran.periode')
             ->with('success', 'Periode pendaftaran berhasil dihapus');
@@ -235,7 +274,6 @@ public function updatePeriode(Request $request, $id)
         return view('admin.pendaftaran.form-fields', compact('formFields'));
     }
     
-    // Tambah form field
     public function storeFormField(Request $request)
     {
         $request->validate([
@@ -263,42 +301,39 @@ public function updatePeriode(Request $request, $id)
             ->with('success', 'Form field berhasil ditambahkan');
     }
     
-    // 🔥 UPDATE FORM FIELD
-public function updateFormField(Request $request, $id)
-{
-    $field = FormField::findOrFail($id);
-    
-    $request->validate([
-        'field_name' => 'required|string|max:50|unique:form_fields,field_name,' . $id . ',id_field',
-        'field_label' => 'required|string|max:100',
-        'field_type' => 'required|in:text,email,tel,textarea,number,date',
-        'placeholder' => 'nullable|string|max:255',
-        'sort_order' => 'integer',
-    ]);
-    
-    // 🔥 AMBIL NILAI CHECKBOX - jika tidak ada, bernilai 0
-    $isRequired = $request->has('is_required') ? 1 : 0;
-    $isActive = $request->has('is_active') ? 1 : 0;
-    
-    if ($field->field_name != $request->field_name) {
-        $this->renameColumnInPendaftaran($field->field_name, $request->field_name);
+    public function updateFormField(Request $request, $id)
+    {
+        $field = FormField::findOrFail($id);
+        
+        $request->validate([
+            'field_name' => 'required|string|max:50|unique:form_fields,field_name,' . $id . ',id_field',
+            'field_label' => 'required|string|max:100',
+            'field_type' => 'required|in:text,email,tel,textarea,number,date',
+            'placeholder' => 'nullable|string|max:255',
+            'sort_order' => 'integer',
+        ]);
+        
+        $isRequired = $request->has('is_required') ? 1 : 0;
+        $isActive = $request->has('is_active') ? 1 : 0;
+        
+        if ($field->field_name != $request->field_name) {
+            $this->renameColumnInPendaftaran($field->field_name, $request->field_name);
+        }
+        
+        $field->update([
+            'field_name' => $request->field_name,
+            'field_label' => $request->field_label,
+            'field_type' => $request->field_type,
+            'is_required' => $isRequired,
+            'placeholder' => $request->placeholder,
+            'sort_order' => $request->sort_order ?? 0,
+            'is_active' => $isActive
+        ]);
+        
+        return redirect()->route('admin.pendaftaran.form-fields')
+            ->with('success', 'Form field berhasil diupdate');
     }
     
-    $field->update([
-        'field_name' => $request->field_name,
-        'field_label' => $request->field_label,
-        'field_type' => $request->field_type,
-        'is_required' => $isRequired,
-        'placeholder' => $request->placeholder,
-        'sort_order' => $request->sort_order ?? 0,
-        'is_active' => $isActive
-    ]);
-    
-    return redirect()->route('admin.pendaftaran.form-fields')
-        ->with('success', 'Form field berhasil diupdate');
-}
-    
-    // Hapus form field
     public function destroyFormField($id)
     {
         $field = FormField::findOrFail($id);
@@ -309,7 +344,6 @@ public function updateFormField(Request $request, $id)
             ->with('success', 'Form field berhasil dihapus');
     }
     
-    // Fungsi untuk manajemen kolom database
     private function addColumnToPendaftaran($columnName)
     {
         try {
@@ -331,7 +365,6 @@ public function updateFormField(Request $request, $id)
         } catch (\Exception $e) {}
     }
     
-    // Halaman manajemen jenis berkas
     public function jenisBerkas()
     {
         $jenisBerkas = JenisBerkas::all();

@@ -122,7 +122,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
 
     // ✅ ROUTE SPESIFIK DULU (sebelum {id})
     Route::get('/pendaftaran/config', [AdminPendaftaranController::class, 'config'])->name('pendaftaran.config');
-    Route::put('/pendaftaran/config', [AdminPendaftaranController::class, 'updateConfig'])->name('admin.pendaftaran.config.update');
+    Route::put('/pendaftaran/config', [AdminPendaftaranController::class, 'updateConfig'])->name('pendaftaran.config.update');
 
     Route::get('/pendaftaran/periode', [AdminPendaftaranController::class, 'periode'])->name('pendaftaran.periode');
     Route::post('/pendaftaran/periode', [AdminPendaftaranController::class, 'storePeriode'])->name('pendaftaran.periode.store');

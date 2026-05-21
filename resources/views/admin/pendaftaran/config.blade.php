@@ -11,12 +11,30 @@
     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
 </div>
 @endif
+
+@if(session('error'))
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ session('error') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+@endif
+
 <div class="admin-card">
     <div class="admin-card-header">
         <h4><i class="bi bi-gear me-2"></i> Pengaturan Pendaftaran</h4>
         <a href="{{ route('admin.pendaftaran.index') }}" class="btn btn-secondary btn-sm">
             <i class="bi bi-arrow-left me-1"></i> Kembali
         </a>
+    </div>
+    
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle-fill me-2"></i>
+        <strong>Catatan:</strong> Pendaftaran akan tampil di halaman publik jika:
+        <ul class="mb-0 mt-2">
+            <li>✅ Tombol "Buka Pendaftaran" diaktifkan</li>
+            <li>✅ Ada periode pendaftaran yang aktif (status "Aktif")</li>
+            <li>✅ Tanggal periode pendaftaran masih berlangsung</li>
+        </ul>
     </div>
     
     <form action="{{ route('admin.pendaftaran.config.update') }}" method="POST">
@@ -31,7 +49,8 @@
                     <i class="bi bi-unlock"></i> Buka Pendaftaran
                 </label>
             </div>
-            <small class="text-muted">✅ Jika diaktifkan, form pendaftaran akan tersedia untuk umum</small>
+            <small class="text-muted">✅ Jika diaktifkan, form pendaftaran akan tersedia untuk umum (dengan periode aktif)</small>
+            <small class="text-muted d-block">⚠️ Jika dinonaktifkan, semua periode pendaftaran akan otomatis dinonaktifkan</small>
         </div>
         
         <div class="mb-3">
@@ -55,10 +74,15 @@
 </div>
 
 <script>
-    // Debug: cek nilai checkbox saat submit
-    document.querySelector('form').addEventListener('submit', function(e) {
-        const isOpen = document.getElementById('is_open').checked;
-        console.log('Nilai is_open yang akan dikirim:', isOpen ? 1 : 0);
+    document.querySelector('form')?.addEventListener('submit', function(e) {
+        const isOpen = document.getElementById('is_open')?.checked;
+        if (!isOpen) {
+            if (confirm('Menonaktifkan pendaftaran akan otomatis menonaktifkan semua periode. Lanjutkan?')) {
+                return true;
+            }
+            e.preventDefault();
+            return false;
+        }
     });
 </script>
 @endsection
