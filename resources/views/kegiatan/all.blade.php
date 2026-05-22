@@ -73,11 +73,9 @@
         @endforelse
     </div>
 
-    @if($posts->hasPages())
-    <div class="d-flex justify-content-center mt-5">
-        {{ $posts->withQueryString()->links() }}
-    </div>
-    @endif
+    <div class="pagination-wrapper">
+    {{ $posts->appends(request()->query())->links('vendor.pagination.custom') }}
+</div>
 
     <div class="text-center mt-4">
         <a href="{{ route('kegiatan.index') }}" class="btn btn-secondary">

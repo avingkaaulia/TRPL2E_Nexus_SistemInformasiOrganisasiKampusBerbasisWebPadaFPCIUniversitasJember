@@ -94,7 +94,7 @@
 </section>
 @endif
 
-<!-- Struktur Organisasi -->
+<!-- Struktur Organisasi - dengan link Instagram tersembunyi di foto -->
 <section class="struktur-section">
     <div class="container">
         <div class="section-header">
@@ -105,13 +105,21 @@
         <div class="struktur-grid">
             @foreach($anggota as $a)
             <div class="anggota-card">
-                <div class="anggota-foto-wrapper">
-                    <img src="{{ asset($a->foto ?? 'assets/avatar.png') }}" 
-                         class="anggota-foto" 
-                         alt="{{ $a->divisi->nama_divisi ?? 'Member' }}">
-                </div>
+                {{-- 🔥 LINK INSTAGRAM TERSEMBUNYI DI FOTO --}}
+                <a href="{{ $a->link ?? '#' }}" 
+                   class="anggota-foto-link" 
+                   target="_blank" 
+                   title="{{ $a->user->nama ?? 'Member' }} - {{ $a->jabatan }}"
+                   @if(!$a->link) style="cursor: default;" @endif>
+                    <div class="anggota-foto-wrapper">
+                        <img src="{{ asset($a->foto ?? 'assets/img/avatars/default-avatar.png') }}" 
+                             class="anggota-foto" 
+                             alt="{{ $a->user->nama ?? 'Member' }}">
+                    </div>
+                </a>
                 <div class="anggota-info">
                     <p class="anggota-posisi">{{ $a->divisi->nama_divisi ?? 'Staff' }}</p>
+                    <p class="anggota-nama">{{ $a->user->nama ?? '' }}</p>
                 </div>
             </div>
             @endforeach

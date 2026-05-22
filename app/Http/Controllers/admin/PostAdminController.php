@@ -78,15 +78,47 @@ class PostAdminController extends Controller
     
     public function store(Request $request)
     {
+        // 🔥 VALIDASI LENGKAP DENGAN PESAN ERROR
         $request->validate([
             'title' => 'required|string|max:150',
-            'post_content' => 'required|string',
+            'post_content' => 'required|string|min:10',
             'id_post_category' => 'required|exists:post_category,id_category',
             'post_type' => 'required|in:post,page',
             'status' => 'required|in:publish,draft,pending',
             'featured_image' => 'nullable|image|mimes:jpeg,png,jpg|max:4000',
             'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:4000',
             'gallery_descriptions.*' => 'nullable|string|max:255'
+        ], [
+            // Pesan error untuk title
+            'title.required' => 'Judul postingan wajib diisi',
+            'title.max' => 'Judul postingan maksimal 150 karakter',
+            
+            // Pesan error untuk post_content
+            'post_content.required' => 'Konten postingan wajib diisi',
+            'post_content.min' => 'Konten postingan minimal 10 karakter',
+            
+            // Pesan error untuk kategori
+            'id_post_category.required' => 'Kategori wajib dipilih',
+            'id_post_category.exists' => 'Kategori yang dipilih tidak valid',
+            
+            // Pesan error untuk tipe
+            'post_type.required' => 'Tipe postingan wajib dipilih',
+            'post_type.in' => 'Tipe postingan harus Post atau Page',
+            
+            // Pesan error untuk status
+            'status.required' => 'Status postingan wajib dipilih',
+            'status.in' => 'Status postingan tidak valid',
+            
+            // Pesan error untuk gambar
+            'featured_image.image' => 'File harus berupa gambar',
+            'featured_image.mimes' => 'Format gambar harus JPG, PNG, atau JPEG',
+            'featured_image.max' => 'Ukuran gambar maksimal 4MB',
+            
+            // Pesan error untuk gallery
+            'gallery_images.*.image' => 'File gallery harus berupa gambar',
+            'gallery_images.*.mimes' => 'Format gallery harus JPG, PNG, atau JPEG',
+            'gallery_images.*.max' => 'Ukuran gallery maksimal 4MB',
+            'gallery_descriptions.*.max' => 'Deskripsi gallery maksimal 255 karakter',
         ]);
         
         $data = [
@@ -111,18 +143,19 @@ class PostAdminController extends Controller
         
         if ($request->hasFile('gallery_images')) {
             foreach ($request->file('gallery_images') as $key => $file) {
-                $filename = time() . '_gallery_' . $key . '.' . $file->getClientOriginalExtension();
-                $path = $file->storeAs('gallery', $filename, 'public');
-                
-                PostGallery::create([
-                    'id_post' => $post->id_post,
-                    'image_path' => $path,
-                    'description' => $request->gallery_descriptions[$key] ?? ''
-                ]);
+                if ($file) {
+                    $filename = time() . '_gallery_' . $key . '_' . Str::slug($request->title) . '.' . $file->getClientOriginalExtension();
+                    $path = $file->storeAs('gallery', $filename, 'public');
+                    
+                    PostGallery::create([
+                        'id_post' => $post->id_post,
+                        'image_path' => $path,
+                        'description' => $request->gallery_descriptions[$key] ?? ''
+                    ]);
+                }
             }
         }
         
-        // Redirect berdasarkan post_type
         if ($request->post_type == 'page') {
             return redirect()->route('admin.pages.list')
                 ->with('success', 'Halaman berhasil ditambahkan');
@@ -160,15 +193,34 @@ class PostAdminController extends Controller
     {
         $post = Post::findOrFail($id);
         
+        // 🔥 VALIDASI LENGKAP UNTUK UPDATE
         $request->validate([
             'title' => 'required|string|max:150',
-            'post_content' => 'required|string',
+            'post_content' => 'required|string|min:10',
             'id_post_category' => 'required|exists:post_category,id_category',
             'post_type' => 'required|in:post,page',
             'status' => 'required|in:publish,draft,pending',
             'featured_image' => 'nullable|image|mimes:jpeg,png,jpg|max:4000',
             'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:4000',
             'gallery_descriptions.*' => 'nullable|string|max:255'
+        ], [
+            'title.required' => 'Judul postingan wajib diisi',
+            'title.max' => 'Judul postingan maksimal 150 karakter',
+            'post_content.required' => 'Konten postingan wajib diisi',
+            'post_content.min' => 'Konten postingan minimal 10 karakter',
+            'id_post_category.required' => 'Kategori wajib dipilih',
+            'id_post_category.exists' => 'Kategori yang dipilih tidak valid',
+            'post_type.required' => 'Tipe postingan wajib dipilih',
+            'post_type.in' => 'Tipe postingan harus Post atau Page',
+            'status.required' => 'Status postingan wajib dipilih',
+            'status.in' => 'Status postingan tidak valid',
+            'featured_image.image' => 'File harus berupa gambar',
+            'featured_image.mimes' => 'Format gambar harus JPG, PNG, atau JPEG',
+            'featured_image.max' => 'Ukuran gambar maksimal 4MB',
+            'gallery_images.*.image' => 'File gallery harus berupa gambar',
+            'gallery_images.*.mimes' => 'Format gallery harus JPG, PNG, atau JPEG',
+            'gallery_images.*.max' => 'Ukuran gallery maksimal 4MB',
+            'gallery_descriptions.*.max' => 'Deskripsi gallery maksimal 255 karakter',
         ]);
         
         $data = [
@@ -193,14 +245,16 @@ class PostAdminController extends Controller
         
         if ($request->hasFile('gallery_images')) {
             foreach ($request->file('gallery_images') as $key => $file) {
-                $filename = time() . '_gallery_' . $key . '_' . $file->getClientOriginalName();
-                $path = $file->storeAs('gallery', $filename, 'public');
-                
-                PostGallery::create([
-                    'id_post' => $post->id_post,
-                    'image_path' => $path,
-                    'description' => $request->gallery_descriptions[$key] ?? ''
-                ]);
+                if ($file) {
+                    $filename = time() . '_gallery_' . $key . '_' . Str::slug($request->title) . '.' . $file->getClientOriginalExtension();
+                    $path = $file->storeAs('gallery', $filename, 'public');
+                    
+                    PostGallery::create([
+                        'id_post' => $post->id_post,
+                        'image_path' => $path,
+                        'description' => $request->gallery_descriptions[$key] ?? ''
+                    ]);
+                }
             }
         }
         

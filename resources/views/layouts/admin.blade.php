@@ -28,72 +28,99 @@
                 <h5>FPCI UNEJ Admin</h5>
             </div>
             
+            <!-- DASHBOARD -->
             <a href="{{ route('admin.dashboard') }}" class="menu-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                 <i class="bi bi-speedometer2"></i> Dashboard
             </a>
             
-            <div class="menu-group-title">MANAJEMEN KONTEN</div>
-            <a href="{{ route('admin.carousel') }}" class="menu-item {{ request()->routeIs('admin.carousel*') ? 'active' : '' }}">
-                <i class="bi bi-images"></i> Carousel / Slider
-            </a>
-            <a href="{{ route('admin.posts.index') }}" class="menu-item {{ request()->routeIs('admin.posts*') ? 'active' : '' }}">
+            <!-- ==================== MANAJEMEN KONTEN ==================== -->
+            <div class="menu-group-title">📄 MANAJEMEN KONTEN</div>
+            
+            <!-- Post & Page -->
+            <a href="{{ route('admin.posts.index') }}" class="menu-item {{ request()->routeIs('admin.posts*') && !request()->routeIs('admin.posts.create') ? 'active' : '' }}">
                 <i class="bi bi-file-post"></i> Semua Postingan
             </a>
             <a href="{{ route('admin.posts.create') }}" class="menu-item">
-                <i class="bi bi-plus-circle"></i> Tambah Post
+                <i class="bi bi-plus-circle"></i> Tambah Post/Page
             </a>
-            <a href="{{ route('admin.pages.list') }}" class="menu-item">
+            <a href="{{ route('admin.pages.list') }}" class="menu-item {{ request()->routeIs('admin.pages*') ? 'active' : '' }}">
                 <i class="bi bi-files"></i> Halaman (Pages)
             </a>
+            
+            <!-- Kategori -->
             <a href="{{ route('admin.categories.index') }}" class="menu-item {{ request()->routeIs('admin.categories*') ? 'active' : '' }}">
                 <i class="bi bi-tags"></i> Kategori
             </a>
+            
+            <!-- Carousel -->
+            <a href="{{ route('admin.carousel') }}" class="menu-item {{ request()->routeIs('admin.carousel*') ? 'active' : '' }}">
+                <i class="bi bi-images"></i> Carousel / Slider
+            </a>
+            
+            <!-- Kelola Karya -->
             <a href="{{ route('admin.writings.pending') }}" class="menu-item {{ request()->routeIs('admin.writings*') ? 'active' : '' }}">
-    <i class="bi bi-journal-bookmark-fill"></i> Kelola Karya
-    @php $pendingWritings = App\Models\Post::where('status', 'pending')->where('post_type', 'post')->count(); @endphp
-    @if($pendingWritings > 0)
-        <span class="badge bg-warning ms-2">{{ $pendingWritings }}</span>
-    @endif
-</a>
-            <div class="menu-group-title">MANAJEMEN</div>
+                <i class="bi bi-journal-bookmark-fill"></i> Kelola Karya
+                @php $pendingWritings = App\Models\Post::where('status', 'pending')->where('post_type', 'post')->count(); @endphp
+                @if($pendingWritings > 0)
+                    <span class="badge bg-warning ms-2">{{ $pendingWritings }}</span>
+                @endif
+            </a>
+            
+            <!-- ==================== MANAJEMEN PENGGUNA ==================== -->
+            <div class="menu-group-title">👥 MANAJEMEN PENGGUNA</div>
+            
+            <!-- Pendaftaran -->
             <a href="{{ route('admin.pendaftaran.index') }}" class="menu-item {{ request()->routeIs('admin.pendaftaran*') ? 'active' : '' }}">
                 <i class="bi bi-person-plus"></i> Pendaftaran
             </a>
+            
+            <!-- Anggota -->
             <a href="{{ route('admin.anggota.index') }}" class="menu-item {{ request()->routeIs('admin.anggota*') ? 'active' : '' }}">
                 <i class="bi bi-people"></i> Anggota
             </a>
-            <a href="{{ route('admin.users.index') }}" class="menu-item {{ request()->routeIs('admin.users*') ? 'active' : '' }}">
-    <i class="bi bi-person-badge"></i> Kelola User & Role
-</a>
-           <a href="{{ route('admin.comments.index') }}" class="menu-item {{ request()->routeIs('admin.comments*') ? 'active' : '' }}">
-    <i class="bi bi-chat-dots"></i> Komentar
-    @php 
-        // 🔥 HITUNG KOMENTAR YANG PERLU DITINDAKLANJUTI:
-        // 1. Komentar dengan status pending (perlu approve/reject)
-        // 2. Komentar dengan status approved tapi belum dibalas (is_replied = 0)
-        $pendingComments = App\Models\Comment::where('status', 'pending')->count();
-        $unrepliedComments = App\Models\Comment::where('status', 'approved')->where('is_replied', 0)->count();
-        $totalNeedAction = $pendingComments + $unrepliedComments;
-    @endphp
-    @if($totalNeedAction > 0)
-        <span class="badge bg-danger ms-2">{{ $totalNeedAction }}</span>
-    @endif
-</a>
             
-            <div class="menu-group-title">PENGATURAN</div>
+            <!-- User & Role -->
+            <a href="{{ route('admin.users.index') }}" class="menu-item {{ request()->routeIs('admin.users*') ? 'active' : '' }}">
+                <i class="bi bi-person-badge"></i> Kelola User & Role
+            </a>
+            
+            <!-- Komentar -->
+            <a href="{{ route('admin.comments.index') }}" class="menu-item {{ request()->routeIs('admin.comments*') ? 'active' : '' }}">
+                <i class="bi bi-chat-dots"></i> Komentar
+                @php 
+                    $pendingComments = App\Models\Comment::where('status', 'pending')->count();
+                    $unrepliedComments = App\Models\Comment::where('status', 'approved')->where('is_replied', 0)->count();
+                    $totalNeedAction = $pendingComments + $unrepliedComments;
+                @endphp
+                @if($totalNeedAction > 0)
+                    <span class="badge bg-danger ms-2">{{ $totalNeedAction }}</span>
+                @endif
+            </a>
+            
+            <!-- ==================== PENGATURAN ==================== -->
+            <div class="menu-group-title">⚙️ PENGATURAN</div>
+            
+            <!-- Menu Navigasi -->
             <a href="{{ route('admin.menu.index') }}" class="menu-item {{ request()->routeIs('admin.menu*') ? 'active' : '' }}">
                 <i class="bi bi-gear"></i> Menu Navigasi
             </a>
+            
+            <!-- Kontak & Sosmed -->
             <a href="{{ route('admin.contact.index') }}" class="menu-item {{ request()->routeIs('admin.contact*') ? 'active' : '' }}">
-    <i class="bi bi-envelope"></i> Kontak & Sosmed
-</a>
-<a href="{{ route('admin.logo.index') }}" class="menu-item {{ request()->routeIs('admin.logo*') ? 'active' : '' }}">
-    <i class="bi bi-image"></i> Logo & Favicon
-</a>
+                <i class="bi bi-envelope"></i> Kontak & Sosmed
+            </a>
+            
+            <!-- Logo & Favicon -->
+            <a href="{{ route('admin.logo.index') }}" class="menu-item {{ request()->routeIs('admin.logo*') ? 'active' : '' }}">
+                <i class="bi bi-image"></i> Logo & Favicon
+            </a>
+            
+            <!-- Profil Saya -->
             <a href="{{ route('profile') }}" class="menu-item">
                 <i class="bi bi-person"></i> Profil Saya
             </a>
             
+            <!-- Logout -->
             <form action="{{ route('logout') }}" method="POST" id="admin-logout-form">
                 @csrf
                 <button type="submit" class="menu-item logout-btn" style="width: 100%; text-align: left; background: none; border: none; cursor: pointer;">

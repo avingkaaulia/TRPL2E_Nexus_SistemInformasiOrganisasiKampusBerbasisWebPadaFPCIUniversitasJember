@@ -11,20 +11,19 @@
         <div class="section-line"></div>
     </div>
 
-    <!-- Search & Sorting Form -->
+   <!-- Search & Sorting Form -->
     <div class="row mb-4">
         <div class="col-md-8 mx-auto">
-            <form action="{{ route('writings.all') }}" method="GET" class="search-wrapper d-flex gap-2 flex-wrap">
-                <input type="text" name="search" class="search-input flex-grow-1" placeholder="Search writings..." value="{{ request('search') }}">
+            <form action="{{ url()->current() }}" method="GET" class="d-flex gap-2 flex-wrap justify-content-center">
                 <select name="sort" class="form-select" style="width: auto;">
                     <option value="terbaru" {{ request('sort') == 'terbaru' ? 'selected' : '' }}>Terbaru</option>
                     <option value="terlama" {{ request('sort') == 'terlama' ? 'selected' : '' }}>Terlama</option>
                     <option value="az" {{ request('sort') == 'az' ? 'selected' : '' }}>A-Z</option>
                     <option value="za" {{ request('sort') == 'za' ? 'selected' : '' }}>Z-A</option>
                 </select>
-                <button type="submit" class="btn-search-submit"><i class="bi bi-search"></i> Search</button>
-                @if(request('search') || request('sort'))
-                <a href="{{ route('writings.all') }}" class="btn-reset">Reset</a>
+                <button type="submit" class="btn-search-submit"><i class="bi bi-sort-down"></i> Urutkan</button>
+                @if(request('sort'))
+                <a href="{{ url()->current() }}" class="btn-reset">Reset</a>
                 @endif
             </form>
         </div>
@@ -71,9 +70,9 @@
     </div>
 
     <!-- Pagination -->
-    <div class="d-flex justify-content-center mt-4">
-        {{ $posts->withQueryString()->links() }}
-    </div>
+    <div class="pagination-wrapper">
+    {{ $posts->appends(request()->query())->links('vendor.pagination.custom') }}
+</div>
 
     <!-- Back Button -->
     <div class="text-center mt-4">

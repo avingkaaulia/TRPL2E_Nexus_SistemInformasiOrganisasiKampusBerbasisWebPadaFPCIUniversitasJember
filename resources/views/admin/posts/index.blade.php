@@ -84,7 +84,7 @@
                     <td>
                         @php
                             $imageFound = false;
-                            $imageUrl = '';
+                            $imageUrl =  asset('assets/img/default-image.jpg');
                             
                             if($post->featured_image_path) {
                                 // Cek di storage
@@ -115,9 +115,8 @@
                             <img src="{{ $imageUrl }}" 
                                  width="50" height="40" style="object-fit: cover; border-radius: 6px;">
                         @else
-                            <div style="width:50px; height:40px; background:#5C6844; border-radius:6px; display:flex; align-items:center; justify-content:center; color:white;">
-                                <i class="bi bi-image" style="font-size:20px;"></i>
-                            </div>
+                            <img src="{{ asset('assets/img/default-image.jpg') }}" 
+                                 width="50" height="40" style="object-fit: cover; border-radius: 6px;">
                         @endif
                     </td>
                     <td>{{ Str::limit($post->title, 50) }}</td>
