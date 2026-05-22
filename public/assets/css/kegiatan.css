@@ -937,68 +937,596 @@
     color: #ccc;
     cursor: not-allowed;
 }
+/* ========== FILTER SECTION STYLES ========== */
+.filter-section {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
 
-/* ========== RESPONSIVE ========== */
+.filter-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1C150F;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-title i {
+    color: #5C6844;
+    font-size: 16px;
+}
+
+.filter-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.filter-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 20px;
+    background: #F5F2E8;
+    border-radius: 40px;
+    text-decoration: none;
+    color: #1C150F;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+    background: #5C6844;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.filter-btn.active {
+    background: #5C6844;
+    color: white;
+    box-shadow: 0 2px 8px rgba(92,104,68,0.3);
+}
+
+.filter-btn i {
+    font-size: 12px;
+}
+
+/* Responsive filter */
 @media (max-width: 768px) {
+    .filter-section {
+        padding: 15px;
+    }
+    
+    .filter-buttons {
+        gap: 8px;
+    }
+    
+    .filter-btn {
+        padding: 6px 14px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 575px) {
+    .filter-buttons {
+        flex-direction: column;
+    }
+    
+    .filter-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* ========== RESPONSIVE LENGKAP UNTUK HALAMAN KEGIATAN ========== */
+
+/* Extra Large (1200px - 1399px) */
+@media (max-width: 1399px) {
+    .card-event .card-image,
+    .card-program .card-image,
+    .card-kegiatan img,
+    .card-event-unggulan .card-image {
+        height: 190px;
+    }
+    
+    .card-event .card-body,
+    .card-program .card-body,
+    .card-kegiatan .card-body {
+        padding: 18px;
+    }
+    
+    .card-event h5,
+    .card-program h5,
+    .card-kegiatan h5 {
+        font-size: 0.95rem;
+    }
+}
+
+/* Large (992px - 1199px) */
+@media (max-width: 1199px) {
     .section-header h2 {
-        font-size: 24px;
+        font-size: 28px;
     }
     
     .card-event .card-image,
     .card-program .card-image,
-    .card-kegiatan img {
+    .card-kegiatan img,
+    .card-event-unggulan .card-image {
         height: 180px;
     }
     
+    .status-card {
+        padding: 15px;
+    }
+    
     .status-card h4 {
-        font-size: 1rem;
+        font-size: 1.1rem;
     }
     
     .status-item {
-        flex-direction: column;
-        text-align: center;
-        gap: 5px;
+        padding: 8px;
     }
     
-    .pagination .page-link {
-        padding: 5px 10px;
+    .status-title {
+        font-size: 12px;
+    }
+    
+    .status-date {
+        font-size: 10px;
+    }
+    
+    .card-program-small {
+        height: 180px;
+    }
+    
+    .card-program-overlay {
+        padding: 15px;
+    }
+    
+    .card-program-overlay h5 {
         font-size: 12px;
     }
 }
 
-@media (max-width: 576px) {
-    .card-kegiatan .category-badge {
-        font-size: 9px;
-        padding: 3px 10px;
+/* Medium (768px - 991px) */
+@media (max-width: 991px) {
+    .section-header {
+        margin-bottom: 30px;
     }
     
+    .section-header h2 {
+        font-size: 26px;
+    }
+    
+    .section-header .section-line {
+        width: 50px;
+        height: 2px;
+    }
+    
+    .card-event .card-image,
+    .card-program .card-image,
+    .card-kegiatan img,
+    .card-event-unggulan .card-image {
+        height: 170px;
+    }
+    
+    .card-event .card-body,
+    .card-program .card-body,
+    .card-kegiatan .card-body {
+        padding: 15px;
+    }
+    
+    .card-event h5,
+    .card-program h5,
     .card-kegiatan h5 {
         font-size: 0.9rem;
+        margin-bottom: 8px;
     }
     
+    .card-event .date,
+    .card-program .date {
+        font-size: 11px;
+        margin-bottom: 12px;
+    }
+    
+    .btn-event,
+    .btn-program,
+    .btn-event-unggulan,
     .btn-main {
         padding: 6px 15px;
         font-size: 12px;
     }
-}
-/* ==================== RESPONSIVE ==================== */
-@media (max-width: 768px) {
-    .section-header h2 {
-        font-size: 24px;
+    
+    .status-badge,
+    .event-badge,
+    .program-badge {
+        font-size: 10px;
+        padding: 4px 12px;
     }
     
-    .card-event .card-image,
-    .card-program .card-image {
-        height: 180px;
+    .status-card {
+        padding: 15px;
     }
     
     .status-card h4 {
         font-size: 1rem;
+        margin-bottom: 15px;
     }
     
+    .status-list {
+        gap: 10px;
+    }
+    
+    .status-item {
+        padding: 8px 10px;
+    }
+    
+    .status-title {
+        font-size: 11px;
+    }
+    
+    .status-date {
+        font-size: 9px;
+    }
+    
+    .see-more-link,
+    .see-more-link-small {
+        font-size: 11px;
+    }
+    
+    .card-program-small {
+        height: 160px;
+    }
+    
+    .card-program-overlay {
+        padding: 12px;
+    }
+    
+    .card-program-overlay h5 {
+        font-size: 11px;
+        margin-bottom: 5px;
+    }
+}
+
+/* Small (576px - 767px) */
+@media (max-width: 767px) {
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    
+    .section-header {
+        margin-bottom: 25px;
+    }
+    
+    .section-header h2 {
+        font-size: 22px;
+    }
+    
+    .section-header .section-line {
+        width: 40px;
+    }
+    
+    /* Grid menjadi 2 kolom */
+    .row {
+        margin-left: -10px;
+        margin-right: -10px;
+    }
+    
+    .col-md-3, .col-md-4, .col-md-6, .col-sm-6 {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    
+    .card-event .card-image,
+    .card-program .card-image,
+    .card-kegiatan img,
+    .card-event-unggulan .card-image {
+        height: 150px;
+    }
+    
+    .card-event .card-body,
+    .card-program .card-body,
+    .card-kegiatan .card-body {
+        padding: 12px;
+    }
+    
+    .card-event h5,
+    .card-program h5,
+    .card-kegiatan h5 {
+        font-size: 0.85rem;
+        margin-bottom: 6px;
+    }
+    
+    .card-event .date,
+    .card-program .date {
+        font-size: 10px;
+        margin-bottom: 10px;
+    }
+    
+    .btn-event,
+    .btn-program,
+    .btn-event-unggulan,
+    .btn-main {
+        padding: 5px 12px;
+        font-size: 11px;
+    }
+    
+    .status-badge,
+    .event-badge,
+    .program-badge,
+    .category-badge {
+        font-size: 9px;
+        padding: 3px 10px;
+        top: 10px;
+        left: 10px;
+    }
+    
+    .status-card {
+        padding: 12px;
+    }
+    
+    .status-card h4 {
+        font-size: 0.9rem;
+        margin-bottom: 12px;
+    }
+    
+    .status-list {
+        gap: 8px;
+    }
+    
+    .status-item {
+        padding: 6px 8px;
+    }
+    
+    .status-title {
+        font-size: 10px;
+    }
+    
+    .status-date {
+        font-size: 8px;
+    }
+    
+    .see-more-link {
+        font-size: 10px;
+    }
+    
+    .card-program-small {
+        height: 140px;
+    }
+    
+    .card-program-overlay {
+        padding: 10px;
+    }
+    
+    .card-program-overlay h5 {
+        font-size: 10px;
+    }
+    
+    /* Pagination responsive */
+    .pagination {
+        gap: 5px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .pagination .page-link {
+        padding: 4px 8px;
+        font-size: 11px;
+    }
+}
+
+/* Extra Small (320px - 575px) */
+@media (max-width: 575px) {
+    .section-header h2 {
+        font-size: 20px;
+    }
+    
+    /* Grid menjadi 1 kolom */
+    .col-sm-6 {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+    
+    .row {
+        margin-left: 0;
+        margin-right: 0;
+    }
+    
+    .col-md-3, .col-md-4, .col-md-6, .col-sm-6 {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    
+    .card-event .card-image,
+    .card-program .card-image,
+    .card-kegiatan img,
+    .card-event-unggulan .card-image {
+        height: 180px;
+    }
+    
+    .card-event .card-body,
+    .card-program .card-body,
+    .card-kegiatan .card-body {
+        padding: 15px;
+    }
+    
+    .card-event h5,
+    .card-program h5,
+    .card-kegiatan h5 {
+        font-size: 0.9rem;
+    }
+    
+    .btn-event,
+    .btn-program,
+    .btn-event-unggulan,
+    .btn-main {
+        padding: 6px 15px;
+        font-size: 12px;
+    }
+    
+    .status-badge,
+    .event-badge,
+    .program-badge,
+    .category-badge {
+        font-size: 9px;
+        padding: 3px 10px;
+    }
+    
+    .status-card {
+        margin-bottom: 15px;
+    }
+    
+    /* Status item menjadi vertikal */
     .status-item {
         flex-direction: column;
         text-align: center;
         gap: 5px;
     }
+    
+    .status-date {
+        font-size: 9px;
+    }
+    
+    .card-program-small {
+        height: 160px;
+    }
+    
+    /* Pagination */
+    .pagination .page-link {
+        padding: 4px 6px;
+        font-size: 10px;
+        min-width: 28px;
+    }
+}
+
+/* Landscape mode untuk mobile */
+@media (max-width: 767px) and (orientation: landscape) {
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    
+    .col-sm-6 {
+        width: 50%;
+    }
+    
+    .card-event .card-image,
+    .card-program .card-image,
+    .card-kegiatan img,
+    .card-event-unggulan .card-image {
+        height: 140px;
+    }
+    
+    .status-item {
+        flex-direction: row;
+        text-align: left;
+    }
+    
+    .status-date {
+        text-align: right;
+    }
+}
+
+/* Tablet landscape (768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    
+    .col-md-3 {
+        width: 33.333%;
+    }
+    
+    .col-md-4 {
+        width: 33.333%;
+    }
+    
+    .card-event .card-image,
+    .card-program .card-image,
+    .card-kegiatan img,
+    .card-event-unggulan .card-image {
+        height: 160px;
+    }
+}
+
+/* High DPI Screens (Retina) */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .card-event .card-image img,
+    .card-program .card-image img,
+    .card-kegiatan img {
+        image-rendering: -webkit-optimize-contrast;
+    }
+}
+
+
+/* Touch device optimization */
+@media (hover: none) and (pointer: coarse) {
+    .card-event,
+    .card-program,
+    .card-kegiatan,
+    .card-event-unggulan,
+    .status-item {
+        cursor: pointer;
+    }
+    
+    .btn-event,
+    .btn-program,
+    .btn-event-unggulan,
+    .btn-main {
+        min-height: 40px;
+    }
+    
+    .card-event:active,
+    .card-program:active,
+    .card-kegiatan:active {
+        transform: scale(0.98);
+    }
+}
+
+/* Loading state */
+.kegiatan-loading {
+    text-align: center;
+    padding: 50px;
+}
+
+.kegiatan-loading .spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #5C6844;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 15px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@media (max-width: 575px) {
+    .kegiatan-loading .spinner {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+/* Smooth transition untuk responsive */
+.card-event,
+.card-program,
+.card-kegiatan,
+.card-event-unggulan,
+.status-item,
+.btn-event,
+.btn-program,
+.btn-main {
+    transition: all 0.3s ease;
 }

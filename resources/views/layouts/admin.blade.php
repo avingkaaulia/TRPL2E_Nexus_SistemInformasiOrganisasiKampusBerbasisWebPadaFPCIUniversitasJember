@@ -172,6 +172,34 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// Mobile menu toggle
+document.addEventListener('DOMContentLoaded', function() {
+    // Buat tombol toggle jika belum ada
+    const topBar = document.querySelector('.top-bar');
+    if (topBar && !document.querySelector('.mobile-menu-toggle')) {
+        const toggleBtn = document.createElement('button');
+        toggleBtn.className = 'mobile-menu-toggle';
+        toggleBtn.innerHTML = '<i class="bi bi-list"></i>';
+        toggleBtn.onclick = function() {
+            document.querySelector('.sidebar').classList.toggle('open');
+            document.querySelector('.sidebar-overlay')?.classList.toggle('active');
+        };
+        topBar.insertBefore(toggleBtn, topBar.firstChild);
+    }
+    
+    // Buat overlay jika belum ada
+    if (!document.querySelector('.sidebar-overlay')) {
+        const overlay = document.createElement('div');
+        overlay.className = 'sidebar-overlay';
+        overlay.onclick = function() {
+            document.querySelector('.sidebar').classList.remove('open');
+            this.classList.remove('active');
+        };
+        document.body.appendChild(overlay);
+    }
+});
+</script>
 @stack('scripts')
 </body>
 </html>

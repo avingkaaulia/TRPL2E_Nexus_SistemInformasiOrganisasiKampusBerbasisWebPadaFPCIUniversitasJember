@@ -1,3 +1,4 @@
+{{-- resources/views/kegiatan/index.blade.php --}}
 @extends('layouts.app')
 
 @section('content')
@@ -89,6 +90,40 @@
     </div>
 </div>
 
+<!-- ==================== EXTRA EVENT CATEGORIES (DINAMIS DARI ADMIN) ==================== -->
+@foreach($extraEventPosts as $catId => $data)
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="section-header text-start mb-0">
+            <h2>📋 {{ $data['category']->category_name }}</h2>
+            <div class="section-line"></div>
+        </div>
+        <a href="{{ route('kegiatan.programs', $catId) }}" class="see-more-link">See More <i class="bi bi-arrow-right-circle ms-1"></i></a>
+    </div>
+    <div class="row g-4">
+        @forelse($data['posts'] as $event)
+        <div class="col-md-4">
+            <div class="card-event">
+                <div class="card-image">
+                    <img src="{{ $event->image_url }}" alt="{{ $event->title }}">
+                    <div class="event-badge reguler">{{ $data['category']->category_name }}</div>
+                </div>
+                <div class="card-body">
+                    <h5>{{ Str::limit($event->title, 50) }}</h5>
+                    <p class="date"><i class="bi bi-calendar"></i> {{ \Carbon\Carbon::parse($event->date_published)->format('d M Y') }}</p>
+                    <a href="{{ route('kegiatan.show', $event->id_post) }}" class="btn btn-event">Detail <i class="bi bi-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+        @empty
+        <div class="col-12 text-center py-3">
+            <p class="text-muted">Belum ada postingan di kategori ini.</p>
+        </div>
+        @endforelse
+    </div>
+</div>
+@endforeach
+
 <!-- ==================== PROGRAM BY STATUS ==================== -->
 <div class="container mt-5 mb-5">
     <div class="section-header">
@@ -110,7 +145,7 @@
                     @empty
                     <p class="text-muted">Tidak ada program direncanakan.</p>
                     @endforelse
-                    <a href="{{ route('kegiatan.programs', 'planned') }}" class="see-more-link-small">See all →</a>
+                    <a href="{{ route('kegiatan.programs', $programPlanned->id_category ?? 14) }}" class="see-more-link-small">See all →</a>
                 </div>
             </div>
         </div>
@@ -128,7 +163,7 @@
                     @empty
                     <p class="text-muted">Tidak ada program berlangsung.</p>
                     @endforelse
-                    <a href="{{ route('kegiatan.programs', 'ongoing') }}" class="see-more-link-small">See all →</a>
+                    <a href="{{ route('kegiatan.programs', $programOngoing->id_category ?? 15) }}" class="see-more-link-small">See all →</a>
                 </div>
             </div>
         </div>
@@ -146,10 +181,41 @@
                     @empty
                     <p class="text-muted">Tidak ada program selesai.</p>
                     @endforelse
-                    <a href="{{ route('kegiatan.programs', 'completed') }}" class="see-more-link-small">See all →</a>
+                    <a href="{{ route('kegiatan.programs', $programCompleted->id_category ?? 16) }}" class="see-more-link-small">See all →</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- ==================== EXTRA PROGRAM CATEGORIES (DINAMIS DARI ADMIN) ==================== -->
+@foreach($extraProgramPosts as $catId => $data)
+<div class="container mt-5 mb-3">
+    <div class="section-header">
+        <h2>📌 {{ $data['category']->category_name }}</h2>
+        <div class="section-line"></div>
+    </div>
+    <div class="row g-4">
+        @foreach($data['posts'] as $program)
+        <div class="col-md-4">
+            <div class="status-card planned">
+                <h4><i class="bi bi-folder"></i> {{ $data['category']->category_name }}</h4>
+                <div class="status-list">
+                    <a href="{{ route('kegiatan.show', $program->id_post) }}" class="status-item">
+                        <span class="status-title">{{ Str::limit($program->title, 40) }}</span>
+                        <span class="status-date">{{ \Carbon\Carbon::parse($program->date_published)->format('d M Y') }}</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        @endforeach
+    </div>
+    @if($data['posts']->isEmpty())
+    <div class="text-center py-3">
+        <p class="text-muted">Belum ada program di kategori {{ $data['category']->category_name }}.</p>
+    </div>
+    @endif
+</div>
+@endforeach
+
 @endsection

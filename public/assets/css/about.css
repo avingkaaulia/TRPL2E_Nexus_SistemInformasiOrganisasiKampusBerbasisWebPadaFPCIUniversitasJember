@@ -302,54 +302,112 @@
     }
 }
 
-/* ========== RESPONSIVE ========== */
+/* ========== RESPONSIVE ENHANCEMENTS ========== */
+
+/* Tablet Landscape (992px - 1200px) */
 @media (max-width: 1200px) {
     .struktur-grid {
         gap: 25px;
+        padding: 0 20px;
     }
     
     .anggota-foto-wrapper {
         height: 250px;
     }
-}
-
-@media (max-width: 992px) {
-    .visi-misi-row {
-        flex-direction: column;
-        gap: 30px;
+    
+    .about-container {
         padding: 0 20px;
     }
-    
-    .struktur-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 25px;
-        max-width: 600px;
-    }
-    
-    .anggota-foto-wrapper {
-        height: 280px;
-    }
 }
 
-@media (max-width: 768px) {
+/* Tablet Portrait (768px - 991px) */
+@media (max-width: 991px) {
+    /* Hero Section */
     .about-hero {
-        min-height: 300px;
+        min-height: 350px;
     }
     
     .about-hero h1 {
+        font-size: 40px;
+    }
+    
+    .about-hero p {
+        font-size: 16px;
+    }
+    
+    /* Visi Misi Row */
+    .visi-misi-row {
+        flex-direction: column;
+        gap: 30px;
+        padding: 0 30px;
+    }
+    
+    .visi-box, .misi-box {
+        padding: 30px;
+    }
+    
+    /* Struktur Grid - 2 kolom */
+    .struktur-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
+        max-width: 650px;
+    }
+    
+    .anggota-foto-wrapper {
+        height: 260px;
+    }
+    
+    /* Section Header */
+    .section-header h2 {
+        font-size: 36px;
+    }
+    
+    /* About Items */
+    .about-item {
+        padding: 30px;
+        margin: 0 20px 40px 20px;
+    }
+    
+    /* Logo Section */
+    .logo-section h2 {
         font-size: 32px;
+    }
+}
+
+/* Mobile Landscape (576px - 767px) */
+@media (max-width: 767px) {
+    /* Hero Section */
+    .about-hero {
+        min-height: 280px;
+    }
+    
+    .about-hero h1 {
+        font-size: 28px;
     }
     
     .about-hero p {
         font-size: 14px;
     }
     
-    .section-header h2 {
-        font-size: 32px;
+    /* About Items */
+    .about-item {
+        padding: 20px;
+        margin: 0 15px 30px 15px;
     }
     
-    .about-item {
-        padding: 25px;
+    .about-item h2 {
+        font-size: 24px;
+    }
+    
+    .about-item p {
+        font-size: 14px;
+        line-height: 1.6;
+    }
+    
+    /* Visi Misi */
+    .visi-misi-row {
+        padding: 0 15px;
+        gap: 20px;
     }
     
     .visi-box, .misi-box {
@@ -357,39 +415,230 @@
     }
     
     .visi-box h3, .misi-box h3 {
+        font-size: 22px;
+    }
+    
+    .visi-box p, .misi-list li {
+        font-size: 14px;
+    }
+    
+    /* Section Header */
+    .section-header {
+        margin-bottom: 30px;
+    }
+    
+    .section-header h2 {
+        font-size: 28px;
+    }
+    
+    .section-line {
+        width: 60px;
+        height: 3px;
+    }
+    
+    /* Struktur Grid - 2 kolom */
+    .struktur-grid {
+        gap: 20px;
+        padding: 0 15px;
+        max-width: 500px;
+    }
+    
+    .anggota-foto-wrapper {
+        height: 200px;
+    }
+    
+    .anggota-info {
+        padding: 12px;
+    }
+    
+    .anggota-posisi {
+        font-size: 12px;
+    }
+    
+    /* Logo Section */
+    .logo-section {
+        padding: 50px 0;
+        margin: 30px 0;
+    }
+    
+    .logo-section h2 {
         font-size: 24px;
     }
     
+    .main-logo {
+        max-height: 80px;
+    }
+}
+
+/* Mobile Portrait (max-width: 575px) */
+@media (max-width: 575px) {
+    /* Hero Section */
+    .about-hero {
+        min-height: 250px;
+    }
+    
+    .about-hero h1 {
+        font-size: 24px;
+    }
+    
+    .about-hero p {
+        font-size: 13px;
+    }
+    
+    /* About Items */
+    .about-item {
+        padding: 18px;
+        margin: 0 10px 25px 10px;
+    }
+    
+    .about-item h2 {
+        font-size: 20px;
+    }
+    
+    .about-item h2:after {
+        width: 40px;
+        height: 2px;
+    }
+    
+    .about-item p {
+        font-size: 13px;
+    }
+    
+    /* Visi Misi */
+    .visi-misi-row {
+        padding: 0 10px;
+    }
+    
+    .visi-box, .misi-box {
+        padding: 20px;
+    }
+    
+    .visi-box h3, .misi-box h3 {
+        font-size: 20px;
+    }
+    
+    .misi-list li {
+        margin-bottom: 10px;
+        padding-left: 20px;
+        font-size: 13px;
+    }
+    
+    /* Section Header */
+    .section-header h2 {
+        font-size: 24px;
+    }
+    
+    /* Struktur Grid - 1 kolom */
     .struktur-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: 1fr;
         gap: 20px;
+        max-width: 280px;
+    }
+    
+    .anggota-foto-wrapper {
+        height: 280px;
+    }
+    
+    .anggota-info {
+        padding: 15px;
+    }
+    
+    .anggota-posisi {
+        font-size: 14px;
+    }
+    
+    /* Logo Section */
+    .logo-section {
+        padding: 40px 0;
+    }
+    
+    .logo-section h2 {
+        font-size: 22px;
+    }
+    
+    .main-logo {
+        max-height: 70px;
+    }
+}
+
+/* Small Mobile (max-width: 375px) */
+@media (max-width: 375px) {
+    .about-hero h1 {
+        font-size: 20px;
+    }
+    
+    .section-header h2 {
+        font-size: 22px;
+    }
+    
+    .struktur-grid {
+        max-width: 250px;
+    }
+    
+    .anggota-foto-wrapper {
+        height: 250px;
+    }
+    
+    .anggota-posisi {
+        font-size: 12px;
+    }
+}
+
+/* Landscape Mode untuk Mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+    .about-hero {
+        min-height: 200px;
+    }
+    
+    .struktur-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+    }
+    
+    .anggota-foto-wrapper {
+        height: 180px;
+    }
+    
+    .visi-misi-row {
+        flex-direction: row;
+        gap: 15px;
+    }
+    
+    .about-item {
+        margin-bottom: 20px;
+    }
+}
+
+/* Tablet Landscape dengan tinggi terbatas */
+@media (max-width: 1024px) and (orientation: landscape) and (max-height: 800px) {
+    .about-hero {
+        min-height: 200px;
+    }
+    
+    .about-sections, .struktur-section, .logo-section {
+        padding: 40px 0;
     }
     
     .anggota-foto-wrapper {
         height: 220px;
     }
-    
-    .anggota-posisi {
-        font-size: 13px;
-    }
-    
-    .logo-section h2 {
-        font-size: 28px;
-    }
-    
-    .main-logo {
-        max-height: 100px;
-    }
 }
 
-@media (max-width: 576px) {
-    .struktur-grid {
-        grid-template-columns: 1fr;
-        gap: 25px;
-        max-width: 300px;
+/* Touch Device Hover Fix */
+@media (hover: none) and (pointer: coarse) {
+    .anggota-card:hover {
+        transform: none;
     }
     
-    .anggota-foto-wrapper {
-        height: 300px;
+    .anggota-card:active {
+        transform: scale(0.98);
+    }
+    
+    .about-item:hover {
+        transform: none;
+    }
+    
+    .visi-box:hover, .misi-box:hover {
+        transform: none;
     }
 }

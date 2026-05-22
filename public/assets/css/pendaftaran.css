@@ -362,19 +362,201 @@ textarea.form-control {
     transform: none;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .file-upload-input {
-        padding: 10px;
+/* ========== RESPONSIVE LENGKAP UNTUK HALAMAN PENDAFTARAN ========== */
+
+/* Extra Large (1200px - 1399px) */
+@media (max-width: 1399px) {
+    .pendaftaran-card {
+        max-width: 750px;
+        padding: 35px;
+    }
+    
+    .pendaftaran-header h1 {
+        font-size: 34px;
+    }
+    
+    .form-section h3 {
+        font-size: 20px;
+    }
+    
+    .btn-pendaftaran {
+        padding: 12px 35px;
+        font-size: 16px;
     }
 }
+
+/* Large (992px - 1199px) */
+@media (max-width: 1199px) {
+    .pendaftaran-page {
+        padding: 50px 0;
+    }
+    
+    .pendaftaran-card {
+        max-width: 700px;
+        padding: 30px;
+    }
+    
+    .pendaftaran-header h1 {
+        font-size: 32px;
+    }
+    
+    .pendaftaran-header p {
+        font-size: 15px;
+    }
+    
+    .form-section h3 {
+        font-size: 19px;
+    }
+    
+    .pendaftaran-cta {
+        padding: 35px;
+    }
+    
+    .pendaftaran-cta-content h3 {
+        font-size: 26px;
+    }
+    
+    .pendaftaran-cta-content p {
+        font-size: 15px;
+    }
+    
+    .btn-pendaftaran {
+        padding: 12px 30px;
+        font-size: 16px;
+    }
+}
+
+/* Medium (768px - 991px) */
+@media (max-width: 991px) {
+    .pendaftaran-page {
+        padding: 40px 20px;
+    }
+    
+    .pendaftaran-header {
+        margin-bottom: 30px;
+    }
     
     .pendaftaran-header h1 {
         font-size: 28px;
     }
     
+    .pendaftaran-header p {
+        font-size: 14px;
+    }
+    
+    .pendaftaran-card {
+        padding: 25px;
+        margin: 0 15px;
+    }
+    
+    .pendaftaran-info {
+        margin-bottom: 25px;
+    }
+    
+    .alert-info {
+        padding: 15px;
+        font-size: 14px;
+    }
+    
+    .form-section {
+        margin-bottom: 25px;
+        padding-bottom: 25px;
+    }
+    
+    .form-section h3 {
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
+    
+    .form-group label {
+        font-size: 13px;
+    }
+    
+    .form-control {
+        padding: 10px 14px;
+        font-size: 13px;
+    }
+    
+    .form-actions {
+        margin-top: 25px;
+        gap: 15px;
+    }
+    
+    .btn-submit,
+    .btn-cancel {
+        padding: 12px 30px;
+        font-size: 14px;
+    }
+    
+    .pendaftaran-cta {
+        padding: 30px 25px;
+    }
+    
+    .pendaftaran-cta-content h3 {
+        font-size: 24px;
+    }
+    
+    .pendaftaran-cta-content p {
+        font-size: 14px;
+    }
+    
+    .btn-pendaftaran {
+        padding: 10px 25px;
+        font-size: 15px;
+    }
+    
+    .alert-closed {
+        padding: 40px 30px;
+    }
+    
+    .alert-closed h3 {
+        font-size: 24px;
+    }
+    
+    .file-upload-input {
+        padding: 10px;
+        font-size: 13px;
+    }
+}
+
+/* Small (576px - 767px) */
+@media (max-width: 767px) {
+    .pendaftaran-page {
+        padding: 30px 15px;
+    }
+    
+    .pendaftaran-header h1 {
+        font-size: 24px;
+    }
+    
+    .pendaftaran-header p {
+        font-size: 13px;
+    }
+    
     .pendaftaran-card {
         padding: 20px;
+        margin: 0 10px;
+        border-radius: 20px;
+    }
+    
+    .alert-info {
+        padding: 12px;
+        font-size: 13px;
+    }
+    
+    .form-section {
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+    }
+    
+    .form-section h3 {
+        font-size: 17px;
+        display: block;
+        text-align: center;
+    }
+    
+    .form-group {
+        margin-bottom: 15px;
     }
     
     .form-row {
@@ -382,10 +564,325 @@ textarea.form-control {
         gap: 0;
     }
     
-    .form-actions {
-        flex-direction: column;
+    .form-control {
+        padding: 10px 12px;
+        font-size: 13px;
     }
     
-    .btn-submit, .btn-cancel {
-        width: 100%;
+    textarea.form-control {
+        min-height: 80px;
     }
+    
+    .form-actions {
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 20px;
+    }
+    
+    .btn-submit,
+    .btn-cancel {
+        width: 100%;
+        padding: 12px 20px;
+        font-size: 14px;
+        text-align: center;
+    }
+    
+    .pendaftaran-cta {
+        padding: 25px 20px;
+        margin: 0 10px;
+    }
+    
+    .pendaftaran-cta-content h3 {
+        font-size: 20px;
+    }
+    
+    .pendaftaran-cta-content p {
+        font-size: 13px;
+    }
+    
+    .btn-pendaftaran {
+        padding: 10px 25px;
+        font-size: 14px;
+        width: 100%;
+        text-align: center;
+    }
+    
+    .pendaftaran-closed {
+        padding: 40px 15px;
+    }
+    
+    .alert-closed {
+        padding: 30px 20px;
+        margin: 0 10px;
+    }
+    
+    .alert-closed h3 {
+        font-size: 20px;
+    }
+    
+    .alert-closed p {
+        font-size: 13px;
+    }
+    
+    .btn-back {
+        padding: 10px 25px;
+        font-size: 13px;
+        width: 100%;
+        text-align: center;
+    }
+    
+    .file-upload-input {
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+    
+    .file-upload-info small {
+        font-size: 10px;
+    }
+    
+    .required-star {
+        font-size: 14px;
+    }
+    
+    .optional-text {
+        font-size: 10px;
+    }
+    
+    .alert-success-custom,
+    .alert-error-custom {
+        padding: 12px 15px;
+        font-size: 13px;
+    }
+    
+    .alert-success-custom i,
+    .alert-error-custom i {
+        font-size: 18px;
+    }
+    
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-15px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+}
+
+/* Extra Small (320px - 575px) */
+@media (max-width: 575px) {
+    .pendaftaran-page {
+        padding: 25px 10px;
+    }
+    
+    .pendaftaran-header {
+        margin-bottom: 20px;
+    }
+    
+    .pendaftaran-header h1 {
+        font-size: 20px;
+    }
+    
+    .pendaftaran-header p {
+        font-size: 12px;
+    }
+    
+    .pendaftaran-card {
+        padding: 15px;
+        margin: 0 5px;
+        border-radius: 16px;
+    }
+    
+    .alert-info {
+        padding: 10px;
+        font-size: 12px;
+    }
+    
+    .form-section h3 {
+        font-size: 16px;
+    }
+    
+    .form-group label {
+        font-size: 12px;
+    }
+    
+    .form-control {
+        padding: 8px 10px;
+        font-size: 12px;
+        border-radius: 10px;
+    }
+    
+    .btn-submit,
+    .btn-cancel {
+        padding: 10px 16px;
+        font-size: 13px;
+    }
+    
+    .pendaftaran-cta {
+        padding: 20px 15px;
+    }
+    
+    .pendaftaran-cta-content h3 {
+        font-size: 18px;
+    }
+    
+    .pendaftaran-cta-content p {
+        font-size: 12px;
+    }
+    
+    .btn-pendaftaran {
+        padding: 8px 20px;
+        font-size: 13px;
+    }
+    
+    .alert-closed {
+        padding: 25px 15px;
+    }
+    
+    .alert-closed h3 {
+        font-size: 18px;
+    }
+    
+    .alert-closed p {
+        font-size: 12px;
+    }
+    
+    .btn-back {
+        padding: 8px 20px;
+        font-size: 12px;
+    }
+    
+    .file-upload-input {
+        padding: 6px 8px;
+        font-size: 11px;
+    }
+    
+    .alert-success-custom,
+    .alert-error-custom {
+        padding: 10px 12px;
+        font-size: 12px;
+    }
+    
+    .btn-close {
+        font-size: 16px;
+        right: 10px;
+    }
+}
+
+/* Landscape mode untuk mobile */
+@media (max-width: 767px) and (orientation: landscape) {
+    .pendaftaran-page {
+        padding: 20px 15px;
+    }
+    
+    .pendaftaran-card {
+        padding: 20px;
+    }
+    
+    .form-section h3 {
+        font-size: 16px;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+    
+    .form-actions {
+        flex-direction: row;
+    }
+    
+    .btn-submit,
+    .btn-cancel {
+        width: auto;
+        flex: 1;
+    }
+}
+
+/* Tablet landscape (768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+    .pendaftaran-card {
+        max-width: 80%;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+}
+
+/* High DPI Screens (Retina) */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .btn-pendaftaran,
+    .btn-submit,
+    .btn-cancel,
+    .btn-back {
+        image-rendering: -webkit-optimize-contrast;
+    }
+}
+
+
+/* Touch device optimization */
+@media (hover: none) and (pointer: coarse) {
+    .btn-submit,
+    .btn-cancel,
+    .btn-pendaftaran,
+    .btn-back {
+        min-height: 44px;
+    }
+    
+    .form-control,
+    .file-upload-input {
+        font-size: 16px; /* Mencegah zoom otomatis di iOS */
+    }
+    
+    .btn-submit:active,
+    .btn-cancel:active,
+    .btn-pendaftaran:active {
+        transform: scale(0.98);
+    }
+}
+
+/* Loading state untuk form submit */
+.btn-submit.loading {
+    position: relative;
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.btn-submit.loading::after {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    top: 50%;
+    right: 20px;
+    margin-top: -9px;
+    border: 2px solid white;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@media (max-width: 575px) {
+    .btn-submit.loading::after {
+        width: 14px;
+        height: 14px;
+        margin-top: -7px;
+        right: 15px;
+    }
+}
+
+/* Smooth transition */
+.pendaftaran-card,
+.form-control,
+.btn-submit,
+.btn-cancel {
+    transition: all 0.3s ease;
+}

@@ -340,32 +340,613 @@
     border-bottom: 3px solid #5C6844;
 }
 
-/* Responsive untuk layar besar */
-@media (min-width: 1400px) {
-    .post-content {
-        padding: 70px;
+/* ========== RESPONSIVE LENGKAP UNTUK DETAIL POSTINGAN ========== */
+
+/* Extra Large (1200px - 1399px) */
+@media (max-width: 1399px) {
+    .post-detail-header {
+        padding: 40px 50px;
     }
     
     .post-title {
-        font-size: 3.5rem;
+        font-size: 2.8rem;
+    }
+    
+    .post-content {
+        padding: 50px;
     }
     
     .post-content p {
-        font-size: 1.15rem;
+        font-size: 1.05rem;
+    }
+    
+    .gallery-section {
+        padding: 40px;
     }
     
     .gallery-item img {
-        height: 220px;
+        height: 180px;
+    }
+    
+    .comments-section {
+        padding: 40px;
     }
 }
 
-@media (min-width: 1920px) {
-    .post-content {
-        padding: 80px;
+/* Large (992px - 1199px) */
+@media (max-width: 1199px) {
+    .post-detail-header {
+        padding: 35px 40px;
     }
     
     .post-title {
-        font-size: 4rem;
+        font-size: 2.5rem;
+    }
+    
+    .post-category {
+        padding: 6px 18px;
+        font-size: 13px;
+    }
+    
+    .post-meta {
+        gap: 20px;
+        font-size: 14px;
+    }
+    
+    .post-meta i {
+        font-size: 16px;
+    }
+    
+    .post-content {
+        padding: 40px;
+    }
+    
+    .post-content h1 {
+        font-size: 2rem;
+    }
+    
+    .post-content h2 {
+        font-size: 1.8rem;
+    }
+    
+    .post-content h3 {
+        font-size: 1.5rem;
+    }
+    
+    .post-content p {
+        font-size: 1rem;
+    }
+    
+    .post-content blockquote {
+        padding: 20px 30px;
+        font-size: 1rem;
+    }
+    
+    .gallery-section {
+        padding: 35px;
+    }
+    
+    .gallery-section h4,
+    .related-posts h4,
+    .comments-title {
+        font-size: 1.4rem;
+    }
+    
+    .gallery-item img {
+        height: 160px;
+    }
+    
+    .related-card img {
+        height: 160px;
+    }
+    
+    .related-card .related-title {
+        font-size: 0.9rem;
+        padding: 12px;
+    }
+    
+    .comments-section {
+        padding: 35px;
     }
 }
 
+/* Medium (768px - 991px) */
+@media (max-width: 991px) {
+    .container.py-5 {
+        padding: 30px 4%;
+    }
+    
+    .post-detail-header {
+        padding: 30px 35px;
+        margin-bottom: 30px;
+    }
+    
+    .post-title {
+        font-size: 2.2rem;
+        margin-bottom: 20px;
+    }
+    
+    .post-category {
+        margin-bottom: 15px;
+    }
+    
+    .post-meta {
+        gap: 15px;
+        font-size: 13px;
+        padding-top: 15px;
+    }
+    
+    .post-featured-image {
+        margin-bottom: 30px;
+    }
+    
+    .post-featured-image img {
+        max-height: 450px;
+    }
+    
+    .post-content {
+        padding: 35px;
+        margin-bottom: 30px;
+    }
+    
+    .post-content h1 {
+        font-size: 1.8rem;
+        margin: 30px 0 20px;
+    }
+    
+    .post-content h2 {
+        font-size: 1.6rem;
+        margin: 30px 0 15px;
+    }
+    
+    .post-content h3 {
+        font-size: 1.4rem;
+        margin: 25px 0 15px;
+    }
+    
+    .post-content h4 {
+        font-size: 1.2rem;
+        margin: 25px 0 12px;
+    }
+    
+    .post-content p {
+        margin-bottom: 20px;
+    }
+    
+    .post-content ul, 
+    .post-content ol {
+        margin: 15px 0;
+        padding-left: 25px;
+    }
+    
+    .post-content blockquote {
+        padding: 18px 25px;
+        margin: 25px 0;
+        font-size: 0.95rem;
+    }
+    
+    .post-content img {
+        margin: 20px 0;
+    }
+    
+    .gallery-section {
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+    
+    .gallery-section h4 {
+        margin-bottom: 25px;
+    }
+    
+    .gallery-item img {
+        height: 150px;
+    }
+    
+    .gallery-caption {
+        font-size: 12px;
+        padding: 8px;
+        margin-top: 8px;
+    }
+    
+    .related-posts {
+        margin: 30px 0 40px;
+    }
+    
+    .related-posts h4 {
+        margin-bottom: 25px;
+    }
+    
+    .related-card img {
+        height: 150px;
+    }
+    
+    .related-card .related-title {
+        font-size: 0.85rem;
+        padding: 10px;
+    }
+    
+    .comments-section {
+        padding: 30px;
+        margin: 30px 0;
+    }
+    
+    .comments-title {
+        font-size: 1.4rem;
+        margin-bottom: 25px;
+        padding-bottom: 12px;
+    }
+}
+
+/* Small (576px - 767px) */
+@media (max-width: 767px) {
+    .container.py-5 {
+        padding: 20px 3%;
+    }
+    
+    .post-detail-header {
+        padding: 25px;
+        margin-bottom: 25px;
+        border-radius: 20px;
+    }
+    
+    .post-title {
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+    }
+    
+    .post-category {
+        padding: 5px 15px;
+        font-size: 12px;
+    }
+    
+    .post-meta {
+        gap: 12px;
+        font-size: 12px;
+        flex-wrap: wrap;
+        padding-top: 12px;
+    }
+    
+    .post-meta span {
+        gap: 5px;
+    }
+    
+    .post-meta i {
+        font-size: 14px;
+    }
+    
+    .post-featured-image {
+        margin-bottom: 25px;
+    }
+    
+    .post-featured-image img {
+        max-height: 350px;
+    }
+    
+    .post-content {
+        padding: 25px;
+        margin-bottom: 25px;
+        border-radius: 20px;
+    }
+    
+    .post-content h1 {
+        font-size: 1.6rem;
+        margin: 25px 0 15px;
+    }
+    
+    .post-content h2 {
+        font-size: 1.4rem;
+        margin: 25px 0 12px;
+        padding-bottom: 8px;
+    }
+    
+    .post-content h3 {
+        font-size: 1.2rem;
+        margin: 20px 0 12px;
+    }
+    
+    .post-content h4 {
+        font-size: 1.1rem;
+        margin: 20px 0 10px;
+    }
+    
+    .post-content p {
+        font-size: 0.95rem;
+        line-height: 1.7;
+        margin-bottom: 18px;
+    }
+    
+    .post-content ul, 
+    .post-content ol {
+        margin: 12px 0;
+        padding-left: 20px;
+    }
+    
+    .post-content li {
+        margin-bottom: 8px;
+        line-height: 1.6;
+    }
+    
+    .post-content blockquote {
+        padding: 15px 20px;
+        margin: 20px 0;
+        font-size: 0.9rem;
+    }
+    
+    .post-content img {
+        margin: 15px 0;
+        border-radius: 12px;
+    }
+    
+    .gallery-section {
+        padding: 25px;
+        margin-bottom: 25px;
+        border-radius: 20px;
+    }
+    
+    .gallery-section h4 {
+        font-size: 1.3rem;
+        margin-bottom: 20px;
+    }
+    
+    .gallery-item img {
+        height: 130px;
+    }
+    
+    .gallery-caption {
+        font-size: 11px;
+        padding: 6px;
+    }
+    
+    .related-posts {
+        margin: 25px 0 30px;
+    }
+    
+    .related-posts h4 {
+        font-size: 1.3rem;
+        margin-bottom: 20px;
+    }
+    
+    /* Grid related posts menjadi 2 kolom */
+    .related-posts .row {
+        margin-left: -8px;
+        margin-right: -8px;
+    }
+    
+    .related-posts .col-md-4 {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+    
+    .related-card img {
+        height: 130px;
+    }
+    
+    .related-card .related-title {
+        font-size: 0.8rem;
+        padding: 8px;
+    }
+    
+    .comments-section {
+        padding: 25px;
+        margin: 25px 0;
+        border-radius: 20px;
+    }
+    
+    .comments-title {
+        font-size: 1.3rem;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+    }
+}
+
+/* Extra Small (320px - 575px) */
+@media (max-width: 575px) {
+    .container.py-5 {
+        padding: 15px 2%;
+    }
+    
+    .post-detail-header {
+        padding: 18px;
+        border-radius: 16px;
+    }
+    
+    .post-title {
+        font-size: 1.5rem;
+    }
+    
+    .post-category {
+        padding: 4px 12px;
+        font-size: 11px;
+    }
+    
+    .post-meta {
+        gap: 8px;
+        font-size: 11px;
+    }
+    
+    .post-featured-image {
+        margin-bottom: 20px;
+    }
+    
+    .post-featured-image img {
+        max-height: 250px;
+    }
+    
+    .post-content {
+        padding: 18px;
+        border-radius: 16px;
+    }
+    
+    .post-content h1 {
+        font-size: 1.4rem;
+    }
+    
+    .post-content h2 {
+        font-size: 1.2rem;
+    }
+    
+    .post-content h3 {
+        font-size: 1.1rem;
+    }
+    
+    .post-content h4 {
+        font-size: 1rem;
+    }
+    
+    .post-content p {
+        font-size: 0.9rem;
+    }
+    
+    .post-content blockquote {
+        padding: 12px 15px;
+        font-size: 0.85rem;
+    }
+    
+    .gallery-section {
+        padding: 18px;
+    }
+    
+    .gallery-section h4 {
+        font-size: 1.2rem;
+    }
+    
+    .gallery-item img {
+        height: 110px;
+    }
+    
+    /* Gallery menjadi 2 kolom */
+    .gallery-section .col-md-4 {
+        width: 50%;
+        padding: 0 5px;
+    }
+    
+    /* Related posts menjadi 1 kolom */
+    .related-posts .col-md-4 {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+    
+    .related-card {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+    
+    .related-card img {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .related-card .related-title {
+        font-size: 0.8rem;
+        padding: 10px;
+        flex: 1;
+    }
+    
+    .comments-section {
+        padding: 18px;
+    }
+    
+    .comments-title {
+        font-size: 1.2rem;
+    }
+}
+
+/* Landscape mode untuk mobile */
+@media (max-width: 767px) and (orientation: landscape) {
+    .post-title {
+        font-size: 1.6rem;
+    }
+    
+    .post-featured-image img {
+        max-height: 300px;
+    }
+    
+    .gallery-item img {
+        height: 140px;
+    }
+    
+    .related-posts .col-md-4 {
+        width: 33.33%;
+    }
+    
+    .related-card {
+        flex-direction: column;
+    }
+    
+    .related-card img {
+        width: 100%;
+        height: 120px;
+    }
+}
+
+/* Tablet landscape (768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+    .post-title {
+        font-size: 2rem;
+    }
+    
+    .post-content {
+        padding: 40px;
+    }
+    
+    .gallery-item img {
+        height: 160px;
+    }
+    
+    .related-card img {
+        height: 140px;
+    }
+}
+
+/* High DPI Screens */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .post-content img,
+    .gallery-item img,
+    .related-card img {
+        image-rendering: -webkit-optimize-contrast;
+    }
+}
+/* Touch device optimization */
+@media (hover: none) and (pointer: coarse) {
+    .gallery-item:active,
+    .related-card:active {
+        transform: scale(0.98);
+    }
+    
+    .post-content blockquote {
+        user-select: none;
+    }
+}
+
+/* Loading state untuk gambar */
+.img-loading {
+    background: #f0f0f0;
+    position: relative;
+    overflow: hidden;
+}
+
+.img-loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Smooth transition */
+.post-detail-header,
+.post-content,
+.gallery-section,
+.comments-section,
+.related-card {
+    transition: all 0.3s ease;
+}

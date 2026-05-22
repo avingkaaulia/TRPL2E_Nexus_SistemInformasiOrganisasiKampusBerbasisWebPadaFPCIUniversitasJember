@@ -36,14 +36,62 @@ class KegiatanController extends Controller
             }
         }
         
-        // 🔥 SUB KATEGORI EVENT
-        $eventReguler = PostCategory::where('category_name', 'Event Reguler')->first();
-        $eventUnggulan = PostCategory::where('category_name', 'Event Unggulan')->first();
-        
-        // 🔥 SUB KATEGORI PROGRAM
-        $programPlanned = PostCategory::where('category_name', 'Sedang Direncanakan')->first();
-        $programOngoing = PostCategory::where('category_name', 'Sedang Berlangsung')->first();
-        $programCompleted = PostCategory::where('category_name', 'Selesai')->first();
+        // SUB KATEGORI EVENT (statis)
+    $eventReguler  = PostCategory::where('category_name', 'Event Reguler')->first();
+    $eventUnggulan = PostCategory::where('category_name', 'Event Unggulan')->first();
+
+    // SUB KATEGORI PROGRAM (statis)
+    $programPlanned   = PostCategory::where('category_name', 'Sedang Direncanakan')->first();
+    $programOngoing   = PostCategory::where('category_name', 'Sedang Berlangsung')->first();
+    $programCompleted = PostCategory::where('category_name', 'Selesai')->first();
+
+    // 🔥 SUB KATEGORI EVENT DINAMIS (tambahan dari admin, parent_id = id event)
+    $eventParent = PostCategory::where('category_name', 'event')->first();
+    $extraEventCategories = PostCategory::where('parent_id', $eventParent->id_category ?? 6)
+        ->whereNotIn('category_name', ['Event Reguler', 'Event Unggulan'])
+        ->get();
+
+    // 🔥 SUB KATEGORI PROGRAM DINAMIS (tambahan dari admin, parent_id = id program)
+    $programParent = PostCategory::where('category_name', 'program')->first();
+    $extraProgramCategories = PostCategory::where('parent_id', $programParent->id_category ?? 7)
+        ->whereNotIn('category_name', ['Sedang Direncanakan', 'Sedang Berlangsung', 'Selesai'])
+        ->get();
+
+    // Ambil posts untuk extra event categories
+    $extraEventPosts = [];
+    foreach ($extraEventCategories as $cat) {
+        $posts = Post::where('status', 'publish')
+            ->where('post_type', 'post')
+            ->where('id_post_category', $cat->id_category)
+            ->latest('date_published')
+            ->take(3)
+            ->get();
+        foreach ($posts as $item) {
+            $item->image_url = getImageUrl($item->featured_image_path);
+        }
+        $extraEventPosts[$cat->id_category] = [
+            'category' => $cat,
+            'posts'    => $posts,
+        ];
+    }
+
+    // Ambil posts untuk extra program categories
+    $extraProgramPosts = [];
+    foreach ($extraProgramCategories as $cat) {
+        $posts = Post::where('status', 'publish')
+            ->where('post_type', 'post')
+            ->where('id_post_category', $cat->id_category)
+            ->latest('date_published')
+            ->take(4)
+            ->get();
+        foreach ($posts as $item) {
+            $item->image_url = getImageUrl($item->featured_image_path);
+        }
+        $extraProgramPosts[$cat->id_category] = [
+            'category' => $cat,
+            'posts'    => $posts,
+        ];
+    }
         
         // 🔥 EVENT REGULER - 3 event terbaru
         $eventRegulerPosts = Post::with(['category', 'gallery'])
@@ -113,13 +161,15 @@ class KegiatanController extends Controller
         $currentSlide = $request->get('slide', 0);
         
         return view('kegiatan.index', compact(
-            'carousel', 
-            'eventRegulerPosts', 
-            'eventUnggulanPosts',
-            'programsPlanned', 
-            'programsOngoing', 
-            'programsCompleted',
-            'currentSlide'
+            'carousel',
+        'eventRegulerPosts',
+        'eventUnggulanPosts',
+        'programsPlanned',
+        'programsOngoing',
+        'programsCompleted',
+        'extraEventPosts',
+        'extraProgramPosts',
+        'currentSlide'
         ));
     }
     

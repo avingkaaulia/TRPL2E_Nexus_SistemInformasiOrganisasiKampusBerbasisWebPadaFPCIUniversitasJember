@@ -2117,3 +2117,573 @@ hr {
         margin-top: 10px;
     }
 }
+/* ========== RESPONSIVE LENGKAP UNTUK HALAMAN SEARCH ========== */
+
+/* Extra Large (1200px - 1399px) */
+@media (max-width: 1399px) {
+    .search-header {
+        padding: 35px;
+        margin-bottom: 35px;
+    }
+    
+    .search-header h1 {
+        font-size: 30px;
+    }
+    
+    .result-card {
+        padding: 22px;
+        gap: 18px;
+    }
+    
+    .result-image {
+        width: 90px;
+        height: 90px;
+    }
+    
+    .result-title {
+        font-size: 19px;
+    }
+}
+
+/* Large (992px - 1199px) */
+@media (max-width: 1199px) {
+    .search-results-page {
+        padding: 50px 0;
+    }
+    
+    .search-header {
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+    
+    .search-header h1 {
+        font-size: 28px;
+    }
+    
+    .search-tabs {
+        gap: 12px;
+        margin-bottom: 25px;
+    }
+    
+    .search-tab {
+        padding: 8px 20px;
+        font-size: 13px;
+    }
+    
+    .result-card {
+        padding: 20px;
+        gap: 15px;
+    }
+    
+    .result-image {
+        width: 85px;
+        height: 85px;
+    }
+    
+    .result-title {
+        font-size: 18px;
+    }
+    
+    .result-excerpt {
+        font-size: 13px;
+    }
+    
+    .no-results {
+        padding: 50px 20px;
+    }
+    
+    .no-results i {
+        font-size: 56px;
+    }
+}
+
+/* Medium (768px - 991px) */
+@media (max-width: 991px) {
+    .search-results-page {
+        padding: 40px 20px;
+    }
+    
+    .search-header {
+        padding: 25px;
+        margin-bottom: 25px;
+        border-radius: 18px;
+    }
+    
+    .search-header h1 {
+        font-size: 26px;
+    }
+    
+    .search-header .query {
+        font-size: 14px;
+        padding: 4px 12px;
+    }
+    
+    .search-tabs {
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .search-tab {
+        padding: 7px 16px;
+        font-size: 12px;
+    }
+    
+    .search-tab .count {
+        font-size: 11px;
+        padding: 1px 6px;
+    }
+    
+    .result-card {
+        padding: 18px;
+        gap: 15px;
+        flex-direction: column;
+    }
+    
+    .result-image {
+        width: 100%;
+        height: 160px;
+    }
+    
+    .result-badge {
+        font-size: 10px;
+        padding: 4px 10px;
+    }
+    
+    .result-title {
+        font-size: 17px;
+        margin-bottom: 8px;
+    }
+    
+    .result-excerpt {
+        font-size: 13px;
+        line-height: 1.5;
+        margin-bottom: 8px;
+    }
+    
+    .result-meta {
+        font-size: 11px;
+        gap: 6px;
+    }
+    
+    /* Contact info di hasil pencarian */
+    .contact-info {
+        padding: 10px;
+    }
+    
+    .contact-info div {
+        font-size: 12px;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+    
+    .contact-info .social-links {
+        gap: 8px;
+        margin-top: 8px;
+    }
+    
+    .contact-info .social-links span {
+        font-size: 10px;
+        padding: 3px 8px;
+    }
+    
+    .no-results {
+        padding: 40px 20px;
+        border-radius: 18px;
+    }
+    
+    .no-results i {
+        font-size: 48px;
+    }
+    
+    .no-results h3 {
+        font-size: 22px;
+    }
+    
+    .no-results .suggestions {
+        padding: 20px;
+        max-width: 350px;
+    }
+    
+    .no-results .suggestions h5 {
+        font-size: 15px;
+    }
+    
+    .no-results .suggestions li {
+        font-size: 12px;
+    }
+}
+
+/* Small (576px - 767px) */
+@media (max-width: 767px) {
+    .search-results-page {
+        padding: 30px 15px;
+    }
+    
+    .search-header {
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 16px;
+    }
+    
+    .search-header h1 {
+        font-size: 22px;
+        margin-bottom: 10px;
+    }
+    
+    .search-header p {
+        font-size: 13px;
+    }
+    
+    .search-header .query {
+        font-size: 13px;
+        padding: 3px 10px;
+    }
+    
+    .search-tabs {
+        gap: 8px;
+        margin-bottom: 20px;
+    }
+    
+    .search-tab {
+        padding: 6px 12px;
+        font-size: 11px;
+    }
+    
+    .search-tab .count {
+        font-size: 10px;
+        padding: 1px 5px;
+    }
+    
+    .result-card {
+        padding: 15px;
+        margin-bottom: 15px;
+        border-radius: 16px;
+    }
+    
+    .result-image {
+        height: 140px;
+        border-radius: 10px;
+    }
+    
+    .result-badge {
+        font-size: 9px;
+        padding: 3px 8px;
+        margin-bottom: 8px;
+    }
+    
+    .result-title {
+        font-size: 16px;
+        margin-bottom: 6px;
+    }
+    
+    .result-excerpt {
+        font-size: 12px;
+        line-height: 1.5;
+        margin-bottom: 8px;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    
+    .result-meta {
+        font-size: 10px;
+        gap: 5px;
+        flex-wrap: wrap;
+    }
+    
+    .result-meta .separator {
+        margin: 0 3px;
+    }
+    
+    .contact-info {
+        padding: 8px;
+        margin-top: 5px;
+    }
+    
+    .contact-info div {
+        font-size: 11px;
+        gap: 5px;
+    }
+    
+    .contact-info i {
+        font-size: 12px;
+        width: 16px;
+    }
+    
+    .contact-info .social-links {
+        gap: 6px;
+    }
+    
+    .contact-info .social-links span {
+        font-size: 9px;
+        padding: 2px 6px;
+    }
+    
+    .no-results {
+        padding: 30px 15px;
+    }
+    
+    .no-results i {
+        font-size: 40px;
+    }
+    
+    .no-results h3 {
+        font-size: 18px;
+        margin-bottom: 8px;
+    }
+    
+    .no-results p {
+        font-size: 12px;
+    }
+    
+    .no-results .suggestions {
+        padding: 15px;
+        margin-top: 20px;
+    }
+    
+    .no-results .suggestions h5 {
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+    
+    .no-results .suggestions li {
+        font-size: 11px;
+        margin-bottom: 6px;
+    }
+}
+
+/* Extra Small (320px - 575px) */
+@media (max-width: 575px) {
+    .search-results-page {
+        padding: 20px 10px;
+    }
+    
+    .search-header {
+        padding: 15px;
+    }
+    
+    .search-header h1 {
+        font-size: 18px;
+    }
+    
+    .search-header p {
+        font-size: 11px;
+    }
+    
+    .search-header .query {
+        font-size: 11px;
+        padding: 2px 8px;
+    }
+    
+    .search-tabs {
+        gap: 6px;
+    }
+    
+    .search-tab {
+        padding: 5px 10px;
+        font-size: 10px;
+    }
+    
+    .search-tab .count {
+        font-size: 9px;
+        padding: 1px 4px;
+    }
+    
+    .result-card {
+        padding: 12px;
+        border-radius: 14px;
+    }
+    
+    .result-image {
+        height: 120px;
+    }
+    
+    .result-title {
+        font-size: 15px;
+    }
+    
+    .result-excerpt {
+        font-size: 11px;
+        line-height: 1.4;
+    }
+    
+    .result-meta {
+        font-size: 9px;
+    }
+    
+    .contact-info {
+        padding: 6px;
+    }
+    
+    .contact-info div {
+        font-size: 10px;
+    }
+    
+    .contact-info .social-links span {
+        font-size: 8px;
+        padding: 2px 5px;
+    }
+    
+    .no-results {
+        padding: 20px 10px;
+    }
+    
+    .no-results i {
+        font-size: 32px;
+    }
+    
+    .no-results h3 {
+        font-size: 16px;
+    }
+    
+    .no-results p {
+        font-size: 11px;
+    }
+    
+    .no-results .suggestions {
+        padding: 12px;
+    }
+    
+    .no-results .suggestions h5 {
+        font-size: 13px;
+    }
+    
+    .no-results .suggestions li {
+        font-size: 10px;
+    }
+}
+
+/* Landscape mode untuk mobile */
+@media (max-width: 767px) and (orientation: landscape) {
+    .search-results-page {
+        padding: 25px 15px;
+    }
+    
+    .search-header {
+        padding: 15px 20px;
+    }
+    
+    .search-header h1 {
+        font-size: 20px;
+    }
+    
+    .result-card {
+        flex-direction: row;
+        gap: 15px;
+    }
+    
+    .result-image {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .result-excerpt {
+        -webkit-line-clamp: 2;
+    }
+    
+    .search-tabs {
+        flex-wrap: wrap;
+    }
+}
+
+/* Tablet landscape (768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+    .search-results-page {
+        padding: 40px 30px;
+    }
+    
+    .result-card {
+        flex-direction: row;
+    }
+    
+    .result-image {
+        width: 100px;
+        height: 100px;
+    }
+}
+
+/* High DPI Screens (Retina) */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .result-image {
+        image-rendering: -webkit-optimize-contrast;
+    }
+}
+
+/* Touch device optimization */
+@media (hover: none) and (pointer: coarse) {
+    .search-tab {
+        min-height: 40px;
+        display: inline-flex;
+        align-items: center;
+    }
+    
+    .result-card:active {
+        transform: scale(0.99);
+    }
+    
+    .search-suggestion {
+        min-height: 50px;
+    }
+}
+
+/* Loading state untuk search */
+.search-loading {
+    text-align: center;
+    padding: 40px;
+}
+
+.search-loading .spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #5C6844;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 15px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@media (max-width: 575px) {
+    .search-loading .spinner {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+/* Smooth transition */
+.search-results-page,
+.search-header,
+.result-card,
+.search-tab {
+    transition: all 0.3s ease;
+}
+
+/* Animasi fade in untuk hasil pencarian */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.result-card {
+    animation: fadeIn 0.3s ease forwards;
+}
+
+/* Stagger animation untuk result cards */
+.result-card:nth-child(1) { animation-delay: 0.05s; }
+.result-card:nth-child(2) { animation-delay: 0.1s; }
+.result-card:nth-child(3) { animation-delay: 0.15s; }
+.result-card:nth-child(4) { animation-delay: 0.2s; }
+.result-card:nth-child(5) { animation-delay: 0.25s; }
+.result-card:nth-child(6) { animation-delay: 0.3s; }
