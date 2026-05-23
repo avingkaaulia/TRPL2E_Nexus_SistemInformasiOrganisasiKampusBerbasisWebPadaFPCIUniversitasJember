@@ -51,7 +51,6 @@ class AdminAnggotaController extends Controller
         return view('admin.anggota.index', compact('anggota', 'divisiList', 'periodeList', 'pendaftaranDiterima'));
     }
     
-    
     // Detail anggota
     public function show($id)
     {
@@ -68,7 +67,7 @@ class AdminAnggotaController extends Controller
         return view('admin.anggota.edit', compact('anggota', 'divisiList', 'periodeList'));
     }
     
-    // Update anggota - DIPERBAIKI
+    // Update anggota
     public function update(Request $request, $id)
     {
         $anggota = Anggota::findOrFail($id);
@@ -108,25 +107,23 @@ class AdminAnggotaController extends Controller
             $anggota->foto = 'storage/' . $path;
         }
         
-        // 🔥 PERBAIKAN: Pastikan link tidak NULL, gunakan string kosong jika null
         $anggota->update([
             'id_divisi' => $request->id_divisi,
             'jabatan' => $request->jabatan,
             'periode' => $request->periode,
             'no_urut' => $request->no_urut,
-            'link' => $request->link ?? ''  // 🔥 GANTI NULL DENGAN STRING KOSONG
+            'link' => $request->link ?? ''
         ]);
         
         return redirect()->route('admin.anggota.index')
             ->with('success', 'Anggota berhasil diupdate');
     }
     
-        // 🔥 PERBAIKI: Hapus anggota - hapus anggota dulu baru user
+    // Hapus anggota
     public function destroy($id)
     {
         $anggota = Anggota::with('user')->findOrFail($id);
         
-        // Hapus foto jika ada
         if ($anggota->foto && $anggota->foto != 'assets/img/avatars/default-avatar.png') {
             $fotoPath = public_path($anggota->foto);
             if (file_exists($fotoPath)) {
@@ -134,13 +131,9 @@ class AdminAnggotaController extends Controller
             }
         }
         
-        // Simpan id_user sebelum menghapus anggota
         $idUser = $anggota->id_user;
-        
-        // 🔥 HAPUS ANGGOTA TERLEBIH DAHULU
         $anggota->delete();
         
-        // 🔥 BARU HAPUS USER SETELAH ANGGOTA DIHAPUS
         $user = User::find($idUser);
         if ($user) {
             $user->delete();
@@ -150,7 +143,7 @@ class AdminAnggotaController extends Controller
             ->with('success', 'Anggota berhasil dihapus');
     }
     
-    // Konversi pendaftar menjadi anggota
+    // 🔥 KONVERSI PENDAFTAR MENJADI ANGGOTA (TANPA EMAIL, KARENA EMAIL SUDAH DIKIRIM SAAT DITERIMA)
     public function convertFromPendaftaran($id)
     {
         $pendaftaran = Pendaftaran::findOrFail($id);
@@ -164,27 +157,19 @@ class AdminAnggotaController extends Controller
             return redirect()->back()->with('error', 'Email ' . $pendaftaran->email . ' sudah terdaftar sebagai anggota!');
         }
         
-        // 🔥 BUAT USERNAME DAN PASSWORD MENGGUNAKAN NIM
-        $username = $pendaftaran->nim;
-        $password = $pendaftaran->nim; // Password default = NIM
+        // Cek apakah user sudah ada
+        $user = User::where('email', $pendaftaran->email)->first();
         
-        // Cek apakah username (NIM) sudah ada
-        $existingUser = User::where('username', $username)->first();
-        if ($existingUser) {
-            // Jika NIM sudah ada, tambahkan angka acak
-            $username = $pendaftaran->nim . rand(10, 99);
-        }
-        
-        // Cek apakah email sudah terdaftar di users
-        $existingUserByEmail = User::where('email', $pendaftaran->email)->first();
-        
-        if ($existingUserByEmail) {
-            $user = $existingUserByEmail;
-            // Update username ke NIM jika belum
-            $user->username = $username;
-            $user->password = Hash::make($password);
-            $user->save();
-        } else {
+        if (!$user) {
+            // Buat username dan password menggunakan NIM
+            $username = $pendaftaran->nim;
+            $password = $pendaftaran->nim;
+            
+            $existingUser = User::where('username', $username)->first();
+            if ($existingUser) {
+                $username = $pendaftaran->nim . rand(10, 99);
+            }
+            
             $user = User::create([
                 'username' => $username,
                 'email' => $pendaftaran->email,
@@ -198,8 +183,7 @@ class AdminAnggotaController extends Controller
         $defaultFoto = 'assets/img/avatars/default-avatar.png';
         $lastNoUrut = Anggota::max('no_urut') ?? 0;
         
-        // Tentukan divisi dari pilihan pendaftar
-        $divisiId = 1; // default
+        $divisiId = 1;
         if (!empty($pendaftaran->divisi)) {
             $divisi = Divisi::where('nama_divisi', $pendaftaran->divisi)->first();
             if ($divisi) {
@@ -217,21 +201,14 @@ class AdminAnggotaController extends Controller
             'link' => ''
         ]);
         
-        // 🔥 KIRIM EMAIL KE CALON ANGGOTA
-        try {
-            Mail::to($pendaftaran->email)->send(new AcceptedMemberMail($pendaftaran, $username, $password));
-            
-            // Update status pendaftaran menjadi diterima
-            if ($pendaftaran->status != 'diterima') {
-                $pendaftaran->status = 'diterima';
-                $pendaftaran->save();
-            }
-            
-            return redirect()->route('admin.anggota.index')
-                ->with('success', 'Pendaftar ' . $pendaftaran->nama . ' berhasil dikonversi menjadi anggota! Email berhasil dikirim.');
-        } catch (\Exception $e) {
-            return redirect()->route('admin.anggota.index')
-                ->with('success', 'Pendaftar ' . $pendaftaran->nama . ' berhasil dikonversi menjadi anggota! Namun email gagal dikirim. Error: ' . $e->getMessage());
+        // Update status pendaftaran jika belum diterima
+        if ($pendaftaran->status != 'diterima') {
+            $pendaftaran->status = 'diterima';
+            $pendaftaran->save();
         }
+        
+        // 🔥 TIDAK KIRIM EMAIL LAGI (sudah dikirim saat accept)
+        return redirect()->route('admin.anggota.index')
+            ->with('success', 'Pendaftar ' . $pendaftaran->nama . ' berhasil dikonversi menjadi anggota!');
     }
 }

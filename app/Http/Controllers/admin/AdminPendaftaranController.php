@@ -12,6 +12,13 @@ use App\Models\BerkasPendaftaran;
 use App\Models\FormField;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\AcceptedMemberMail;
+use App\Mail\RejectedMemberMail;
+use App\Models\User;
+use App\Models\Anggota;
+use App\Models\Divisi;
+use Illuminate\Support\Facades\Hash;
 
 class AdminPendaftaranController extends Controller
 {
@@ -81,22 +88,94 @@ class AdminPendaftaranController extends Controller
             ->with('success', 'Data pendaftaran berhasil dihapus');
     }
     
+// 🔥 TERIMA PENDAFTARAN - LANGSUNG KIRIM EMAIL DAN BUAT AKUN
     public function accept($id)
     {
         $pendaftaran = Pendaftaran::findOrFail($id);
+        
+        // Cek apakah email sudah terdaftar di users
+        $existingUser = User::where('email', $pendaftaran->email)->first();
+        
+        // 🔥 BUAT USERNAME DAN PASSWORD MENGGUNAKAN NIM
+        $username = $pendaftaran->nim;
+        $password = $pendaftaran->nim;
+        
+        // Cek apakah username (NIM) sudah ada
+        $existingUsername = User::where('username', $username)->first();
+        if ($existingUsername) {
+            $username = $pendaftaran->nim . rand(10, 99);
+        }
+        
+        if ($existingUser) {
+            $user = $existingUser;
+            $user->username = $username;
+            $user->password = Hash::make($password);
+            $user->save();
+        } else {
+            $user = User::create([
+                'username' => $username,
+                'email' => $pendaftaran->email,
+                'password' => Hash::make($password),
+                'nama' => $pendaftaran->nama,
+                'id_role' => 2,
+                'tanggal_daftar' => now()
+            ]);
+        }
+        
+        // Cek apakah user sudah memiliki data anggota
+        $existingAnggota = Anggota::where('id_user', $user->id_user)->first();
+        
+        if (!$existingAnggota) {
+            $defaultFoto = 'assets/img/avatars/default-avatar.png';
+            $lastNoUrut = Anggota::max('no_urut') ?? 0;
+            
+            // Tentukan divisi dari pilihan pendaftar
+            $divisiId = 1;
+            if (!empty($pendaftaran->divisi)) {
+                $divisi = Divisi::where('nama_divisi', $pendaftaran->divisi)->first();
+                if ($divisi) {
+                    $divisiId = $divisi->id_divisi;
+                }
+            }
+            
+            Anggota::create([
+                'id_user' => $user->id_user,
+                'id_divisi' => $divisiId,
+                'jabatan' => 'Staff',
+                'periode' => '2025/2026',
+                'foto' => $defaultFoto,
+                'no_urut' => $lastNoUrut + 1,
+                'link' => ''
+            ]);
+        }
+        
+        // Update status pendaftaran
         $pendaftaran->status = 'diterima';
         $pendaftaran->save();
         
-        return redirect()->back()->with('success', 'Pendaftar ' . $pendaftaran->nama . ' telah DITERIMA');
+        // 🔥 KIRIM EMAIL KELULUSAN
+        try {
+            Mail::to($pendaftaran->email)->send(new AcceptedMemberMail($pendaftaran, $username, $password));
+            return redirect()->back()->with('success', 'Pendaftar ' . $pendaftaran->nama . ' telah DITERIMA! Email berhasil dikirim.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('success', 'Pendaftar ' . $pendaftaran->nama . ' telah DITERIMA! Namun email gagal dikirim. Error: ' . $e->getMessage());
+        }
     }
     
+    // 🔥 TOLAK PENDAFTARAN - LANGSUNG KIRIM EMAIL PENOLAKAN
     public function reject($id)
     {
         $pendaftaran = Pendaftaran::findOrFail($id);
         $pendaftaran->status = 'ditolak';
         $pendaftaran->save();
         
-        return redirect()->back()->with('success', 'Pendaftar ' . $pendaftaran->nama . ' telah DITOLAK');
+        // 🔥 KIRIM EMAIL PENOLAKAN
+        try {
+            Mail::to($pendaftaran->email)->send(new RejectedMemberMail($pendaftaran));
+            return redirect()->back()->with('success', 'Pendaftar ' . $pendaftaran->nama . ' telah DITOLAK! Email pemberitahuan telah dikirim.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('success', 'Pendaftar ' . $pendaftaran->nama . ' telah DITOLAK! Namun email gagal dikirim. Error: ' . $e->getMessage());
+        }
     }
     
     public function downloadBerkas($id)
