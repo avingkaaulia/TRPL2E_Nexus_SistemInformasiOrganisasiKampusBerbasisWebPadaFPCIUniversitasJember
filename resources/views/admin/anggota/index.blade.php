@@ -174,8 +174,8 @@
         </table>
     </div>
     
-    <div class="d-flex justify-content-center mt-4">
-        {{ $anggota->links() }}
+    <div class="pagination-wrapper">
+        {{ $anggota->appends(request()->query())->links('vendor.pagination.custom') }}
     </div>
 </div>
 @endsection

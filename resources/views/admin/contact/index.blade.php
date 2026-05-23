@@ -9,7 +9,7 @@
     <div class="admin-card-header">
         <h4><i class="bi bi-envelope me-2"></i> Informasi Kontak</h4>
         <a href="{{ route('admin.contact.edit') }}" class="btn-edit-contact">
-            <i class="bi bi-pencil-square me-1"></i> Edit Kontak
+            <i class="bi bi-plus-circle me-1"></i> Edit Kontak
         </a>
     </div>
     

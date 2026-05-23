@@ -134,8 +134,8 @@
         </table>
     </div>
     
-    <div class="d-flex justify-content-center mt-4">
-        {{ $users->appends(request()->query())->links() }}
+    <div class="pagination-wrapper">
+        {{ $users->appends(request()->query())->links('vendor.pagination.custom') }}
     </div>
 </div>
 

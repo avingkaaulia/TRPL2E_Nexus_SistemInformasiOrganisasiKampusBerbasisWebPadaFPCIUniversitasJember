@@ -72,12 +72,28 @@
             <!-- Pendaftaran -->
             <a href="{{ route('admin.pendaftaran.index') }}" class="menu-item {{ request()->routeIs('admin.pendaftaran*') ? 'active' : '' }}">
                 <i class="bi bi-person-plus"></i> Pendaftaran
-            </a>
+            @php 
+        $pendingPendaftaran = App\Models\Pendaftaran::where('status', 'menunggu')->count();
+    @endphp
+    @if($pendingPendaftaran > 0)
+        <span class="badge bg-warning ms-2">{{ $pendingPendaftaran }}</span>
+    @endif
+</a>
             
             <!-- Anggota -->
             <a href="{{ route('admin.anggota.index') }}" class="menu-item {{ request()->routeIs('admin.anggota*') ? 'active' : '' }}">
                 <i class="bi bi-people"></i> Anggota
-            </a>
+            @php 
+        // Hitung pendaftar yang sudah diterima tapi belum menjadi anggota
+        $emailAnggota = App\Models\Anggota::with('user')->get()->pluck('user.email')->filter()->toArray();
+        $belumKonversi = App\Models\Pendaftaran::where('status', 'diterima')
+            ->whereNotIn('email', $emailAnggota)
+            ->count();
+    @endphp
+    @if($belumKonversi > 0)
+        <span class="badge bg-info ms-2">{{ $belumKonversi }}</span>
+    @endif
+</a>
             
             <!-- User & Role -->
             <a href="{{ route('admin.users.index') }}" class="menu-item {{ request()->routeIs('admin.users*') ? 'active' : '' }}">
@@ -135,10 +151,6 @@
             <div class="top-bar">
                 <h3><i class="bi bi-speedometer2 me-2"></i> @yield('page-title', 'Dashboard')</h3>
                 <div class="top-bar-right">
-                    <div class="notification-icon">
-                        <i class="bi bi-bell"></i>
-                        <span class="notification-badge">0</span>
-                    </div>
                     <div class="admin-profile dropdown">
                         <div class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                             <div class="admin-avatar">

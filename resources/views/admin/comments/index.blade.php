@@ -239,31 +239,5 @@ if (replyModal) {
 </script>
 @endpush
 
-@push('styles')
-<style>
-.reply-preview {
-    background: #e8f5e9;
-    padding: 6px 10px;
-    border-radius: 8px;
-    font-size: 12px;
-    margin-top: 8px;
-}
 
-.badge-reply {
-    background: #dc3545;
-    color: white;
-    border-radius: 50%;
-    font-size: 10px;
-    padding: 2px 5px;
-    margin-left: 5px;
-    animation: pulse 1s infinite;
-}
-
-@keyframes pulse {
-    0% { opacity: 1; }
-    50% { opacity: 0.5; }
-    100% { opacity: 1; }
-}
-</style>
-@endpush
 @endsection

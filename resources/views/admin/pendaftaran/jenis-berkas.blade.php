@@ -12,6 +12,11 @@
 </div>
 @endif
 
+<div class="mb-3">
+    <a href="{{ route('admin.pendaftaran.index') }}" class="btn btn-secondary">
+        <i class="bi bi-arrow-left me-1"></i> Kembali ke Pendaftaran
+    </a>
+</div>
 <div class="row">
     <!-- Form Tambah Jenis Berkas -->
     <div class="col-md-4">
