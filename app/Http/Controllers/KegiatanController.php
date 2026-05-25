@@ -247,49 +247,42 @@ public function allEventUnggulan(Request $request)
     return view('kegiatan.all', compact('posts', 'sort'));
 }
 
-// Halaman all Programs by status dengan sorting
-public function allPrograms(Request $request, $status)
-{
-    $statusMap = [
-        'planned' => 'Sedang Direncanakan',
-        'ongoing' => 'Sedang Berlangsung',
-        'completed' => 'Selesai'
-    ];
-    
-    $categoryName = $statusMap[$status] ?? 'Sedang Direncanakan';
-    $programCategory = PostCategory::where('category_name', $categoryName)->first();
-    
-    $query = Post::with(['category', 'gallery'])
-        ->where('status', 'publish')
-        ->where('post_type', 'post')
-        ->where('id_post_category', $programCategory->id_category ?? 0);
-    
-    // 🔥 SORTING
-    $sort = $request->get('sort', 'terbaru');
-    switch ($sort) {
-        case 'terlama':
-            $query->orderBy('date_published', 'asc');
-            break;
-        case 'az':
-            $query->orderBy('title', 'asc');
-            break;
-        case 'za':
-            $query->orderBy('title', 'desc');
-            break;
-        case 'terbaru':
-        default:
-            $query->orderBy('date_published', 'desc');
-            break;
+// 🔥 PERBAIKI: Halaman all Programs by ID kategori (dinamis)
+    public function allPrograms(Request $request, $categoryId)
+    {
+        // Cari kategori berdasarkan ID
+        $category = PostCategory::findOrFail($categoryId);
+        
+        $query = Post::with(['category', 'gallery'])
+            ->where('status', 'publish')
+            ->where('post_type', 'post')
+            ->where('id_post_category', $categoryId);
+        
+        $sort = $request->get('sort', 'terbaru');
+        switch ($sort) {
+            case 'terlama':
+                $query->orderBy('date_published', 'asc');
+                break;
+            case 'az':
+                $query->orderBy('title', 'asc');
+                break;
+            case 'za':
+                $query->orderBy('title', 'desc');
+                break;
+            case 'terbaru':
+            default:
+                $query->orderBy('date_published', 'desc');
+                break;
+        }
+        
+        $posts = $query->paginate(9);
+        
+        foreach ($posts as $item) {
+            $item->image_url = getImageUrl($item->featured_image_path);
+        }
+        
+        return view('kegiatan.all', compact('posts', 'sort', 'category'));
     }
-    
-    $posts = $query->paginate(9);
-    
-    foreach ($posts as $item) {
-        $item->image_url = getImageUrl($item->featured_image_path);
-    }
-    
-    return view('kegiatan.all', compact('posts', 'sort', 'status'));
-}
     
     // Detail Event/Program
     public function show($id)
