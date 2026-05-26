@@ -45,37 +45,6 @@ class AuthController extends Controller
         return back()->with('error', 'Email atau password salah!')->withInput($request->only('email'));
     }
     
-    // Halaman Register
-    public function showRegisterForm()
-    {
-        return view('auth.register');
-    }
-    
-    // Proses Register
-    public function register(Request $request)
-    {
-        $request->validate([
-            'nama' => 'required|string|max:100',
-            'username' => 'required|string|max:50|unique:users,username',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6|confirmed',
-            'password_confirmation' => 'required|min:6'
-        ]);
-        
-        $user = User::create([
-            'username' => $request->username,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'nama' => $request->nama,
-            'id_role' => 2, // Default role: anggota
-            'tanggal_daftar' => now()
-        ]);
-        
-        // Auto login setelah register
-        Auth::login($user);
-        
-        return redirect()->route('home')->with('success', 'Pendaftaran berhasil! Selamat datang ' . $user->nama);
-    }
     
     // Logout
     public function logout(Request $request)

@@ -35,7 +35,7 @@
                            class="form-control @error('logo') is-invalid @enderror" 
                            accept="image/*" 
                            required>
-                    <small class="text-muted">Format: JPG, PNG, SVG. Max 2MB. Ukuran: 90x90px direkomendasikan</small>
+                    <small class="text-muted">Format: JPG, PNG, SVG. Max 5MB. Ukuran: 90x90px direkomendasikan</small>
                     @error('logo')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -84,7 +84,7 @@
                            class="form-control @error('favicon') is-invalid @enderror" 
                            accept="image/x-icon,image/png,image/jpeg" 
                            required>
-                    <small class="text-muted">Format: ICO, PNG, JPG. Max 512KB. Ukuran: 32x32px direkomendasikan</small>
+                    <small class="text-muted">Format: ICO, PNG, JPG. Max 5MB. Ukuran: 32x32px direkomendasikan</small>
                     @error('favicon')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror

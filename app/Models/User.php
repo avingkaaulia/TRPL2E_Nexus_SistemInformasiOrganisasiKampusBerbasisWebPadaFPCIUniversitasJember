@@ -15,15 +15,16 @@ class User extends Authenticatable
     protected $primaryKey = 'id_user';
     
     protected $fillable = [
-    'username',
-    'email',
-    'password',
-    'nama',
-    'id_role',
-    'tanggal_daftar',
-    'reset_token',
-    'reset_token_expires'
-];
+        'username',
+        'email',
+        'password',
+        'nama',
+        'id_role',
+        'tanggal_daftar',
+        'reset_token',
+        'reset_token_expires',
+        'remember_token'  // 🔥 TAMBAHKAN INI
+    ];
     
     protected $hidden = [
         'password',

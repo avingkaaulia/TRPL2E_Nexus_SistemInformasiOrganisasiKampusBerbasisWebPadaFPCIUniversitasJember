@@ -46,7 +46,7 @@ class AdminLogoController extends Controller
     public function updateFavicon(Request $request)
     {
         $request->validate([
-            'favicon' => 'required|image|mimes:ico,png,jpg,jpeg|max:512'
+            'favicon' => 'required|image|mimes:ico,png,jpg,jpeg|max:5048'
         ]);
         
         $oldFavicon = Setting::get('site_favicon', 'assets/img/favicon.ico');
