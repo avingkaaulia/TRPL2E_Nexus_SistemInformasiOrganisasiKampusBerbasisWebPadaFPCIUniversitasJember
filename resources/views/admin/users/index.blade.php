@@ -86,29 +86,30 @@
                             </a>
                             
                             <!-- Dropdown untuk ubah role cepat -->
-                            <div class="dropdown d-inline">
-                                <button class="btn-action btn-role" type="button" data-bs-toggle="dropdown" title="Ubah Role">
-                                    <i class="bi bi-shield"></i>
-                                </button>
-                                <ul class="dropdown-menu">
-                                    @foreach($roles as $role)
-                                    <li>
-                                        <form action="{{ route('admin.users.update-role', $user->id_user) }}" method="POST" class="role-form">
-                                            @csrf
-                                            @method('PUT')
-                                            <input type="hidden" name="id_role" value="{{ $role->id_role }}">
-                                            <button type="submit" class="dropdown-item {{ $user->id_role == $role->id_role ? 'active' : '' }}">
-                                                <i class="bi {{ $role->id_role == 1 ? 'bi-shield-lock' : 'bi-person' }} me-2"></i>
-                                                {{ $role->nama_role }}
-                                                @if($user->id_role == $role->id_role)
-                                                    <i class="bi bi-check ms-2"></i>
-                                                @endif
-                                            </button>
-                                        </form>
-                                    </li>
-                                    @endforeach
-                                </ul>
-                            </div>
+<div class="dropdown d-inline">
+    <button class="btn-action btn-role" type="button" data-bs-toggle="dropdown" title="Ubah Role">
+        <i class="bi bi-shield"></i>
+    </button>
+    <ul class="dropdown-menu">
+        @foreach($roles as $role)
+        <li>
+            {{-- 🔥 METHOD POST --}}
+            <form action="{{ route('admin.users.update-role', $user->id_user) }}" method="POST" style="display:inline;">
+                @csrf
+                @method('PUT')
+                <input type="hidden" name="id_role" value="{{ $role->id_role }}">
+                <button type="submit" class="dropdown-item {{ $user->id_role == $role->id_role ? 'active' : '' }}">
+                    <i class="bi {{ $role->id_role == 1 ? 'bi-shield-lock' : 'bi-person' }} me-2"></i>
+                    {{ $role->nama_role }}
+                    @if($user->id_role == $role->id_role)
+                        <i class="bi bi-check ms-2"></i>
+                    @endif
+                </button>
+            </form>
+        </li>
+        @endforeach
+    </ul>
+</div>
                             
                             @if($user->id_user != 1 && $user->id_user != Auth::id())
                             <form action="{{ route('admin.users.destroy', $user->id_user) }}" method="POST" class="d-inline">
@@ -141,16 +142,56 @@
 
 @push('scripts')
 <script>
-// Konfirmasi untuk ubah role via AJAX (opsional)
 document.querySelectorAll('.role-form').forEach(form => {
     form.addEventListener('submit', function(e) {
-        const selectedRole = this.querySelector('input[name="id_role"]').value;
-        const roleName = this.querySelector('.dropdown-item').innerText.trim();
-        if (!confirm(`Ubah role user ini menjadi ${roleName}?`)) {
-            e.preventDefault();
-        }
+        e.preventDefault(); // Cegah reload
+        
+        const formData = new FormData(this);
+        const action = this.action;
+        const method = this.querySelector('input[name="_method"]').value || 'POST';
+        
+        fetch(action, {
+            method: method,
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Tampilkan alert sukses
+                showAlert('success', data.message);
+                // Reload halaman setelah 1 detik biar role berubah
+                setTimeout(() => location.reload(), 1000);
+            } else {
+                showAlert('danger', data.message || 'Gagal mengubah role');
+            }
+        })
+        .catch(error => {
+            showAlert('danger', 'Terjadi kesalahan: ' + error.message);
+        });
     });
 });
+
+function showAlert(type, message) {
+    const alertHtml = `
+        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+            <i class="bi ${type === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill'} me-2"></i>
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    `;
+    
+    // Hapus alert lama
+    document.querySelectorAll('.alert').forEach(el => el.remove());
+    
+    // Tambah alert baru di atas tabel
+    const container = document.querySelector('.admin-card .table-responsive');
+    if (container) {
+        container.insertAdjacentHTML('beforebegin', alertHtml);
+    }
+}
 </script>
 @endpush
 

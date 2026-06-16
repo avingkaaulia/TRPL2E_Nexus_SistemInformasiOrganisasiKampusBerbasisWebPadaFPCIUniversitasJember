@@ -54,27 +54,32 @@ class PostAdminController extends Controller
         return view('admin.posts.index', compact('posts', 'categories', 'statuses'));
     }
     
-    public function create()
-    {
-        $parentWithoutChildren = PostCategory::whereNull('parent_id')
-            ->whereNotIn('id_category', function($query) {
-                $query->select('parent_id')
-                    ->from('post_category')
-                    ->whereNotNull('parent_id')
-                    ->distinct();
-            })
-            ->orderBy('category_name')
-            ->get();
-        
-        $subCategories = PostCategory::whereNotNull('parent_id')
-            ->orderBy('category_name')
-            ->get();
-        
-        $categories = $parentWithoutChildren->merge($subCategories);
-        
-        $users = User::all();
-        return view('admin.posts.create', compact('categories', 'users'));
-    }
+   public function create(Request $request)
+{
+    $parentWithoutChildren = PostCategory::whereNull('parent_id')
+        ->whereNotIn('id_category', function($query) {
+            $query->select('parent_id')
+                ->from('post_category')
+                ->whereNotNull('parent_id')
+                ->distinct();
+        })
+        ->orderBy('category_name')
+        ->get();
+    
+    $subCategories = PostCategory::whereNotNull('parent_id')
+        ->orderBy('category_name')
+        ->get();
+    
+    $categories = $parentWithoutChildren->merge($subCategories);
+    
+    $users = User::all();
+    
+    // 🔥 CEK PARAMETER TYPE DARI URL
+    $type = $request->get('type', 'post'); // default 'post'
+    $isPage = ($type === 'page');
+    
+    return view('admin.posts.create', compact('categories', 'users', 'isPage', 'type'));
+}
     
     public function store(Request $request)
     {
@@ -165,29 +170,34 @@ class PostAdminController extends Controller
             ->with('success', 'Postingan berhasil ditambahkan');
     }
     
-    public function edit($id)
-    {
-        $post = Post::with('gallery')->findOrFail($id);
-        
-        $parentWithoutChildren = PostCategory::whereNull('parent_id')
-            ->whereNotIn('id_category', function($query) {
-                $query->select('parent_id')
-                    ->from('post_category')
-                    ->whereNotNull('parent_id')
-                    ->distinct();
-            })
-            ->orderBy('category_name')
-            ->get();
-        
-        $subCategories = PostCategory::whereNotNull('parent_id')
-            ->orderBy('category_name')
-            ->get();
-        
-        $categories = $parentWithoutChildren->merge($subCategories);
-        
-        $users = User::all();
-        return view('admin.posts.edit', compact('post', 'categories', 'users'));
-    }
+   public function edit($id)
+{
+    $post = Post::with('gallery')->findOrFail($id);
+    
+    $parentWithoutChildren = PostCategory::whereNull('parent_id')
+        ->whereNotIn('id_category', function($query) {
+            $query->select('parent_id')
+                ->from('post_category')
+                ->whereNotNull('parent_id')
+                ->distinct();
+        })
+        ->orderBy('category_name')
+        ->get();
+    
+    $subCategories = PostCategory::whereNotNull('parent_id')
+        ->orderBy('category_name')
+        ->get();
+    
+    $categories = $parentWithoutChildren->merge($subCategories);
+    
+    $users = User::all();
+    
+    // 🔥 KIRIMKAN FLAG IS PAGE
+    $isPage = $post->post_type === 'page';
+    
+    return view('admin.posts.edit', compact('post', 'categories', 'users', 'isPage'));
+}
+    
     
     public function update(Request $request, $id)
     {

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Comment;
 use App\Models\Post;
+use App\Models\Setting;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -160,5 +161,17 @@ class AdminCommentController extends Controller
         
         return redirect()->route('admin.comments.index')
             ->with('success', 'Komentar dari "' . $nama . '" berhasil dihapus!');
+    }
+    // 🔥 TAMBAH METHOD TOGGLE KOMENTAR
+    public function toggleComments(Request $request)
+    {
+        $currentStatus = Setting::isCommentsEnabled();
+        $newStatus = !$currentStatus;
+        
+        Setting::toggleComments($newStatus);
+        
+        $statusText = $newStatus ? 'diaktifkan' : 'dinonaktifkan';
+        return redirect()->route('admin.comments.index')
+            ->with('success', "Fitur komentar berhasil {$statusText}.");
     }
 }

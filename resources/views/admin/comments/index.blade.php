@@ -20,6 +20,27 @@
     </div>
     
     <div class="card-body">
+        <!-- 🔥 TOMBOL ON/OFF KOMENTAR -->
+        <div class="toggle-comment-bar mb-3 p-3 bg-light rounded d-flex justify-content-between align-items-center">
+            <div>
+                <strong><i class="bi bi-power me-2"></i> Status Fitur Komentar:</strong>
+                @if(\App\Models\Setting::isCommentsEnabled())
+                    <span class="badge bg-success">AKTIF</span>
+                    <small class="text-muted ms-2">Pengunjung bisa menulis komentar</small>
+                @else
+                    <span class="badge bg-danger">NONAKTIF</span>
+                    <small class="text-muted ms-2">Pengunjung tidak bisa menulis komentar</small>
+                @endif
+            </div>
+            
+            <form action="{{ route('admin.comments.toggle') }}" method="POST" class="d-inline">
+                @csrf
+                <button type="submit" class="btn {{ \App\Models\Setting::isCommentsEnabled() ? 'btn-outline-danger' : 'btn-outline-success' }}">
+                    <i class="bi {{ \App\Models\Setting::isCommentsEnabled() ? 'bi-x-circle' : 'bi-check-circle' }} me-1"></i>
+                    {{ \App\Models\Setting::isCommentsEnabled() ? 'Nonaktifkan' : 'Aktifkan' }}
+                </button>
+            </form>
+        </div>
         <!-- Filter -->
         <div class="filter-bar">
             <form action="{{ route('admin.comments.index') }}" method="GET" class="d-flex gap-3 flex-wrap">

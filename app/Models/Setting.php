@@ -36,4 +36,17 @@ class Setting extends Model
         );
         return $setting;
     }
+     // 🔥 TAMBAH METHOD INI: Cek apakah komentar aktif
+    public static function isCommentsEnabled()
+    {
+        $value = self::get('comments_enabled', 'true');
+        return $value === 'true' || $value === '1' || $value === 1;
+    }
+    
+    // 🔥 TAMBAH METHOD INI: Toggle komentar
+    public static function toggleComments($status)
+    {
+        $value = $status ? 'true' : 'false';
+        return self::set('comments_enabled', $value, 'boolean');
+    }
 }

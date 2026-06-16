@@ -145,9 +145,21 @@
         </div>
         
         <div class="mb-3">
-            <a href="{{ route('admin.posts.index') }}" class="btn btn-secondary">Batal</a>
-            <button type="submit" class="btn btn-primary">Update</button>
-        </div>
+    {{-- 🔥 TOMBOL KEMBALI DINAMIS --}}
+    @if(isset($isPage) && $isPage)
+        <a href="{{ route('admin.pages.list') }}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left me-1"></i> Kembali ke Halaman
+        </a>
+    @else
+        <a href="{{ route('admin.posts.index') }}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left me-1"></i> Kembali ke Semua Postingan
+        </a>
+    @endif
+    
+    <button type="submit" class="btn btn-primary">
+        <i class="bi bi-save me-1"></i> Update
+    </button>
+</div>
     </form>
 </div>
 

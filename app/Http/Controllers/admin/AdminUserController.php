@@ -73,21 +73,23 @@ class AdminUserController extends Controller
     
     // Update role saja (AJAX)
     public function updateRole(Request $request, $id)
-    {
-        $request->validate([
-            'id_role' => 'required|exists:roles,id_role'
-        ]);
-        
-        $user = User::findOrFail($id);
-        $oldRole = $user->id_role;
-        $user->id_role = $request->id_role;
-        $user->save();
-        
-        return response()->json([
-            'success' => true,
-            'message' => 'Role user ' . $user->nama . ' berhasil diubah dari ' . $this->getRoleName($oldRole) . ' menjadi ' . $this->getRoleName($request->id_role)
-        ]);
-    }
+{
+    $request->validate([
+        'id_role' => 'required|exists:roles,id_role'
+    ]);
+    
+    $user = User::findOrFail($id);
+    $oldRole = $user->id_role;
+    $oldRoleName = $this->getRoleName($oldRole);
+    $newRoleName = $this->getRoleName($request->id_role);
+    
+    $user->id_role = $request->id_role;
+    $user->save();
+    
+    // 🔥 UBAH JADI REDIRECT BIASA, BUKAN JSON
+    return redirect()->route('admin.users.index')
+        ->with('success', 'Role user ' . $user->nama . ' berhasil diubah dari ' . $oldRoleName . ' menjadi ' . $newRoleName);
+}
     
     private function getRoleName($roleId)
     {

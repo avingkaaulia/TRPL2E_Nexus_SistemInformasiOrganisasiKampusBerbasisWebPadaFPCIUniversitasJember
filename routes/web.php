@@ -216,6 +216,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     // 🔥 Approve & Reject - Method POST
     Route::post('/comments/{id}/approve', [AdminCommentController::class, 'approve'])->name('comments.approve');
     Route::post('/comments/{id}/reject', [AdminCommentController::class, 'reject'])->name('comments.reject');
+    Route::post('/comments/toggle', [AdminCommentController::class, 'toggleComments'])->name('comments.toggle');
 });
 // Admin User Routes
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {

@@ -7,12 +7,16 @@ use Illuminate\Http\Request;
 use App\Models\Comment;
 use App\Models\Post;
 use Carbon\Carbon;
+use App\Models\Setting;
 use Illuminate\Support\Facades\Log;
 
 class CommentController extends Controller
 {
     public function store(Request $request, $id_post)
     {
+         if (!Setting::isCommentsEnabled()) {
+            return back()->with('error', 'Fitur komentar sedang dinonaktifkan oleh admin.');
+        }
         $request->validate([
             'nama' => 'required|string|max:100',
             'email' => 'required|email|max:100',
