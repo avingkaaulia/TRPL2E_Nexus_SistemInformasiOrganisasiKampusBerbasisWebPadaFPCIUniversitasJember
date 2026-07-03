@@ -20,7 +20,7 @@
     </div>
     
     <div class="card-body">
-        <!-- 🔥 TOMBOL ON/OFF KOMENTAR -->
+        <!--  TOMBOL ON/OFF KOMENTAR -->
         <div class="toggle-comment-bar mb-3 p-3 bg-light rounded d-flex justify-content-between align-items-center">
             <div>
                 <strong><i class="bi bi-power me-2"></i> Status Fitur Komentar:</strong>
