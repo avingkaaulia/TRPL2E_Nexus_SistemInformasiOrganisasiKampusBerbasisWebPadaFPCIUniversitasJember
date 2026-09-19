@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Menu;
 use App\Models\Post;
 use Illuminate\Support\Facades\Log;
+use App\Helpers\ActivityLogger;   // ← TAMBAHKAN INI (import helper)
 
 class AdminMenuController extends Controller
 {
@@ -85,6 +86,14 @@ class AdminMenuController extends Controller
         ]);
         
         if ($menu) {
+            // ← TAMBAHKAN INI: Log aktivitas create menu
+            ActivityLogger::log(
+                'create',
+                'Menambah menu: ' . $request->menu_label,
+                'Menu',
+                $menu->id_menu
+            );
+            
             return redirect()->route('admin.menu.index')
                 ->with('success', '✅ Menu "' . $request->menu_label . '" berhasil ditambahkan!');
         } else {
@@ -162,6 +171,14 @@ class AdminMenuController extends Controller
             'id_menu_parent' => $parentId,
         ]);
 
+        // ← TAMBAHKAN INI: Log aktivitas update menu
+        ActivityLogger::log(
+            'update',
+            'Mengedit menu: ' . $request->menu_label,
+            'Menu',
+            $id
+        );
+
         return redirect()->route('admin.menu.index')
             ->with('success', '✅ Menu "' . $menu->menu_label . '" berhasil diupdate');
     }
@@ -180,6 +197,14 @@ class AdminMenuController extends Controller
         
         Menu::where('id_menu_parent', $id)->delete();
         $menu->delete();
+        
+        // ← TAMBAHKAN INI: Log aktivitas delete menu
+        ActivityLogger::log(
+            'delete',
+            'Menghapus menu: ' . $menuLabel,
+            'Menu',
+            $id
+        );
         
         return redirect()->route('admin.menu.index')
             ->with('success', '✅ Menu "' . $menuLabel . '" berhasil dihapus');

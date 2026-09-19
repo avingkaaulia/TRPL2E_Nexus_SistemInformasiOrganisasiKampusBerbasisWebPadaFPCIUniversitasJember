@@ -54,18 +54,16 @@
         <table class="admin-table">
             <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Gambar</th>
                     <th>Judul Halaman</th>
                     <th>Status</th>
                     <th>Tanggal Dibuat</th>
-                    <th width="150">Aksi</th>
+                    <th width="100">Aksi</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($pages as $page)
                 <tr>
-                    <td>{{ $page->id_post }}</td>
                     <td>
                         @php
                             $imageUrl = asset('assets/img/default-image.jpg');
@@ -80,34 +78,50 @@
                         @endphp
                         <img src="{{ $imageUrl }}" width="50" height="40" style="object-fit: cover; border-radius: 6px;">
                     </td>
-                    <td>{{ $page->title }}</td>
+                    <td class="td-title">{{ $page->title }}</td>
                     <td>
                         <span class="badge-status {{ $page->status == 'publish' ? 'badge-publish' : 'badge-draft' }}">
                             {{ $page->status == 'publish' ? 'Publish' : 'Draft' }}
                         </span>
                     </td>
-                    <td>{{ \Carbon\Carbon::parse($page->date_published)->format('d/m/Y H:i') }}</td>
+                    <td class="td-date">
+                        <div class="date-human">{{ \Carbon\Carbon::parse($page->date_published)->diffForHumans() }}</div>
+                        <div class="date-full">{{ \Carbon\Carbon::parse($page->date_published)->format('d/m/Y H:i') }}</div>
+                    </td>
                     <td>
-                        <div class="action-group">
-                            <a href="{{ route('admin.posts.edit', $page->id_post) }}" class="btn-action btn-edit" title="Edit">
-                                <i class="bi bi-pencil"></i>
-                            </a>
-                            <a href="{{ route('page.show', $page->id_post) }}" target="_blank" class="btn-action btn-view" title="Lihat">
-                                <i class="bi bi-eye"></i>
-                            </a>
-                            <form action="{{ route('admin.posts.destroy', $page->id_post) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn-action btn-delete" title="Hapus" onclick="return confirm('Hapus halaman {{ $page->title }}?')">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </form>
+                        <div class="dropdown">
+                            <button class="btn-action btn-dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('admin.posts.edit', $page->id_post) }}">
+                                        <i class="bi bi-pencil me-2"></i> Edit
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('page.show', $page->id_post) }}" target="_blank">
+                                        <i class="bi bi-eye me-2"></i> Lihat
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form action="{{ route('admin.posts.destroy', $page->id_post) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="dropdown-item text-danger" 
+                                                onclick="return confirm('Hapus halaman {{ $page->title }}?')">
+                                            <i class="bi bi-trash me-2"></i> Hapus
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
                         </div>
                     </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" class="text-center py-5">
+                    <td colspan="5" class="text-center py-5">
                         <i class="bi bi-inbox" style="font-size: 48px; color: #ccc;"></i>
                         <p class="mt-2">Belum ada halaman (page) yang dibuat</p>
                         <a href="{{ route('admin.posts.create') }}?type=page" class="btn btn-success mt-2">

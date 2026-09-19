@@ -9,6 +9,7 @@ use App\Models\Post;
 use App\Models\PostCategory;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Helpers\ActivityLogger;   // ← TAMBAHKAN INI (import helper)
 
 class CarouselController extends Controller
 {
@@ -71,7 +72,7 @@ class CarouselController extends Controller
         $filename = time() . '_' . Str::slug($request->title) . '.' . $file->getClientOriginalExtension();
         $path = $file->storeAs('img', $filename, 'public');
         
-        Post::create([
+        $carousel = Post::create([
             'title' => $request->title,
             'content' => $request->description,
             'id_post_category' => $categoryId,
@@ -81,6 +82,14 @@ class CarouselController extends Controller
             'status' => $request->status,
             'featured_image_path' => $path
         ]);
+        
+        // ← TAMBAHKAN INI: Log aktivitas create carousel
+        ActivityLogger::log(
+            'create',
+            'Menambah slide carousel: ' . $request->title,
+            'Carousel',
+            $carousel->id_post
+        );
         
         return redirect()->route('admin.carousel')
             ->with('success', '✅ Slide carousel berhasil ditambahkan');
@@ -141,6 +150,14 @@ class CarouselController extends Controller
         
         $carousel->update($data);
         
+        // ← TAMBAHKAN INI: Log aktivitas update carousel
+        ActivityLogger::log(
+            'update',
+            'Mengedit slide carousel: ' . $request->title,
+            'Carousel',
+            $id
+        );
+        
         return redirect()->route('admin.carousel')
             ->with('success', '✅ Slide carousel berhasil diupdate');
     }
@@ -149,11 +166,22 @@ class CarouselController extends Controller
     {
         $carousel = Post::findOrFail($id);
         
+        // ← TAMBAHKAN INI: Simpan judul dulu sebelum dihapus (untuk log)
+        $carouselTitle = $carousel->title;
+        
         if ($carousel->featured_image_path) {
             Storage::disk('public')->delete($carousel->featured_image_path);
         }
         
         $carousel->delete();
+        
+        // ← TAMBAHKAN INI: Log aktivitas delete carousel
+        ActivityLogger::log(
+            'delete',
+            'Menghapus slide carousel: ' . $carouselTitle,
+            'Carousel',
+            $id
+        );
         
         return redirect()->route('admin.carousel')
             ->with('success', '✅ Slide carousel berhasil dihapus');

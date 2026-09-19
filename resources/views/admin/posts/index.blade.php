@@ -67,7 +67,6 @@
         <table class="admin-table">
             <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Gambar</th>
                     <th>Judul</th>
                     <th>Kategori</th>
@@ -80,7 +79,6 @@
             <tbody>
                 @forelse($posts as $post)
                 <tr>
-                    <td>{{ $post->id_post }}</td>
                     <td>
                         @php
                             $imageFound = false;
@@ -119,7 +117,7 @@
                                  width="50" height="40" style="object-fit: cover; border-radius: 6px;">
                         @endif
                     </td>
-                    <td>{{ Str::limit($post->title, 50) }}</td>
+                    <td class="td-title">{{ Str::limit($post->title, 50) }}</td>
                     <td>{{ $post->category->category_name ?? '-' }}</td>
                     <td>{{ $post->user->nama ?? 'Admin' }}</td>
                     <td>
@@ -130,30 +128,44 @@
                             {{ $post->status }}
                         </span>
                     </td>
-                    <td>{{ \Carbon\Carbon::parse($post->date_published)->format('d/m/Y H:i') }}</td>
+                    <td class="td-date">
+                        <div class="date-human">{{ \Carbon\Carbon::parse($post->date_published)->diffForHumans() }}</div>
+                        <div class="date-full">{{ \Carbon\Carbon::parse($post->date_published)->format('d/m/Y H:i') }}</div>
+                    </td>
                     <td>
-                        <a href="{{ route('admin.posts.edit', $post->id_post) }}" 
-                           class="btn btn-sm btn-warning">
-                            <i class="bi bi-pencil"></i>
-                        </a>
-                        <form action="{{ route('admin.posts.destroy', $post->id_post) }}" 
-                              method="POST" class="d-inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-danger" 
-                                    onclick="return confirm('Hapus postingan ini?')">
-                                <i class="bi bi-trash"></i>
+                        <div class="dropdown">
+                            <button class="btn-action btn-dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-three-dots-vertical"></i>
                             </button>
-                        </form>
-                        <a href="{{ route('post.show', $post->id_post) }}" 
-                           target="_blank" class="btn btn-sm btn-info">
-                            <i class="bi bi-eye"></i>
-                        </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('admin.posts.edit', $post->id_post) }}">
+                                        <i class="bi bi-pencil me-2"></i> Edit
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('post.show', $post->id_post) }}" target="_blank">
+                                        <i class="bi bi-eye me-2"></i> Lihat
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form action="{{ route('admin.posts.destroy', $post->id_post) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="dropdown-item text-danger" 
+                                                onclick="return confirm('Hapus postingan ini?')">
+                                            <i class="bi bi-trash me-2"></i> Hapus
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
                     </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="8" class="text-center">Belum ada postingan</td>
+                    <td colspan="7" class="text-center">Belum ada postingan</td>
                 </tr>
                 @endforelse
             </tbody>

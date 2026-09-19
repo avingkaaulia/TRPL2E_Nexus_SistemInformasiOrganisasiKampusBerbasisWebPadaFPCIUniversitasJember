@@ -43,10 +43,13 @@
             <tbody>
                 @foreach($pendaftaranDiterima as $p)
                 <tr>
-                    <td>{{ $p->nama }}</td>
+                    <td class="td-title">{{ $p->nama }}</td>
                     <td>{{ $p->email }}</td>
                     <td>{{ $p->jurusan ?? '-' }}</td>
-                    <td>{{ \Carbon\Carbon::parse($p->tanggal_daftar)->format('d/m/Y') }}</td>
+                    <td class="td-date">
+                        <div class="date-human">{{ \Carbon\Carbon::parse($p->tanggal_daftar)->diffForHumans() }}</div>
+                        <div class="date-full">{{ \Carbon\Carbon::parse($p->tanggal_daftar)->format('d/m/Y H:i') }}</div>
+                    </td>
                     <td>
                         <form action="{{ route('admin.anggota.convert', $p->id_pendaftaran) }}" method="POST" class="d-inline">
                             @csrf
@@ -126,7 +129,7 @@
                     <th>Divisi</th>
                     <th>Jabatan</th>
                     <th>Periode</th>
-                    <th>Aksi</th>
+                    <th width="80">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -142,26 +145,38 @@
                             </div>
                         @endif
                     </td>
-                    <td>{{ $a->user->nama ?? '-' }}</td>
+                    <td class="td-title">{{ $a->user->nama ?? '-' }}</td>
                     <td>{{ $a->user->email ?? '-' }}</td>
                     <td>{{ $a->divisi->nama_divisi ?? '-' }}</td>
                     <td>{{ $a->jabatan }}</td>
                     <td>{{ $a->periode }}</td>
-                    <td>
-                        <div class="btn-group btn-group-sm" role="group">
-                            <a href="{{ route('admin.anggota.show', $a->id_anggota) }}" class="btn btn-info" title="Detail">
-                                <i class="bi bi-eye"></i>
-                            </a>
-                            <a href="{{ route('admin.anggota.edit', $a->id_anggota) }}" class="btn btn-warning" title="Edit">
-                                <i class="bi bi-pencil"></i>
-                            </a>
-                            <form action="{{ route('admin.anggota.destroy', $a->id_anggota) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger" title="Hapus" onclick="return confirm('Hapus anggota {{ $a->user->nama }}?')">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </form>
+                    <td class="td-action">
+                        <div class="dropdown">
+                            <button class="btn-action btn-dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('admin.anggota.show', $a->id_anggota) }}">
+                                        <i class="bi bi-eye me-2"></i> Detail
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('admin.anggota.edit', $a->id_anggota) }}">
+                                        <i class="bi bi-pencil me-2"></i> Edit
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form action="{{ route('admin.anggota.destroy', $a->id_anggota) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="dropdown-item text-danger" onclick="return confirm('Hapus anggota {{ $a->user->nama }}?')">
+                                            <i class="bi bi-trash me-2"></i> Hapus
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
                         </div>
                     </td>
                 </tr>

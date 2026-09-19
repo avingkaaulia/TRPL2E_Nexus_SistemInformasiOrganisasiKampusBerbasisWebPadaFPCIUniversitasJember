@@ -34,18 +34,16 @@
         <table class="admin-table-menu">
             <thead>
                 <tr>
-                    <th width="50">ID</th>
                     <th>Nama Menu</th>
                     <th>Parent</th>
                     <th>Link</th>
-                    <th width="100">Aksi</th>
+                    <th width="80">Aksi</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($menus as $menu)
                 <tr>
-                    <td>{{ $menu->id_menu }}</td>
-                    <td>
+                    <td class="td-title">
                         @if($menu->id_menu_parent > 0)
                             <span class="menu-level-1">{{ $menu->menu_label }}</span>
                         @else
@@ -63,31 +61,38 @@
                             </span>
                         @endif
                     </td>
-                    <td>
+                    <td class="td-link">
                         <code style="font-size: 11px;">{{ $menu->link }}</code>
                     </td>
-                    <td>
-                        <div class="action-group">
-                            <a href="{{ route('admin.menu.edit', $menu->id_menu) }}" 
-                               class="btn-action btn-edit" title="Edit">
-                                <i class="bi bi-pencil"></i>
-                            </a>
-                            <form action="{{ route('admin.menu.destroy', $menu->id_menu) }}" 
-                                  method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn-action btn-delete" 
-                                        onclick="return confirm('Hapus menu {{ $menu->menu_label }}?')"
-                                        title="Hapus">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </form>
+                    <td class="td-action">
+                        <div class="dropdown">
+                            <button class="btn-action btn-dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('admin.menu.edit', $menu->id_menu) }}">
+                                        <i class="bi bi-pencil me-2"></i> Edit
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form action="{{ route('admin.menu.destroy', $menu->id_menu) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="dropdown-item text-danger" 
+                                                onclick="return confirm('Hapus menu {{ $menu->menu_label }}?')">
+                                            <i class="bi bi-trash me-2"></i> Hapus
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
                         </div>
                     </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" class="text-center py-5">
+                    <td colspan="4" class="text-center py-5">
                         <i class="bi bi-inbox" style="font-size: 32px; color: #ccc;"></i>
                         <p class="mt-2 text-muted">Belum ada menu</p>
                         <a href="{{ route('admin.menu.create') }}" class="btn-add mt-2">

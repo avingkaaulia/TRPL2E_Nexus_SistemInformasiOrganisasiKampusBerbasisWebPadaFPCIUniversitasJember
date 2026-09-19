@@ -10,6 +10,7 @@ use App\Models\PostCategory;
 use App\Models\PostGallery;
 use App\Models\Comment;
 use Illuminate\Support\Facades\Storage;
+use App\Helpers\ActivityLogger;   // ← TAMBAHKAN INI (import helper)
 
 class AdminWritingsController extends Controller
 {
@@ -83,6 +84,14 @@ class AdminWritingsController extends Controller
         $post->status = 'publish';
         $post->save();
         
+        // ← TAMBAHKAN INI: Log aktivitas approve
+        ActivityLogger::log(
+            'approve',
+            'Menyetujui karya: ' . $post->title,
+            'Writings',
+            $post->id_post
+        );
+        
         return redirect()->back()->with('success', 'Karya "' . $post->title . '" berhasil disetujui dan dipublikasikan!');
     }
     
@@ -92,6 +101,14 @@ class AdminWritingsController extends Controller
         $post = Post::findOrFail($id);
         $post->status = 'draft';  // Gunakan 'draft' sebagai status ditolak
         $post->save();
+        
+        // ← TAMBAHKAN INI: Log aktivitas reject
+        ActivityLogger::log(
+            'reject',
+            'Menolak karya: ' . $post->title,
+            'Writings',
+            $post->id_post
+        );
         
         return redirect()->back()->with('success', 'Karya "' . $post->title . '" berhasil ditolak dan dipindahkan ke Draft!');
     }

@@ -19,6 +19,7 @@ use App\Models\User;
 use App\Models\Anggota;
 use App\Models\Divisi;
 use Illuminate\Support\Facades\Hash;
+use App\Helpers\ActivityLogger;   // ← TAMBAHKAN INI (import helper)
 
 class AdminPendaftaranController extends Controller
 {
@@ -153,6 +154,14 @@ class AdminPendaftaranController extends Controller
         $pendaftaran->status = 'diterima';
         $pendaftaran->save();
         
+        // ← TAMBAHKAN INI: Log aktivitas approve
+        ActivityLogger::log(
+            'approve',
+            'Menerima pendaftar: ' . $pendaftaran->nama,
+            'Pendaftaran',
+            $id
+        );
+        
         // 🔥 KIRIM EMAIL KELULUSAN
         try {
             Mail::to($pendaftaran->email)->send(new AcceptedMemberMail($pendaftaran, $username, $password));
@@ -168,6 +177,14 @@ class AdminPendaftaranController extends Controller
         $pendaftaran = Pendaftaran::findOrFail($id);
         $pendaftaran->status = 'ditolak';
         $pendaftaran->save();
+        
+        // ← TAMBAHKAN INI: Log aktivitas reject
+        ActivityLogger::log(
+            'reject',
+            'Menolak pendaftar: ' . $pendaftaran->nama,
+            'Pendaftaran',
+            $id
+        );
         
         // 🔥 KIRIM EMAIL PENOLAKAN
         try {

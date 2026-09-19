@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Setting;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Helpers\ActivityLogger;   // ← TAMBAHKAN INI (import helper)
 
 class AdminLogoController extends Controller
 {
@@ -39,6 +40,14 @@ class AdminLogoController extends Controller
         
         Setting::set('site_logo', 'storage/' . $path, 'image');
         
+        // ← TAMBAHKAN INI: Log aktivitas upload logo
+        ActivityLogger::log(
+            'upload',
+            'Mengganti logo website',
+            'Setting',
+            null
+        );
+        
         return redirect()->route('admin.logo.index')
             ->with('success', 'Logo berhasil diperbarui!');
     }
@@ -62,6 +71,14 @@ class AdminLogoController extends Controller
         }
         
         Setting::set('site_favicon', 'storage/' . $path, 'image');
+        
+        // ← TAMBAHKAN INI: Log aktivitas upload favicon
+        ActivityLogger::log(
+            'upload',
+            'Mengganti favicon website',
+            'Setting',
+            null
+        );
         
         return redirect()->route('admin.logo.index')
             ->with('success', 'Favicon berhasil diperbarui!');

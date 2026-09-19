@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Contact;
 use App\Models\Menu;
 use App\Models\Post;
+use App\Helpers\ActivityLogger;   // ← TAMBAHKAN INI (import helper)
 
 class AdminContactController extends Controller
 {
@@ -67,6 +68,14 @@ class AdminContactController extends Controller
                 'x' => $request->x,
             ]);
         }
+        
+        // ← TAMBAHKAN INI: Log aktivitas update kontak
+        ActivityLogger::log(
+            'update',
+            'Memperbarui informasi kontak & sosmed',
+            'Contact',
+            null
+        );
         
         return redirect()->route('admin.contact.index')
             ->with('success', 'Informasi kontak berhasil diperbarui!');

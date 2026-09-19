@@ -72,21 +72,19 @@
             <table class="admin-table">
                 <thead>
                     <tr>
-                        <th width="50">ID</th>
                         <th>Postingan</th>
                         <th>Pengunjung</th>
                         <th>Komentar</th>
                         <th>Tanggal</th>
                         <th>Status</th>
                         <th>Balasan</th>
-                        <th width="200">Aksi</th>
+                        <th width="80">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($comments as $comment)
                     <tr>
-                        <td>{{ $comment->id_comment }}</td>
-                        <td>
+                        <td class="td-title">
                             <a href="{{ route('post.show', $comment->id_post) }}" target="_blank">
                                 {{ Str::limit($comment->post->title ?? 'No Title', 40) }}
                             </a>
@@ -105,7 +103,10 @@
                                 </div>
                             @endif
                         </td>
-                        <td>{{ \Carbon\Carbon::parse($comment->tanggal)->format('d M Y H:i') }}</td>
+                        <td class="td-date">
+                            <div class="date-human">{{ \Carbon\Carbon::parse($comment->tanggal)->diffForHumans() }}</div>
+                            <div class="date-full">{{ \Carbon\Carbon::parse($comment->tanggal)->format('d M Y H:i') }}</div>
+                        </td>
                         <td>
                             @if($comment->status == 'approved')
                                 <span class="badge bg-success">Disetujui</span>
@@ -126,58 +127,67 @@
                                 <span class="badge bg-secondary">-</span>
                             @endif
                         </td>
-                        <td>
-                            <div class="action-group" style="flex-wrap: wrap; gap: 5px;">
-                                @if($comment->status == 'pending')
-                                    {{-- TOMBOL SETUJUI --}}
-                                    <form action="{{ route('admin.comments.approve', $comment->id_comment) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        <button type="submit" class="btn-action btn-approve" title="Setujui" onclick="return confirm('Setujui komentar ini?')">
-                                            <i class="bi bi-check-lg"></i>
-                                        </button>
-                                    </form>
+                        <td class="td-action">
+                            <div class="dropdown">
+                                <button class="btn-action btn-dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-three-dots-vertical"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    @if($comment->status == 'pending')
+                                        <li>
+                                            <form action="{{ route('admin.comments.approve', $comment->id_comment) }}" method="POST">
+                                                @csrf
+                                                <button type="submit" class="dropdown-item text-success" onclick="return confirm('Setujui komentar ini?')">
+                                                    <i class="bi bi-check-lg me-2"></i> Setujui
+                                                </button>
+                                            </form>
+                                        </li>
+                                        <li>
+                                            <form action="{{ route('admin.comments.reject', $comment->id_comment) }}" method="POST">
+                                                @csrf
+                                                <button type="submit" class="dropdown-item text-danger" onclick="return confirm('Tolak komentar ini?')">
+                                                    <i class="bi bi-x-lg me-2"></i> Tolak
+                                                </button>
+                                            </form>
+                                        </li>
+                                    @endif
                                     
-                                    {{-- TOMBOL TOLAK --}}
-                                    <form action="{{ route('admin.comments.reject', $comment->id_comment) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        <button type="submit" class="btn-action btn-reject" title="Tolak" onclick="return confirm('Tolak komentar ini?')">
-                                            <i class="bi bi-x-lg"></i>
-                                        </button>
-                                    </form>
-                                @endif
-                                
-                                {{-- TOMBOL BALAS (hanya untuk komentar yang sudah disetujui) --}}
-                                @if($comment->status == 'approved')
-                                    <button type="button" class="btn-action btn-reply" 
-                                            data-bs-toggle="modal" 
-                                            data-bs-target="#replyModal"
-                                            data-id="{{ $comment->id_comment }}"
-                                            data-name="{{ $comment->nama_pengunjung }}"
-                                            data-comment="{{ $comment->isi_komentar }}"
-                                            data-reply="{{ $comment->reply }}"
-                                            data-is-replied="{{ $comment->is_replied }}"
-                                            title="{{ $comment->is_replied ? 'Edit Balasan' : 'Balas Komentar' }}">
-                                        <i class="bi bi-reply"></i>
-                                        @if(!$comment->is_replied)
-                                            <span class="badge-reply">!</span>
-                                        @endif
-                                    </button>
-                                @endif
-                                
-                                {{-- TOMBOL HAPUS --}}
-                                <form action="{{ route('admin.comments.destroy', $comment->id_comment) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn-action btn-delete" title="Hapus" onclick="return confirm('Hapus komentar ini?')">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </form>
+                                    @if($comment->status == 'approved')
+                                        <li>
+                                            <button type="button" class="dropdown-item btn-reply-trigger" 
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#replyModal"
+                                                    data-id="{{ $comment->id_comment }}"
+                                                    data-name="{{ $comment->nama_pengunjung }}"
+                                                    data-comment="{{ $comment->isi_komentar }}"
+                                                    data-reply="{{ $comment->reply }}"
+                                                    data-is-replied="{{ $comment->is_replied }}">
+                                                <i class="bi bi-reply me-2"></i> 
+                                                {{ $comment->is_replied ? 'Edit Balasan' : 'Balas Komentar' }}
+                                                @if(!$comment->is_replied)
+                                                    <span class="badge bg-danger ms-auto">!</span>
+                                                @endif
+                                            </button>
+                                        </li>
+                                    @endif
+                                    
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form action="{{ route('admin.comments.destroy', $comment->id_comment) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="dropdown-item text-danger" onclick="return confirm('Hapus komentar ini?')">
+                                                <i class="bi bi-trash me-2"></i> Hapus
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
                             </div>
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="8" class="text-center py-5">
+                        <td colspan="7" class="text-center py-5">
                             <i class="bi bi-inbox" style="font-size: 48px; color: #ccc;"></i>
                             <p class="mt-2">Belum ada komentar</p>
                         </td>
@@ -259,6 +269,5 @@ if (replyModal) {
 }
 </script>
 @endpush
-
 
 @endsection

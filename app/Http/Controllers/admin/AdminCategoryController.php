@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\PostCategory;
 use Illuminate\Support\Facades\DB;
+use App\Helpers\ActivityLogger;   // ← TAMBAHKAN INI (import helper)
 
 class AdminCategoryController extends Controller
 {
@@ -36,10 +37,18 @@ class AdminCategoryController extends Controller
             'parent_id' => 'nullable|exists:post_category,id_category'
         ]);
         
-        PostCategory::create([
+        $category = PostCategory::create([
             'category_name' => $request->category_name,
             'parent_id' => $request->parent_id ?? null
         ]);
+        
+        // ← TAMBAHKAN INI: Log aktivitas create
+        ActivityLogger::log(
+            'create',
+            'Menambah kategori: ' . $request->category_name,
+            'PostCategory',
+            $category->id_category
+        );
         
         return redirect()->route('admin.categories.index')
             ->with('success', 'Kategori "' . $request->category_name . '" berhasil ditambahkan');
@@ -76,6 +85,14 @@ class AdminCategoryController extends Controller
             'parent_id' => $request->parent_id ?? null
         ]);
         
+        // ← TAMBAHKAN INI: Log aktivitas update
+        ActivityLogger::log(
+            'update',
+            'Mengedit kategori: ' . $request->category_name,
+            'PostCategory',
+            $id
+        );
+        
         return redirect()->route('admin.categories.index')
             ->with('success', 'Kategori "' . $request->category_name . '" berhasil diupdate');
     }
@@ -101,6 +118,14 @@ class AdminCategoryController extends Controller
         }
         
         $category->delete();
+        
+        // ← TAMBAHKAN INI: Log aktivitas delete
+        ActivityLogger::log(
+            'delete',
+            'Menghapus kategori: ' . $categoryName,
+            'PostCategory',
+            $id
+        );
         
         return redirect()->route('admin.categories.index')
             ->with('success', 'Kategori "' . $categoryName . '" berhasil dihapus');

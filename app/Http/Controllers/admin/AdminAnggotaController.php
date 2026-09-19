@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\AcceptedMemberMail;
+use App\Helpers\ActivityLogger;   // ← TAMBAHKAN INI (import helper)
 
 class AdminAnggotaController extends Controller
 {
@@ -115,6 +116,14 @@ class AdminAnggotaController extends Controller
             'link' => $request->link ?? ''
         ]);
         
+        // ← TAMBAHKAN INI: Log aktivitas update
+        ActivityLogger::log(
+            'update',
+            'Mengedit anggota: ' . $request->nama,
+            'Anggota',
+            $id
+        );
+        
         return redirect()->route('admin.anggota.index')
             ->with('success', 'Anggota berhasil diupdate');
     }
@@ -138,6 +147,14 @@ class AdminAnggotaController extends Controller
         if ($user) {
             $user->delete();
         }
+        
+        // ← TAMBAHKAN INI: Log aktivitas delete
+        ActivityLogger::log(
+            'delete',
+            'Menghapus anggota: ' . $anggota->user->nama,
+            'Anggota',
+            $id
+        );
         
         return redirect()->route('admin.anggota.index')
             ->with('success', 'Anggota berhasil dihapus');

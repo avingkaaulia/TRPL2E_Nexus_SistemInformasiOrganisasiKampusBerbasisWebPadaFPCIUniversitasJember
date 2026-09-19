@@ -57,20 +57,18 @@
         <table class="admin-table">
             <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Nama</th>
                     <th>Username</th>
                     <th>Email</th>
                     <th>Role</th>
                     <th>Tanggal Daftar</th>
-                    <th width="200">Aksi</th>
+                    <th width="80">Aksi</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($users as $user)
                 <tr>
-                    <td>{{ $user->id_user }}</td>
-                    <td>{{ $user->nama }}</td>
+                    <td class="td-title">{{ $user->nama }}</td>
                     <td>{{ $user->username }}</td>
                     <td>{{ $user->email }}</td>
                     <td>
@@ -78,54 +76,60 @@
                             {{ $user->role->nama_role ?? 'Unknown' }}
                         </span>
                     </td>
-                    <td>{{ \Carbon\Carbon::parse($user->tanggal_daftar)->format('d M Y') }}</td>
-                    <td>
-                        <div class="action-group">
-                            <a href="{{ route('admin.users.edit', $user->id_user) }}" class="btn-action btn-edit" title="Edit User">
-                                <i class="bi bi-pencil"></i>
-                            </a>
-                            
-                            <!-- Dropdown untuk ubah role cepat -->
-<div class="dropdown d-inline">
-    <button class="btn-action btn-role" type="button" data-bs-toggle="dropdown" title="Ubah Role">
-        <i class="bi bi-shield"></i>
-    </button>
-    <ul class="dropdown-menu">
-        @foreach($roles as $role)
-        <li>
-            {{-- 🔥 METHOD POST --}}
-            <form action="{{ route('admin.users.update-role', $user->id_user) }}" method="POST" style="display:inline;">
-                @csrf
-                @method('PUT')
-                <input type="hidden" name="id_role" value="{{ $role->id_role }}">
-                <button type="submit" class="dropdown-item {{ $user->id_role == $role->id_role ? 'active' : '' }}">
-                    <i class="bi {{ $role->id_role == 1 ? 'bi-shield-lock' : 'bi-person' }} me-2"></i>
-                    {{ $role->nama_role }}
-                    @if($user->id_role == $role->id_role)
-                        <i class="bi bi-check ms-2"></i>
-                    @endif
-                </button>
-            </form>
-        </li>
-        @endforeach
-    </ul>
-</div>
-                            
-                            @if($user->id_user != 1 && $user->id_user != Auth::id())
-                            <form action="{{ route('admin.users.destroy', $user->id_user) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn-action btn-delete" title="Hapus User" onclick="return confirm('Hapus user {{ $user->nama }}?')">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </form>
-                            @endif
+                    <td class="td-date">
+                        <div class="date-human">{{ \Carbon\Carbon::parse($user->tanggal_daftar)->diffForHumans() }}</div>
+                        <div class="date-full">{{ \Carbon\Carbon::parse($user->tanggal_daftar)->format('d M Y H:i') }}</div>
+                    </td>
+                    <td class="td-action">
+                        <div class="dropdown">
+                            <button class="btn-action btn-dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('admin.users.edit', $user->id_user) }}">
+                                        <i class="bi bi-pencil me-2"></i> Edit User
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li class="dropdown-header" style="font-size: 11px; color: #999;">
+                                    <i class="bi bi-shield me-1"></i> UBAH ROLE
+                                </li>
+                                @foreach($roles as $role)
+                                <li>
+                                    <form action="{{ route('admin.users.update-role', $user->id_user) }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+                                        <input type="hidden" name="id_role" value="{{ $role->id_role }}">
+                                        <button type="submit" class="dropdown-item {{ $user->id_role == $role->id_role ? 'active' : '' }}">
+                                            <i class="bi {{ $role->id_role == 1 ? 'bi-shield-lock' : 'bi-person' }} me-2"></i>
+                                            {{ $role->nama_role }}
+                                            @if($user->id_role == $role->id_role)
+                                                <i class="bi bi-check ms-2"></i>
+                                            @endif
+                                        </button>
+                                    </form>
+                                </li>
+                                @endforeach
+                                @if($user->id_user != 1 && $user->id_user != Auth::id())
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form action="{{ route('admin.users.destroy', $user->id_user) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="dropdown-item text-danger" onclick="return confirm('Hapus user {{ $user->nama }}?')">
+                                            <i class="bi bi-trash me-2"></i> Hapus User
+                                        </button>
+                                    </form>
+                                </li>
+                                @endif
+                            </ul>
                         </div>
                     </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="7" class="text-center py-5">
+                    <td colspan="6" class="text-center py-5">
                         <i class="bi bi-inbox" style="font-size: 48px; color: #ccc;"></i>
                         <p class="mt-2">Belum ada user</p>
                     </td>
@@ -140,76 +144,20 @@
     </div>
 </div>
 
-@push('scripts')
-<script>
-document.querySelectorAll('.role-form').forEach(form => {
-    form.addEventListener('submit', function(e) {
-        e.preventDefault(); // Cegah reload
-        
-        const formData = new FormData(this);
-        const action = this.action;
-        const method = this.querySelector('input[name="_method"]').value || 'POST';
-        
-        fetch(action, {
-            method: method,
-            body: formData,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Tampilkan alert sukses
-                showAlert('success', data.message);
-                // Reload halaman setelah 1 detik biar role berubah
-                setTimeout(() => location.reload(), 1000);
-            } else {
-                showAlert('danger', data.message || 'Gagal mengubah role');
-            }
-        })
-        .catch(error => {
-            showAlert('danger', 'Terjadi kesalahan: ' + error.message);
-        });
-    });
-});
-
-function showAlert(type, message) {
-    const alertHtml = `
-        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
-            <i class="bi ${type === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill'} me-2"></i>
-            ${message}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    `;
-    
-    // Hapus alert lama
-    document.querySelectorAll('.alert').forEach(el => el.remove());
-    
-    // Tambah alert baru di atas tabel
-    const container = document.querySelector('.admin-card .table-responsive');
-    if (container) {
-        container.insertAdjacentHTML('beforebegin', alertHtml);
-    }
-}
-</script>
-@endpush
-
 @push('styles')
 <style>
-.btn-role {
-    background: #17a2b8;
-    color: white;
-}
-.btn-role:hover {
-    background: #138496;
-}
 .dropdown-item.active {
     background: #5C6844;
     color: white;
 }
 .dropdown-item.active i {
     color: white;
+}
+.dropdown-header {
+    padding: 8px 18px 4px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
 }
 </style>
 @endpush

@@ -38,20 +38,18 @@
         <table class="admin-table">
             <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Gambar</th>
                     <th>Judul</th>
                     <th>Kategori</th>
                     <th>Penulis</th>
                     <th>Status</th>
                     <th>Tanggal Submit</th>
-                    <th width="150">Aksi</th>
+                    <th width="80">Aksi</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($pendingPosts as $post)
                 <tr>
-                    <td>{{ $post->id_post }}</td>
                     <td>
                         @if(isset($post->image_url) && $post->image_url)
                             <img src="{{ $post->image_url }}" width="60" height="50" style="object-fit: cover; border-radius: 8px;">
@@ -61,7 +59,7 @@
                             </div>
                         @endif
                     </td>
-                    <td>{{ Str::limit($post->title, 50) }}</td>
+                    <td class="td-title">{{ Str::limit($post->title, 50) }}</td>
                     <td>{{ $post->category->category_name ?? '-' }}</td>
                     <td>{{ $post->user->nama ?? 'User' }}</td>
                     <td>
@@ -72,50 +70,70 @@
                             {{ $post->status }}
                         </span>
                     </td>
-                    <td>{{ \Carbon\Carbon::parse($post->date_published)->format('d M Y H:i') }}</td>
-                    <td>
-                        <div class="action-group">
-                            <a href="{{ route('admin.writings.show', $post->id_post) }}" class="btn-action btn-view" title="Detail" target="_blank">
-                                <i class="bi bi-eye"></i>
-                            </a>
-                            @if($post->status == 'pending')
-                                <form action="{{ route('admin.writings.approve', $post->id_post) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    @method('PUT')
-                                    <button type="submit" class="btn-action btn-approve" onclick="return confirm('Setujui karya ini?')" title="Setujui">
-                                        <i class="bi bi-check-lg"></i>
-                                    </button>
-                                </form>
-                                <form action="{{ route('admin.writings.reject', $post->id_post) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    @method('PUT')
-                                    <button type="submit" class="btn-action btn-reject" onclick="return confirm('Tolak karya ini?')" title="Tolak">
-                                        <i class="bi bi-x-lg"></i>
-                                    </button>
-                                </form>
-                            @elseif($post->status == 'draft')
-                                <form action="{{ route('admin.writings.force-delete', $post->id_post) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn-action btn-delete" onclick="return confirm('Hapus permanen karya ini?')" title="Hapus Permanen">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </form>
-                            @elseif($post->status == 'publish')
-                                <form action="{{ route('admin.writings.reject', $post->id_post) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    @method('PUT')
-                                    <button type="submit" class="btn-action btn-reject" onclick="return confirm('Tolak karya ini?')" title="Tolak">
-                                        <i class="bi bi-x-lg"></i>
-                                    </button>
-                                </form>
-                            @endif
+                    <td class="td-date">
+                        <div class="date-human">{{ \Carbon\Carbon::parse($post->date_published)->diffForHumans() }}</div>
+                        <div class="date-full">{{ \Carbon\Carbon::parse($post->date_published)->format('d M Y H:i') }}</div>
+                    </td>
+                    <td class="td-action">
+                        <div class="dropdown">
+                            <button class="btn-action btn-dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('admin.writings.show', $post->id_post) }}" target="_blank">
+                                        <i class="bi bi-eye me-2"></i> Detail
+                                    </a>
+                                </li>
+                                @if($post->status == 'pending')
+                                    <li>
+                                        <form action="{{ route('admin.writings.approve', $post->id_post) }}" method="POST">
+                                            @csrf
+                                            @method('PUT')
+                                            <button type="submit" class="dropdown-item text-success" onclick="return confirm('Setujui karya ini?')">
+                                                <i class="bi bi-check-lg me-2"></i> Setujui
+                                            </button>
+                                        </form>
+                                    </li>
+                                    <li>
+                                        <form action="{{ route('admin.writings.reject', $post->id_post) }}" method="POST">
+                                            @csrf
+                                            @method('PUT')
+                                            <button type="submit" class="dropdown-item text-danger" onclick="return confirm('Tolak karya ini?')">
+                                                <i class="bi bi-x-lg me-2"></i> Tolak
+                                            </button>
+                                        </form>
+                                    </li>
+                                @elseif($post->status == 'draft')
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form action="{{ route('admin.writings.force-delete', $post->id_post) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="dropdown-item text-danger" onclick="return confirm('Hapus permanen karya ini?')">
+                                                <i class="bi bi-trash me-2"></i> Hapus Permanen
+                                            </button>
+                                        </form>
+                                    </li>
+                                @elseif($post->status == 'publish')
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form action="{{ route('admin.writings.reject', $post->id_post) }}" method="POST">
+                                            @csrf
+                                            @method('PUT')
+                                            <button type="submit" class="dropdown-item text-danger" onclick="return confirm('Tolak karya ini?')">
+                                                <i class="bi bi-x-lg me-2"></i> Tolak
+                                            </button>
+                                        </form>
+                                    </li>
+                                @endif
+                            </ul>
                         </div>
                     </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="8" class="text-center py-5">
+                    <td colspan="7" class="text-center py-5">
                         <i class="bi bi-inbox" style="font-size: 48px; color: #ccc;"></i>
                         <p class="mt-2">Tidak ada karya</p>
                     </td>

@@ -28,6 +28,7 @@ use App\Http\Controllers\Admin\AdminContactController;
 use App\Http\Controllers\Admin\AdminLogoController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Admin\AdminActivityLogController;
 
 /*
 |--------------------------------------------------------------------------
@@ -232,3 +233,9 @@ Route::get('/forgot-password', [App\Http\Controllers\Auth\ForgotPasswordControll
 Route::post('/forgot-password', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'sendResetLink'])->name('password.email');
 Route::get('/reset-password/{token}', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('/reset-password', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'resetPassword'])->name('password.update');
+
+// Admin Activity Log Routes
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/activity-log', [AdminActivityLogController::class, 'index'])->name('activity-log.index');
+    Route::delete('/activity-log/clear', [AdminActivityLogController::class, 'clear'])->name('activity-log.clear');
+});

@@ -11,6 +11,7 @@ use App\Models\PostGallery;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Helpers\ActivityLogger;   // ← TAMBAHKAN INI (import helper)
 
 class PostAdminController extends Controller
 {
@@ -146,6 +147,14 @@ class PostAdminController extends Controller
         
         $post = Post::create($data);
         
+        // ← TAMBAHKAN INI: Log aktivitas create
+        ActivityLogger::log(
+            'create',
+            'Menambah postingan: ' . $request->title,
+            'Post',
+            $post->id_post
+        );
+        
         if ($request->hasFile('gallery_images')) {
             foreach ($request->file('gallery_images') as $key => $file) {
                 if ($file) {
@@ -253,6 +262,14 @@ class PostAdminController extends Controller
         
         $post->update($data);
         
+        // ← TAMBAHKAN INI: Log aktivitas update
+        ActivityLogger::log(
+            'update',
+            'Mengedit postingan: ' . $request->title,
+            'Post',
+            $post->id_post
+        );
+        
         if ($request->hasFile('gallery_images')) {
             foreach ($request->file('gallery_images') as $key => $file) {
                 if ($file) {
@@ -296,6 +313,11 @@ class PostAdminController extends Controller
     {
         $post = Post::findOrFail($id);
         
+        // ← TAMBAHKAN INI: Simpan data dulu sebelum dihapus (untuk log)
+        $postTitle = $post->title;
+        $postType = $post->post_type;
+        $postId = $post->id_post;
+        
         if ($post->featured_image_path) {
             Storage::disk('public')->delete($post->featured_image_path);
         }
@@ -309,7 +331,15 @@ class PostAdminController extends Controller
         $post->gallery()->delete();
         $post->delete();
         
-        if ($post->post_type == 'page') {
+        // ← TAMBAHKAN INI: Log aktivitas delete
+        ActivityLogger::log(
+            'delete',
+            'Menghapus postingan: ' . $postTitle,
+            'Post',
+            $postId
+        );
+        
+        if ($postType == 'page') {
             return redirect()->route('admin.pages.list')
                 ->with('success', 'Halaman berhasil dihapus');
         }

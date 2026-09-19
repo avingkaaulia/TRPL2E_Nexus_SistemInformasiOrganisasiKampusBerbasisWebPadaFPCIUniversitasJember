@@ -130,6 +130,10 @@
             <a href="{{ route('admin.logo.index') }}" class="menu-item {{ request()->routeIs('admin.logo*') ? 'active' : '' }}">
                 <i class="bi bi-image"></i> Logo & Favicon
             </a>
+
+            <a href="{{ route('admin.activity-log.index') }}" class="menu-item {{ request()->routeIs('admin.activity-log*') ? 'active' : '' }}">
+            <i class="bi bi-clock-history"></i> Log Aktivitas
+             </a>
             
             <!-- Profil Saya -->
             <a href="{{ route('profile') }}" class="menu-item">

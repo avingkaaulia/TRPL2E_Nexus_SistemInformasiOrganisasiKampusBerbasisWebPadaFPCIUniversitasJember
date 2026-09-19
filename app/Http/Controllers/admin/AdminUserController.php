@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Role;
 use Illuminate\Support\Facades\Hash;
+use App\Helpers\ActivityLogger;   // ← TAMBAHKAN INI (import helper)
 
 class AdminUserController extends Controller
 {
@@ -67,6 +68,14 @@ class AdminUserController extends Controller
         
         $user->update($data);
         
+        // ← TAMBAHKAN INI: Log aktivitas update user
+        ActivityLogger::log(
+            'update',
+            'Mengedit user: ' . $request->nama,
+            'User',
+            $id
+        );
+        
         return redirect()->route('admin.users.index')
             ->with('success', 'User ' . $user->nama . ' berhasil diupdate');
     }
@@ -85,6 +94,14 @@ class AdminUserController extends Controller
     
     $user->id_role = $request->id_role;
     $user->save();
+    
+    // ← TAMBAHKAN INI: Log aktivitas update role
+    ActivityLogger::log(
+        'update',
+        'Mengubah role user ' . $user->nama . ' dari ' . $oldRoleName . ' menjadi ' . $newRoleName,
+        'User',
+        $id
+    );
     
     // 🔥 UBAH JADI REDIRECT BIASA, BUKAN JSON
     return redirect()->route('admin.users.index')
@@ -110,6 +127,14 @@ class AdminUserController extends Controller
         }
         
         $user->delete();
+        
+        // ← TAMBAHKAN INI: Log aktivitas delete user
+        ActivityLogger::log(
+            'delete',
+            'Menghapus user: ' . $nama,
+            'User',
+            $id
+        );
         
         return redirect()->route('admin.users.index')
             ->with('success', 'User ' . $nama . ' berhasil dihapus');

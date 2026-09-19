@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
+use App\Helpers\ActivityLogger;   // ← TAMBAHKAN INI (import helper)
 
 class AdminCommentController extends Controller
 {
@@ -80,6 +81,15 @@ class AdminCommentController extends Controller
             
             if ($affected) {
                 Log::info('Comment approved successfully - ID: ' . $id);
+                
+                // ← TAMBAHKAN INI: Log aktivitas approve
+                ActivityLogger::log(
+                    'approve',
+                    'Menyetujui komentar dari: ' . $comment->nama_pengunjung,
+                    'Comment',
+                    $id
+                );
+                
                 return redirect()->back()->with('success', 'Komentar dari "' . $comment->nama_pengunjung . '" berhasil disetujui!');
             } else {
                 Log::warning('No rows updated - Comment ID: ' . $id);
@@ -123,6 +133,15 @@ class AdminCommentController extends Controller
             
             if ($affected) {
                 Log::info('Comment rejected successfully - ID: ' . $id);
+                
+                // ← TAMBAHKAN INI: Log aktivitas reject
+                ActivityLogger::log(
+                    'reject',
+                    'Menolak komentar dari: ' . $comment->nama_pengunjung,
+                    'Comment',
+                    $id
+                );
+                
                 return redirect()->back()->with('success', 'Komentar dari "' . $comment->nama_pengunjung . '" berhasil ditolak!');
             } else {
                 Log::warning('No rows updated - Comment ID: ' . $id);
@@ -150,6 +169,14 @@ class AdminCommentController extends Controller
             'is_replied' => 1
         ]);
         
+        // ← TAMBAHKAN INI: Log aktivitas reply
+        ActivityLogger::log(
+            'update',
+            'Membalas komentar dari: ' . $comment->nama_pengunjung,
+            'Comment',
+            $id
+        );
+        
         return redirect()->back()->with('success', 'Balasan berhasil ditambahkan!');
     }
     
@@ -158,6 +185,14 @@ class AdminCommentController extends Controller
         $comment = Comment::findOrFail($id);
         $nama = $comment->nama_pengunjung;
         $comment->delete();
+        
+        // ← TAMBAHKAN INI: Log aktivitas delete
+        ActivityLogger::log(
+            'delete',
+            'Menghapus komentar dari: ' . $nama,
+            'Comment',
+            $id
+        );
         
         return redirect()->route('admin.comments.index')
             ->with('success', 'Komentar dari "' . $nama . '" berhasil dihapus!');
@@ -171,6 +206,15 @@ class AdminCommentController extends Controller
         Setting::toggleComments($newStatus);
         
         $statusText = $newStatus ? 'diaktifkan' : 'dinonaktifkan';
+        
+        // ← TAMBAHKAN INI: Log aktivitas toggle komentar
+        ActivityLogger::log(
+            'update',
+            'Fitur komentar ' . $statusText,
+            'Setting',
+            null
+        );
+        
         return redirect()->route('admin.comments.index')
             ->with('success', "Fitur komentar berhasil {$statusText}.");
     }

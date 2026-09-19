@@ -61,7 +61,7 @@
                             <th>Deskripsi</th>
                             <th>Status</th>
                             <th>Tanggal</th>
-                            <th>Aksi</th>
+                            <th width="80">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -120,28 +120,40 @@
                                     </div>
                                 @endif
                             </td>
-                            <td>{{ Str::limit($slide->title, 40) }}</td>
-                            <td>{{ Str::limit(strip_tags($slide->content), 50) }}</td>
+                            <td class="td-title">{{ Str::limit($slide->title, 40) }}</td>
+                            <td class="td-desc">{{ Str::limit(strip_tags($slide->content), 50) }}</td>
                             <td>
                                 <span class="badge-status {{ $slide->status == 'publish' ? 'badge-publish' : 'badge-draft' }}">
                                     {{ $slide->status }}
                                 </span>
                             </td>
-                            <td>{{ \Carbon\Carbon::parse($slide->date_published)->format('d/m/Y') }}</td>
-                            <td>
-                                <a href="{{ route('admin.carousel.edit', $slide->id_post) }}" 
-                                   class="btn btn-sm btn-warning">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
-                                <form action="{{ route('admin.carousel.destroy', $slide->id_post) }}" 
-                                      method="POST" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger" 
-                                            onclick="return confirm('Hapus slide ini?')">
-                                        <i class="bi bi-trash"></i>
+                            <td class="td-date">
+                                <div class="date-human">{{ \Carbon\Carbon::parse($slide->date_published)->diffForHumans() }}</div>
+                                <div class="date-full">{{ \Carbon\Carbon::parse($slide->date_published)->format('d/m/Y H:i') }}</div>
+                            </td>
+                            <td class="td-action">
+                                <div class="dropdown">
+                                    <button class="btn-action btn-dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-three-dots-vertical"></i>
                                     </button>
-                                </form>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li>
+                                            <a class="dropdown-item" href="{{ route('admin.carousel.edit', $slide->id_post) }}">
+                                                <i class="bi bi-pencil me-2"></i> Edit
+                                            </a>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <form action="{{ route('admin.carousel.destroy', $slide->id_post) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="dropdown-item text-danger" onclick="return confirm('Hapus slide ini?')">
+                                                    <i class="bi bi-trash me-2"></i> Hapus
+                                                </button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </div>
                             </td>
                         </tr>
                         @empty
