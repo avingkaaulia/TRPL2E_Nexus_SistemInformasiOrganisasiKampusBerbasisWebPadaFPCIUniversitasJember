@@ -1,6 +1,17 @@
 {{-- resources/views/show.blade.php --}}
 @extends('layouts.app')
 
+@section('meta_title', $post->meta_title ?: $post->title)
+
+@section('meta_description', $post->meta_description ?: \Illuminate\Support\Str::limit(strip_tags($post->content), 160))
+
+@section('og_title', $post->meta_title ?: $post->title)
+
+@section('og_description', $post->meta_description ?: \Illuminate\Support\Str::limit(strip_tags($post->content), 160))
+@if($post->featured_image_path)
+    @section('og_image', asset($post->featured_image_path))
+@endif
+
 @section('content')
 <link rel="stylesheet" href="{{ asset('assets/css/writing.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/css/comments.css') }}">
