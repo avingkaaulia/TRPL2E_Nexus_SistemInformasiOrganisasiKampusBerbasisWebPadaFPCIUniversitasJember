@@ -135,6 +135,21 @@ $favicon = App\Models\Setting::get('site_favicon', 'assets/img/favicon.ico');
     @yield('content')
 </main>
 
+<div class="site-lightbox" id="siteLightbox" role="dialog" aria-modal="true" aria-labelledby="lightboxTitle" aria-hidden="true">
+    <button type="button" class="site-lightbox-close" id="lightboxClose" aria-label="Tutup gambar">&times;</button>
+    <button type="button" class="site-lightbox-control site-lightbox-prev" id="lightboxPrev" aria-label="Gambar sebelumnya">&#10094;</button>
+    <figure class="site-lightbox-figure">
+        <img id="lightboxImage" src="" alt="">
+        <figcaption id="lightboxTitle"></figcaption>
+    </figure>
+    <button type="button" class="site-lightbox-control site-lightbox-next" id="lightboxNext" aria-label="Gambar berikutnya">&#10095;</button>
+    <div class="site-lightbox-zoom-controls" role="group" aria-label="Kontrol zoom">
+        <button type="button" id="lightboxZoomOut" aria-label="Perkecil gambar">&minus;</button>
+        <button type="button" id="lightboxZoomReset" aria-label="Atur ulang ukuran gambar">100%</button>
+        <button type="button" id="lightboxZoomIn" aria-label="Perbesar gambar">+</button>
+    </div>
+</div>
+
 <!-- FOOTER -->
 <div class="footer-wrapper">
     <div class="footer">
@@ -230,6 +245,151 @@ $favicon = App\Models\Setting::get('site_favicon', 'assets/img/favicon.ico');
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const lightbox = document.getElementById('siteLightbox');
+    const lightboxImage = document.getElementById('lightboxImage');
+    const lightboxTitle = document.getElementById('lightboxTitle');
+    const closeButton = document.getElementById('lightboxClose');
+    const previousButton = document.getElementById('lightboxPrev');
+    const nextButton = document.getElementById('lightboxNext');
+    const zoomOutButton = document.getElementById('lightboxZoomOut');
+    const zoomResetButton = document.getElementById('lightboxZoomReset');
+    const zoomInButton = document.getElementById('lightboxZoomIn');
+    const images = Array.from(document.querySelectorAll('main img:not(.no-lightbox)'))
+        .filter(image => image.src);
+    let currentIndex = 0;
+    let zoomLevel = 1;
+
+    function setZoom(level) {
+        zoomLevel = Math.min(3, Math.max(0.5, level));
+        lightboxImage.style.transform = `scale(${zoomLevel})`;
+        zoomResetButton.textContent = `${Math.round(zoomLevel * 100)}%`;
+    }
+
+    function updateLightbox(index) {
+        currentIndex = (index + images.length) % images.length;
+        const image = images[currentIndex];
+        lightboxImage.src = image.currentSrc || image.src;
+        lightboxImage.alt = image.alt || 'Gambar';
+        lightboxTitle.textContent = image.alt || '';
+        setZoom(1);
+        previousButton.hidden = images.length < 2;
+        nextButton.hidden = images.length < 2;
+    }
+
+    function closeLightbox() {
+        lightbox.classList.remove('is-open');
+        lightbox.setAttribute('aria-hidden', 'true');
+        lightboxImage.src = '';
+    }
+
+    function openLightbox(index) {
+        if (!images[index]) {
+            return;
+        }
+        updateLightbox(index);
+        lightbox.classList.add('is-open');
+        lightbox.setAttribute('aria-hidden', 'false');
+        closeButton.focus();
+    }
+
+    document.addEventListener('click', function(event) {
+        const carouselImage = event.target.closest('main .carousel-item img:not(.no-lightbox)');
+        if (!carouselImage) {
+            return;
+        }
+        const carouselLink = carouselImage.closest('a');
+        const carouselHref = carouselLink ? carouselLink.getAttribute('href') : '';
+        if (carouselLink && carouselHref && carouselHref !== '#') {
+            return;
+        }
+
+        const imageIndex = images.indexOf(carouselImage);
+        if (imageIndex === -1) {
+            return;
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+        openLightbox(imageIndex);
+    }, true);
+
+    images.forEach((image, index) => {
+        const link = image.closest('a');
+        const href = link ? link.getAttribute('href') : '';
+        const hasDestination = link && href && href !== '#';
+
+        if (hasDestination) {
+            const linkContainer = document.createElement('span');
+            linkContainer.className = 'lightbox-link-container';
+            link.parentNode.insertBefore(linkContainer, link);
+            linkContainer.appendChild(link);
+
+            const previewButton = document.createElement('button');
+            previewButton.type = 'button';
+            previewButton.className = 'image-preview-trigger';
+            previewButton.setAttribute('aria-label', `Lihat gambar ${image.alt || 'lebih besar'}`);
+            previewButton.innerHTML = '&#128269;';
+            previewButton.addEventListener('click', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                openLightbox(index);
+            });
+            linkContainer.appendChild(previewButton);
+            return;
+        }
+
+        image.classList.add('lightbox-trigger');
+        image.addEventListener('click', function(event) {
+            if (link && href === '#') {
+                event.preventDefault();
+            }
+            event.stopPropagation();
+            openLightbox(index);
+        });
+    });
+
+    closeButton.addEventListener('click', closeLightbox);
+    zoomOutButton.addEventListener('click', function() {
+        setZoom(zoomLevel - 0.25);
+    });
+    zoomResetButton.addEventListener('click', function() {
+        setZoom(1);
+    });
+    zoomInButton.addEventListener('click', function() {
+        setZoom(zoomLevel + 0.25);
+    });
+    lightboxImage.addEventListener('wheel', function(event) {
+        event.preventDefault();
+        setZoom(zoomLevel + (event.deltaY < 0 ? 0.1 : -0.1));
+    }, { passive: false });
+    previousButton.addEventListener('click', function() {
+        updateLightbox(currentIndex - 1);
+    });
+    nextButton.addEventListener('click', function() {
+        updateLightbox(currentIndex + 1);
+    });
+    lightbox.addEventListener('click', function(event) {
+        if (event.target === lightbox) {
+            closeLightbox();
+        }
+    });
+    document.addEventListener('keydown', function(event) {
+        if (!lightbox.classList.contains('is-open')) {
+            return;
+        }
+        if (event.key === 'Escape') {
+            closeLightbox();
+        } else if (event.key === 'ArrowLeft' && images.length > 1) {
+            updateLightbox(currentIndex - 1);
+        } else if (event.key === 'ArrowRight' && images.length > 1) {
+            updateLightbox(currentIndex + 1);
+        }
+    });
+});
+</script>
 
 <!-- TARUH JAVASCRIPT SEARCH DI SINI -->
 <script>

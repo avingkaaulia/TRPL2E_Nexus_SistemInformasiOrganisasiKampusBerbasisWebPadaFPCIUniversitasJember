@@ -1682,6 +1682,24 @@ hr {
     text-decoration: none;
 }
 
+.home-latest-grid > .d-flex > a {
+    display: flex;
+    width: 100%;
+}
+
+.home-latest-grid .card-custom {
+    width: 100%;
+}
+
+.home-latest-grid .card-custom .card-img-top {
+    aspect-ratio: 4 / 3;
+    height: auto;
+}
+
+.home-latest-grid .card-custom h6 {
+    min-height: 2.66em;
+}
+
 /* CATEGORY BADGE */
 .btn-sm {
     font-size: 12px;
@@ -1691,6 +1709,197 @@ hr {
     color: white;
     border: none;
     margin-bottom: 15px;
+}
+
+/* PUBLIC IMAGE LIGHTBOX */
+.lightbox-trigger {
+    cursor: zoom-in;
+}
+
+.carousel-item img.lightbox-trigger {
+    cursor: zoom-in;
+}
+
+.lightbox-link-container {
+    position: relative;
+    display: block;
+}
+
+.image-preview-trigger {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 2;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    color: #fff;
+    background: rgba(28, 21, 15, 0.8);
+    cursor: zoom-in;
+    font-size: 16px;
+    line-height: 36px;
+    opacity: 0;
+    transition: opacity 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+.lightbox-link-container:hover .image-preview-trigger,
+.image-preview-trigger:hover,
+.image-preview-trigger:focus-visible {
+    opacity: 0.9;
+    background: #5C6844;
+    transform: scale(1.08);
+}
+
+.site-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 80px;
+    background: rgba(13, 16, 12, 0.92);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.site-lightbox.is-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.site-lightbox-figure {
+    max-width: min(1100px, 90vw);
+    max-height: 90vh;
+    margin: 0;
+    text-align: center;
+}
+
+.site-lightbox-figure img {
+    display: block;
+    max-width: 100%;
+    max-height: 82vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 10px;
+    transform-origin: center;
+    transition: transform 0.2s ease;
+}
+
+.site-lightbox-figure figcaption {
+    margin-top: 12px;
+    color: #fff;
+    font-size: 0.95rem;
+}
+
+.site-lightbox-close,
+.site-lightbox-control {
+    position: absolute;
+    border: 0;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.14);
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.site-lightbox-close:hover,
+.site-lightbox-control:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.08);
+}
+
+.site-lightbox-close {
+    top: 18px;
+    right: 24px;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    font-size: 30px;
+    line-height: 1;
+}
+
+.site-lightbox-control {
+    top: 50%;
+    width: 48px;
+    height: 64px;
+    margin-top: -32px;
+    border-radius: 10px;
+    font-size: 30px;
+}
+
+.site-lightbox-prev {
+    left: 22px;
+}
+
+.site-lightbox-next {
+    right: 22px;
+}
+
+.site-lightbox-zoom-controls {
+    position: absolute;
+    right: 24px;
+    bottom: 22px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.14);
+}
+
+.site-lightbox-zoom-controls button {
+    min-width: 38px;
+    height: 34px;
+    border: 0;
+    border-radius: 6px;
+    color: #fff;
+    background: transparent;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.site-lightbox-zoom-controls button:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.site-lightbox-zoom-controls #lightboxZoomReset {
+    min-width: 52px;
+    font-size: 12px;
+}
+
+@media (max-width: 576px) {
+    .site-lightbox {
+        padding: 50px 18px 30px;
+    }
+
+    .site-lightbox-control {
+        top: auto;
+        bottom: 22px;
+        margin-top: 0;
+        width: 44px;
+        height: 44px;
+        font-size: 24px;
+    }
+
+    .site-lightbox-prev {
+        left: calc(50% - 52px);
+    }
+
+    .site-lightbox-next {
+        right: calc(50% - 52px);
+    }
+
+    .site-lightbox-zoom-controls {
+        right: 50%;
+        bottom: 78px;
+        transform: translateX(50%);
+    }
 }
 /* ========== SUBMIT WRITINGS PAGE ========== */
 .submit-container {
