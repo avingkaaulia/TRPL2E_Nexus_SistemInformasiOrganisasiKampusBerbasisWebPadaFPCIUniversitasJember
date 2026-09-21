@@ -91,6 +91,7 @@ class PostAdminController extends Controller
             'id_post_category' => 'required|exists:post_category,id_category',
             'post_type' => 'required|in:post,page',
             'status' => 'required|in:publish,draft,pending',
+            'meta_description' => 'nullable|string|max:160',
             'featured_image' => 'nullable|image|mimes:jpeg,png,jpg|max:4000',
             'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:4000',
             'gallery_descriptions.*' => 'nullable|string|max:255'
@@ -129,6 +130,8 @@ class PostAdminController extends Controller
         
         $data = [
             'title' => $request->title,
+            'meta_title' => $request->title,
+            'meta_description' => $request->meta_description,
             'content' => $request->post_content,
             'id_post_category' => $request->id_post_category,
             'post_type' => $request->post_type,
@@ -219,6 +222,7 @@ class PostAdminController extends Controller
             'id_post_category' => 'required|exists:post_category,id_category',
             'post_type' => 'required|in:post,page',
             'status' => 'required|in:publish,draft,pending',
+            'meta_description' => 'nullable|string|max:160',
             'featured_image' => 'nullable|image|mimes:jpeg,png,jpg|max:4000',
             'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:4000',
             'gallery_descriptions.*' => 'nullable|string|max:255'
@@ -244,6 +248,8 @@ class PostAdminController extends Controller
         
         $data = [
             'title' => $request->title,
+            'meta_title' => $request->title,
+            'meta_description' => $request->meta_description,
             'content' => $request->post_content,
             'id_post_category' => $request->id_post_category,
             'post_type' => $request->post_type,
