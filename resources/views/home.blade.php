@@ -37,15 +37,15 @@
         <div class="section-line"></div>
     </div>
     
-    <div class="row">
+    <div class="row g-4 home-latest-grid">
         @foreach($posts as $p)
-        <div class="col-md-3">
+        <div class="col-6 col-lg-3 d-flex">
             <a href="{{ route('post.show', $p->id_post) }}" class="text-decoration-none">
                 <div class="card card-custom">
                     <img src="{{ $p->image_url }}" class="card-img-top" alt="{{ $p->title }}">
                     <div class="p-3">
                         <!-- 🔥 TAMPILKAN PARENT CATEGORY, BUKAN SUB-CATEGORY -->
-                        <button class="btn btn-sm btn-main">
+                        <button type="button" class="btn btn-sm btn-main">
                             @php
                                 // Jika kategori memiliki parent, tampilkan parent-nya
                                 if($p->category && $p->category->parent) {
