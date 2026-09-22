@@ -52,7 +52,15 @@ class PostAdminController extends Controller
         
         $statuses = ['publish', 'draft', 'pending'];
         
-        return view('admin.posts.index', compact('posts', 'categories', 'statuses'));
+        // ← TAMBAHKAN INI: Hitung jumlah post per status (untuk tab counter)
+        $statusCounts = [
+            'all'     => Post::where('post_type', 'post')->count(),
+            'publish' => Post::where('post_type', 'post')->where('status', 'publish')->count(),
+            'draft'   => Post::where('post_type', 'post')->where('status', 'draft')->count(),
+            'pending' => Post::where('post_type', 'post')->where('status', 'pending')->count(),
+        ];
+        
+        return view('admin.posts.index', compact('posts', 'categories', 'statuses', 'statusCounts'));
     }
     
    public function create(Request $request)

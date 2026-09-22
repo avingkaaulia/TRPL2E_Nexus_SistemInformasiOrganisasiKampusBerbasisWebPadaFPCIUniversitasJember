@@ -56,6 +56,31 @@
     </a>
 </div>
 
+{{-- ← TAMBAHKAN INI: Tab Filter Status --}}
+<div class="status-tabs mb-4">
+    <a href="{{ route('admin.posts.index', array_merge(request()->except('status', 'page'), [])) }}"
+       class="status-tab {{ !request('status') ? 'active' : '' }}">
+        <i class="bi bi-grid me-1"></i> Semua
+        <span class="tab-count">{{ $statusCounts['all'] ?? 0 }}</span>
+    </a>
+    <a href="{{ route('admin.posts.index', array_merge(request()->except('page'), ['status' => 'publish'])) }}"
+       class="status-tab status-tab-publish {{ request('status') == 'publish' ? 'active' : '' }}">
+        <i class="bi bi-check-circle me-1"></i> Publish
+        <span class="tab-count">{{ $statusCounts['publish'] ?? 0 }}</span>
+    </a>
+    <a href="{{ route('admin.posts.index', array_merge(request()->except('page'), ['status' => 'draft'])) }}"
+       class="status-tab status-tab-draft {{ request('status') == 'draft' ? 'active' : '' }}">
+        <i class="bi bi-file-earmark me-1"></i> Draft
+        <span class="tab-count">{{ $statusCounts['draft'] ?? 0 }}</span>
+    </a>
+    <a href="{{ route('admin.posts.index', array_merge(request()->except('page'), ['status' => 'pending'])) }}"
+       class="status-tab status-tab-pending {{ request('status') == 'pending' ? 'active' : '' }}">
+        <i class="bi bi-hourglass-split me-1"></i> Pending
+        <span class="tab-count">{{ $statusCounts['pending'] ?? 0 }}</span>
+    </a>
+</div>
+{{-- ← END TAMBAHKAN --}}
+
 <!-- Daftar Postingan -->
 <div class="admin-card">
     <div class="admin-card-header">

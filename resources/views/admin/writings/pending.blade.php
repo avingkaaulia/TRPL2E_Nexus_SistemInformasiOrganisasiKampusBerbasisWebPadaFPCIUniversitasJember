@@ -8,11 +8,24 @@
 <div class="admin-card">
     <div class="admin-card-header">
         <h4><i class="bi bi-journal-bookmark-fill me-2"></i> Kelola Karya Writings</h4>
-        <div class="stats-badges">
-            <span class="badge bg-warning">Pending: {{ $totalPending }}</span>
-            <span class="badge bg-success">Published: {{ $totalPublished }}</span>
-            <span class="badge bg-secondary">Draft: {{ $totalDraft ?? 0 }}</span>
-        </div>
+        <div class="stats-badges d-flex gap-2">
+    <a href="{{ route('admin.writings.pending') }}" 
+       class="badge {{ request('status') == '' ? 'bg-dark' : 'bg-secondary' }} text-decoration-none">
+        Semua: {{ $totalPending + $totalPublished + ($totalDraft ?? 0) }}
+    </a>
+    <a href="{{ route('admin.writings.pending', ['status' => 'pending']) }}" 
+       class="badge {{ request('status') == 'pending' ? 'bg-dark' : 'bg-warning' }} text-decoration-none">
+        Pending: {{ $totalPending }}
+    </a>
+    <a href="{{ route('admin.writings.pending', ['status' => 'publish']) }}" 
+       class="badge {{ request('status') == 'publish' ? 'bg-dark' : 'bg-success' }} text-decoration-none">
+        Published: {{ $totalPublished }}
+    </a>
+    <a href="{{ route('admin.writings.pending', ['status' => 'draft']) }}" 
+       class="badge {{ request('status') == 'draft' ? 'bg-dark' : 'bg-secondary' }} text-decoration-none">
+        Draft: {{ $totalDraft ?? 0 }}
+    </a>
+</div>
     </div>
     
     <!-- Filter -->
