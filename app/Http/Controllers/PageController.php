@@ -23,7 +23,21 @@ class PageController extends Controller
             $item->image_url = getImageUrl($item->image_path);
         }
         
-        return view('page.show', compact('page'));
+        // ← TAMBAHKAN INI: Ambil post dengan kategori SAMA dengan page ini
+        $postsInPage = Post::with(['user', 'category'])
+            ->where('id_post_category', $page->id_post_category)
+            ->where('post_type', 'post')       // hanya post, bukan page
+            ->where('status', 'publish')       // hanya yang publish
+            ->where('id_post', '!=', $page->id_post)  // jangan tampilkan page-nya sendiri
+            ->orderBy('date_published', 'desc')
+            ->get();
+        
+        // Set image URL untuk post terkait
+        foreach ($postsInPage as $relatedPost) {
+            $relatedPost->image_url = getImageUrl($relatedPost->featured_image_path);
+        }
+        
+        return view('page.show', compact('page', 'postsInPage'));
     }
     
     public function all()

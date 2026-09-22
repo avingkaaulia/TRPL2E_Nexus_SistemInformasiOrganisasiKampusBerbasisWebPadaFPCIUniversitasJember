@@ -58,6 +58,40 @@
             </div>
             @endif
             
+            <!-- ← TAMBAHKAN INI: Post dengan kategori sama dengan page -->
+            @if(isset($postsInPage) && $postsInPage->count() > 0)
+            <div class="page-posts-section mt-5">
+                <h4><i class="bi bi-files me-2"></i> Postingan Terkait</h4>
+                <div class="row g-4">
+                    @foreach($postsInPage as $relatedPost)
+                    <div class="col-md-6">
+                        <div class="page-post-card">
+                            <a href="{{ route('post.show', $relatedPost->id_post) }}" class="text-decoration-none">
+                                @if($relatedPost->featured_image_path)
+                                <img src="{{ $relatedPost->image_url }}" 
+                                     class="w-100" 
+                                     alt="{{ $relatedPost->title }}" 
+                                     style="height: 180px; object-fit: cover; border-radius: 8px;">
+                                @endif
+                                <div class="page-post-body mt-2">
+                                    <h5 class="page-post-title">{{ $relatedPost->title }}</h5>
+                                    <p class="page-post-excerpt">
+                                        {{ Str::limit(strip_tags($relatedPost->content), 100) }}
+                                    </p>
+                                    <span class="text-muted small">
+                                        <i class="bi bi-calendar"></i> 
+                                        {{ \Carbon\Carbon::parse($relatedPost->date_published)->format('M d, Y') }}
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+            @endif
+            <!-- ← END TAMBAHKAN -->
+            
             <!-- Back Button -->
             <div class="text-center mt-4">
                 <a href="{{ url()->previous() !== url()->current() ? url()->previous() : url('/') }}" class="btn btn-secondary">
