@@ -5,10 +5,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-Use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\SoftDeletes;   // ← TAMBAHKAN INI
+use Illuminate\Support\Str;
 
 class Post extends Model
 {
+    use HasFactory, SoftDeletes;   // ← TAMBAHKAN SoftDeletes
+
     protected $table = 'posts';
     protected $primaryKey = 'id_post';
     public $timestamps = false;
@@ -56,31 +59,31 @@ class Post extends Model
     }
 
     // Ambil nama parent category untuk ditampilkan
-public function getParentCategoryNameAttribute()
-{
-    if ($this->category && $this->category->parent) {
-        return $this->category->parent->category_name;
+    public function getParentCategoryNameAttribute()
+    {
+        if ($this->category && $this->category->parent) {
+            return $this->category->parent->category_name;
+        }
+        return $this->category->category_name ?? 'Uncategorized';
     }
-    return $this->category->category_name ?? 'Uncategorized';
-}
 
-// Ambil ID parent category
-public function getParentCategoryIdAttribute()
-{
-    if ($this->category && $this->category->parent) {
-        return $this->category->parent->id_category;
+    // Ambil ID parent category
+    public function getParentCategoryIdAttribute()
+    {
+        if ($this->category && $this->category->parent) {
+            return $this->category->parent->id_category;
+        }
+        return $this->category->id_category ?? null;
     }
-    return $this->category->id_category ?? null;
-}
 
-public function getSlugAttribute()
-{
-    return Str::slug($this->title);
-}
+    public function getSlugAttribute()
+    {
+        return Str::slug($this->title);
+    }
 
-// Untuk mendapatkan URL page
-public function getPageUrlAttribute()
-{
-    return route('page.show', $this->slug);
-}
+    // Untuk mendapatkan URL page
+    public function getPageUrlAttribute()
+    {
+        return route('page.show', $this->slug);
+    }
 }

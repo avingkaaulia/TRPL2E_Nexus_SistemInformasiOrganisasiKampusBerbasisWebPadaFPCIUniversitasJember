@@ -11,14 +11,21 @@ use App\Models\PostGallery;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use App\Helpers\ActivityLogger;   // ← TAMBAHKAN INI (import helper)
+use App\Helpers\ActivityLogger;
 
 class PostAdminController extends Controller
 {
     // 🔥 HANYA MENAMPILKAN POST (post_type = 'post') untuk halaman "Semua Postingan"
     public function index(Request $request)
     {
-        $query = Post::with(['category', 'user'])->where('post_type', 'post');
+        // ← TAMBAHKAN INI: cek mode trash
+        $showTrash = $request->get('trash') == 1;
+        
+        if ($showTrash) {
+            $query = Post::onlyTrashed()->with(['category', 'user'])->where('post_type', 'post');
+        } else {
+            $query = Post::with(['category', 'user'])->where('post_type', 'post');
+        }
         
         if ($request->has('status') && $request->status != '') {
             $query->where('status', $request->status);
@@ -52,15 +59,16 @@ class PostAdminController extends Controller
         
         $statuses = ['publish', 'draft', 'pending'];
         
-        // ← TAMBAHKAN INI: Hitung jumlah post per status (untuk tab counter)
+        // ← TAMBAHKAN INI: hitung jumlah post per status + trash
         $statusCounts = [
             'all'     => Post::where('post_type', 'post')->count(),
             'publish' => Post::where('post_type', 'post')->where('status', 'publish')->count(),
             'draft'   => Post::where('post_type', 'post')->where('status', 'draft')->count(),
             'pending' => Post::where('post_type', 'post')->where('status', 'pending')->count(),
+            'trash'   => Post::onlyTrashed()->where('post_type', 'post')->count(),
         ];
         
-        return view('admin.posts.index', compact('posts', 'categories', 'statuses', 'statusCounts'));
+        return view('admin.posts.index', compact('posts', 'categories', 'statuses', 'statusCounts', 'showTrash'));
     }
     
    public function create(Request $request)
@@ -83,8 +91,7 @@ class PostAdminController extends Controller
     
     $users = User::all();
     
-    // 🔥 CEK PARAMETER TYPE DARI URL
-    $type = $request->get('type', 'post'); // default 'post'
+    $type = $request->get('type', 'post');
     $isPage = ($type === 'page');
     
     return view('admin.posts.create', compact('categories', 'users', 'isPage', 'type'));
@@ -92,7 +99,6 @@ class PostAdminController extends Controller
     
     public function store(Request $request)
     {
-        // 🔥 VALIDASI LENGKAP DENGAN PESAN ERROR
         $request->validate([
             'title' => 'required|string|max:150',
             'post_content' => 'required|string|min:10',
@@ -104,32 +110,19 @@ class PostAdminController extends Controller
             'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:4000',
             'gallery_descriptions.*' => 'nullable|string|max:255'
         ], [
-            // Pesan error untuk title
             'title.required' => 'Judul postingan wajib diisi',
             'title.max' => 'Judul postingan maksimal 150 karakter',
-            
-            // Pesan error untuk post_content
             'post_content.required' => 'Konten postingan wajib diisi',
             'post_content.min' => 'Konten postingan minimal 10 karakter',
-            
-            // Pesan error untuk kategori
             'id_post_category.required' => 'Kategori wajib dipilih',
             'id_post_category.exists' => 'Kategori yang dipilih tidak valid',
-            
-            // Pesan error untuk tipe
             'post_type.required' => 'Tipe postingan wajib dipilih',
             'post_type.in' => 'Tipe postingan harus Post atau Page',
-            
-            // Pesan error untuk status
             'status.required' => 'Status postingan wajib dipilih',
             'status.in' => 'Status postingan tidak valid',
-            
-            // Pesan error untuk gambar
             'featured_image.image' => 'File harus berupa gambar',
             'featured_image.mimes' => 'Format gambar harus JPG, PNG, atau JPEG',
             'featured_image.max' => 'Ukuran gambar maksimal 4MB',
-            
-            // Pesan error untuk gallery
             'gallery_images.*.image' => 'File gallery harus berupa gambar',
             'gallery_images.*.mimes' => 'Format gallery harus JPG, PNG, atau JPEG',
             'gallery_images.*.max' => 'Ukuran gallery maksimal 4MB',
@@ -158,7 +151,6 @@ class PostAdminController extends Controller
         
         $post = Post::create($data);
         
-        // ← TAMBAHKAN INI: Log aktivitas create
         ActivityLogger::log(
             'create',
             'Menambah postingan: ' . $request->title,
@@ -212,7 +204,6 @@ class PostAdminController extends Controller
     
     $users = User::all();
     
-    // 🔥 KIRIMKAN FLAG IS PAGE
     $isPage = $post->post_type === 'page';
     
     return view('admin.posts.edit', compact('post', 'categories', 'users', 'isPage'));
@@ -223,7 +214,6 @@ class PostAdminController extends Controller
     {
         $post = Post::findOrFail($id);
         
-        // 🔥 VALIDASI LENGKAP UNTUK UPDATE
         $request->validate([
             'title' => 'required|string|max:150',
             'post_content' => 'required|string|min:10',
@@ -276,7 +266,6 @@ class PostAdminController extends Controller
         
         $post->update($data);
         
-        // ← TAMBAHKAN INI: Log aktivitas update
         ActivityLogger::log(
             'update',
             'Mengedit postingan: ' . $request->title,
@@ -323,19 +312,65 @@ class PostAdminController extends Controller
             ->with('success', 'Gambar gallery berhasil dihapus');
     }
     
+    // ← UBAH INI: destroy jadi soft delete (tidak hapus file)
     public function destroy($id)
     {
         $post = Post::findOrFail($id);
         
-        // ← TAMBAHKAN INI: Simpan data dulu sebelum dihapus (untuk log)
         $postTitle = $post->title;
         $postType = $post->post_type;
         $postId = $post->id_post;
         
+        // ← SOFT DELETE: cukup panggil delete(), tidak hapus file
+        // File gambar tetap ada sampai forceDelete dipanggil
+        $post->delete();
+        
+        ActivityLogger::log(
+            'delete',
+            'Menghapus postingan (soft): ' . $postTitle,
+            'Post',
+            $postId
+        );
+        
+        if ($postType == 'page') {
+            return redirect()->route('admin.pages.list')
+                ->with('success', 'Halaman berhasil dihapus (bisa di-restore dari Trash)');
+        }
+        
+        return redirect()->route('admin.posts.index')
+            ->with('success', 'Postingan berhasil dihapus (bisa di-restore dari Trash)');
+    }
+    
+    // ← TAMBAHKAN INI: Restore post dari trash
+    public function restore($id)
+    {
+        $post = Post::onlyTrashed()->findOrFail($id);
+        $post->restore();
+        
+        ActivityLogger::log(
+            'restore',
+            'Mengembalikan postingan dari trash: ' . $post->title,
+            'Post',
+            $post->id_post
+        );
+        
+        return redirect()->route('admin.posts.index', ['trash' => 1])
+            ->with('success', 'Postingan "' . $post->title . '" berhasil dikembalikan!');
+    }
+    
+    // ← TAMBAHKAN INI: Force delete (hapus permanen)
+    public function forceDelete($id)
+    {
+        $post = Post::onlyTrashed()->findOrFail($id);
+        $postTitle = $post->title;
+        $postId = $post->id_post;
+        
+        // Hapus file featured image
         if ($post->featured_image_path) {
             Storage::disk('public')->delete($post->featured_image_path);
         }
         
+        // Hapus file gallery
         foreach ($post->gallery as $gallery) {
             if ($gallery->image_path) {
                 Storage::disk('public')->delete($gallery->image_path);
@@ -343,22 +378,18 @@ class PostAdminController extends Controller
         }
         
         $post->gallery()->delete();
-        $post->delete();
         
-        // ← TAMBAHKAN INI: Log aktivitas delete
+        // Force delete (hapus permanen dari DB)
+        $post->forceDelete();
+        
         ActivityLogger::log(
             'delete',
-            'Menghapus postingan: ' . $postTitle,
+            'Menghapus permanen postingan: ' . $postTitle,
             'Post',
             $postId
         );
         
-        if ($postType == 'page') {
-            return redirect()->route('admin.pages.list')
-                ->with('success', 'Halaman berhasil dihapus');
-        }
-        
-        return redirect()->route('admin.posts.index')
-            ->with('success', 'Postingan berhasil dihapus');
+        return redirect()->route('admin.posts.index', ['trash' => 1])
+            ->with('success', 'Postingan "' . $postTitle . '" berhasil dihapus permanen!');
     }
 }

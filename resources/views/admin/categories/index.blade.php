@@ -82,7 +82,7 @@
                             <th>Parent</th>
                             <th>Sub Kategori</th>
                             <th>Jumlah Post</th>
-                            <th width="120">Aksi</th>
+                            <th width="80">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -121,23 +121,32 @@
                                 <span class="badge bg-secondary">Direct: {{ DB::table('posts')->where('id_post_category', $cat->id_category)->count() }}</span>
                                 <span class="badge bg-success ms-1">Total: {{ $totalPostCount }}</span>
                             </td>
-                            <td>
-                                <div class="action-group">
-                                    <a href="{{ route('admin.categories.edit', $cat->id_category) }}" 
-                                       class="btn-action btn-edit" title="Edit">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
-                                    <form action="{{ route('admin.categories.destroy', $cat->id_category) }}" 
-                                          method="POST" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn-action btn-delete" 
-                                                onclick="return confirm('Hapus kategori {{ $cat->category_name }}?')"
-                                                title="Hapus">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </form>
+                            <td class="td-action">
+                                {{-- ← UBAH INI: dari action-group jadi dropdown --}}
+                                <div class="dropdown">
+                                    <button class="btn-action btn-dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-three-dots-vertical"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li>
+                                            <a class="dropdown-item" href="{{ route('admin.categories.edit', $cat->id_category) }}">
+                                                <i class="bi bi-pencil me-2"></i> Edit
+                                            </a>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <form action="{{ route('admin.categories.destroy', $cat->id_category) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="dropdown-item text-danger" 
+                                                        onclick="return confirm('Hapus kategori {{ $cat->category_name }}?')">
+                                                    <i class="bi bi-trash me-2"></i> Hapus
+                                                </button>
+                                            </form>
+                                        </li>
+                                    </ul>
                                 </div>
+                                {{-- ← END UBAH --}}
                             </td>
                         </tr>
                         @empty

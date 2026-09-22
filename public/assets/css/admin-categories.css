@@ -187,6 +187,95 @@
     background: #4a5637;
     transform: translateY(-2px);
 }
+/* ============================================================
+   DROPDOWN AKSI UNTUK TABEL KATEGORI
+   ============================================================ */
+
+/* Kolom Aksi - Center */
+.admin-table .td-action {
+    text-align: center !important;
+    width: 80px;
+    vertical-align: middle;
+}
+
+.admin-table .td-action .dropdown {
+    display: inline-block;
+}
+
+.admin-table td.td-action:last-child {
+    text-align: center !important;
+}
+
+/* Tombol Dropdown (titik 3) */
+.admin-table .btn-action.btn-dropdown {
+    background: #f5f5f5;
+    color: #1C150F;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.admin-table .btn-action.btn-dropdown:hover {
+    background: #5C6844;
+    color: white;
+    transform: scale(1.05);
+}
+
+.admin-table .btn-action.btn-dropdown::after {
+    display: none;
+}
+
+/* Dropdown Menu */
+.admin-table .dropdown-menu {
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    border: none;
+    padding: 8px 0;
+    min-width: 170px;
+}
+
+.admin-table .dropdown-item {
+    padding: 10px 18px;
+    font-size: 13px;
+    transition: all 0.2s ease;
+    color: #1C150F;
+    display: flex;
+    align-items: center;
+}
+
+.admin-table .dropdown-item:hover {
+    background: #F5F2E8;
+    padding-left: 22px;
+}
+
+.admin-table .dropdown-item i {
+    font-size: 14px;
+    width: 18px;
+}
+
+.admin-table .dropdown-item.text-danger {
+    color: #dc3545 !important;
+}
+
+.admin-table .dropdown-item.text-danger:hover {
+    background: #dc3545;
+    color: white !important;
+}
+
+.admin-table .dropdown-item.text-danger:hover i {
+    color: white;
+}
+
+.admin-table .dropdown-divider {
+    margin: 6px 0;
+    border-top: 1px solid #E8E4D9;
+}
 
 /* ========== RESPONSIVE LENGKAP UNTUK ADMIN CATEGORIES ========== */
 

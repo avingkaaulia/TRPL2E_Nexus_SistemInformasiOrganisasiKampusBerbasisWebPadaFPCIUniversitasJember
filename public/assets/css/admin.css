@@ -2378,3 +2378,37 @@ body {
         font-size: 10px;
     }
 }
+/* ========== TAB TRASH ========== */
+.status-tab-trash {
+    color: #dc3545;
+}
+
+.status-tab-trash:hover {
+    background: #f8d7da;
+    color: #dc3545;
+}
+
+.status-tab-trash.active {
+    background: #dc3545;
+    color: white;
+    border-color: #dc3545;
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+.status-tab-trash.active .tab-count {
+    background: rgba(255, 255, 255, 0.25);
+    color: white;
+}
+/* ========== POST THUMBNAIL ========== */
+.post-thumb {
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.post-thumb-trashed {
+    opacity: 0.5;
+}
+
+.date-deleted {
+    color: #dc3545;
+}

@@ -115,6 +115,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::put('/posts/update/{id}', [PostAdminController::class, 'update'])->name('posts.update');
     Route::delete('/posts/destroy/{id}', [PostAdminController::class, 'destroy'])->name('posts.destroy');
     Route::delete('/posts/gallery/{id}', [PostAdminController::class, 'deleteGallery'])->name('posts.gallery.delete');
+    // ← TAMBAHKAN 2 BARIS INI: route soft delete
+    Route::put('/posts/restore/{id}', [PostAdminController::class, 'restore'])->name('posts.restore');
+    Route::delete('/posts/force-delete/{id}', [PostAdminController::class, 'forceDelete'])->name('posts.force-delete');
 });
 
 // Admin Pendaftaran Routes
