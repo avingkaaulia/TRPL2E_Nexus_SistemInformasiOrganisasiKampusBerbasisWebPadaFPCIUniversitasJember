@@ -2272,3 +2272,109 @@ body {
         height: 16px;
     }
 }
+
+/* ============================================================
+   STATUS TABS UNTUK FILTER POSTINGAN
+   Tab: Semua | Publish | Draft | Pending
+   ============================================================ */
+
+.status-tabs {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 15px 0;
+    border-bottom: 1px solid #E8E4D9;
+    margin-bottom: 20px;
+}
+
+.status-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 18px;
+    border-radius: 30px;
+    background: #f5f5f5;
+    color: #666;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.25s ease;
+    border: 2px solid transparent;
+}
+
+.status-tab:hover {
+    background: #e8e8e8;
+    color: #1C150F;
+    transform: translateY(-1px);
+    text-decoration: none;
+}
+
+.status-tab.active {
+    background: #1C150F;
+    color: white;
+    border-color: #1C150F;
+    box-shadow: 0 4px 12px rgba(28, 21, 15, 0.2);
+}
+
+.status-tab .tab-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+    border-radius: 11px;
+    background: rgba(0, 0, 0, 0.08);
+    color: #666;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.status-tab.active .tab-count {
+    background: rgba(255, 255, 255, 0.25);
+    color: white;
+}
+
+/* Warna khusus per status */
+.status-tab-publish.active {
+    background: #28a745;
+    border-color: #28a745;
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+.status-tab-draft.active {
+    background: #dc3545;
+    border-color: #dc3545;
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+.status-tab-pending.active {
+    background: #f0ad4e;
+    border-color: #f0ad4e;
+    color: #1C150F;
+    box-shadow: 0 4px 12px rgba(240, 173, 78, 0.3);
+}
+
+.status-tab-pending.active .tab-count {
+    background: rgba(28, 21, 15, 0.15);
+    color: #1C150F;
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+    .status-tabs {
+        gap: 6px;
+        padding: 10px 0;
+    }
+
+    .status-tab {
+        padding: 7px 12px;
+        font-size: 12px;
+    }
+
+    .status-tab .tab-count {
+        min-width: 18px;
+        height: 18px;
+        font-size: 10px;
+    }
+}
