@@ -41,6 +41,7 @@ body {
     text-decoration: none;
     padding: 12px 20px;
     display: block;
+    white-space: nowrap;
     transition: all 0.3s ease;
     font-size: 14px;
 }
@@ -63,15 +64,28 @@ body {
 
 .sidebar .menu-group-title {
     padding: 15px 20px 8px;
-    font-size: 11px;
+    font-size: 10px;
     text-transform: uppercase;
-    letter-spacing: 2px;
+    letter-spacing: 1.5px;
     color: #B6CCCA;
+    white-space: nowrap;
 }
 
 /* ========== MAIN CONTENT ========== */
 .main-content {
     padding: 20px;
+}
+
+@media (min-width: 992px) {
+    .admin-sidebar-column {
+        flex: 0 0 280px;
+        max-width: 280px;
+    }
+
+    .admin-main-column {
+        flex: 1 1 auto;
+        max-width: calc(100% - 280px);
+    }
 }
 
 /* Top Bar */

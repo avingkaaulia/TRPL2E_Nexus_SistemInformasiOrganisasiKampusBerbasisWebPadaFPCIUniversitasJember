@@ -22,7 +22,7 @@
 <div class="container-fluid">
     <div class="row">
         <!-- SIDEBAR -->
-        <div class="col-md-3 col-lg-2 px-0 sidebar">
+        <div class="col-md-3 col-lg-2 px-0 sidebar admin-sidebar-column">
             <div class="logo-area">
                 <img src="{{ asset($logo) }}" alt="Logo">
                 <h5>FPCI UNEJ Admin</h5>
@@ -150,7 +150,7 @@
         </div>
         
         <!-- MAIN CONTENT -->
-        <div class="col-md-9 col-lg-10 main-content">
+        <div class="col-md-9 col-lg-10 main-content admin-main-column">
             <!-- Top Bar -->
             <div class="top-bar">
                 <h3><i class="bi bi-speedometer2 me-2"></i> @yield('page-title', 'Dashboard')</h3>
