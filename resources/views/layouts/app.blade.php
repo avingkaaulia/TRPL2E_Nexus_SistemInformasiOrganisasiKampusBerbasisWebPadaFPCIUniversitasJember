@@ -197,7 +197,7 @@
 
                         <div class="row">
                             <div class="col-6">
-                                @foreach($chunks[0] as $m)
+                                @foreach($chunks->get(0, []) as $m)
                                     <p>
                                         <a href="{{ $m->link }}" class="footer-link">
                                             {{ $m->menu_label }}
