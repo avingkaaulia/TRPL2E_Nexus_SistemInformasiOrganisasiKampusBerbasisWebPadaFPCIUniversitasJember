@@ -14,13 +14,13 @@
         </div>
         
         @if(session('error'))
-            <div class="alert alert-danger">
+            <div class="alert alert-danger" role="alert">
                 <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ session('error') }}
             </div>
         @endif
         
         @if(session('success'))
-            <div class="alert alert-success">
+            <div class="alert alert-success" role="status">
                 <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
             </div>
         @endif
@@ -36,7 +36,7 @@
                        id="email" 
                        class="form-control @error('email') is-invalid @enderror" 
                        value="{{ old('email') }}" 
-                       required autofocus>
+                       required autofocus autocomplete="email" inputmode="email">
                 @error('email')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
@@ -51,8 +51,8 @@
                            name="password" 
                            id="password" 
                            class="form-control @error('password') is-invalid @enderror" 
-                           required>
-                    <i class="bi bi-eye-slash toggle-password" onclick="togglePassword()"></i>
+                           required autocomplete="current-password">
+                    <i class="bi bi-eye-slash toggle-password" role="button" tabindex="0" aria-label="Tampilkan password" onclick="togglePassword()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();togglePassword();}"></i>
                 </div>
                 @error('password')
                     <div class="invalid-feedback">{{ $message }}</div>
@@ -83,12 +83,32 @@ function togglePassword() {
         password.type = 'text';
         toggle.classList.remove('bi-eye-slash');
         toggle.classList.add('bi-eye');
+        toggle.setAttribute('aria-label', 'Sembunyikan password');
     } else {
         password.type = 'password';
         toggle.classList.remove('bi-eye');
         toggle.classList.add('bi-eye-slash');
+        toggle.setAttribute('aria-label', 'Tampilkan password');
     }
 }
+
+// cegah tombol diklik dua kali saat form sedang dikirim
+document.querySelectorAll('form').forEach(function (form) {
+    form.addEventListener('submit', function () {
+        const tombol = form.querySelector('button[type="submit"]');
+        if (!tombol) return;
+        tombol.disabled = true;
+        tombol.dataset.teksAsli = tombol.innerHTML;
+        tombol.innerHTML = '<i class="bi bi-hourglass-split"></i> Memproses...';
+    });
+});
+// kalau pengguna menekan tombol kembali di browser, tombol dikembalikan seperti semula
+window.addEventListener('pageshow', function () {
+    document.querySelectorAll('button[type="submit"][data-teks-asli]').forEach(function (t) {
+        t.disabled = false;
+        t.innerHTML = t.dataset.teksAsli;
+    });
+});
 </script>
 @endpush
 @endsection

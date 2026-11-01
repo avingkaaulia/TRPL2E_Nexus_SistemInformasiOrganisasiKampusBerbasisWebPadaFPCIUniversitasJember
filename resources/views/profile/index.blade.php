@@ -34,19 +34,19 @@
                 <h4><i class="bi bi-pencil-square me-2"></i> Edit Profil</h4>
                 
                 @if(session('success'))
-                    <div class="alert alert-success">
+                    <div class="alert alert-success" role="status">
                         <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
                     </div>
                 @endif
                 
                 @if(session('error'))
-                    <div class="alert alert-danger">
+                    <div class="alert alert-danger" role="alert">
                         <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ session('error') }}
                     </div>
                 @endif
                 
                 @if($errors->any())
-                    <div class="alert alert-danger">
+                    <div class="alert alert-danger" role="alert">
                         <i class="bi bi-exclamation-triangle-fill me-2"></i>
                         <ul class="mb-0 mt-1">
                             @foreach($errors->all() as $error)
@@ -67,7 +67,7 @@
                             </label>
                             <input type="text" 
                                    name="nama" 
-                                   id="nama" 
+                                   id="nama" autocomplete="name" 
                                    class="form-control @error('nama') is-invalid @enderror" 
                                    value="{{ old('nama', $user->nama) }}" 
                                    required>
@@ -82,7 +82,7 @@
                             </label>
                             <input type="text" 
                                    name="username" 
-                                   id="username" 
+                                   id="username" autocomplete="username" 
                                    class="form-control @error('username') is-invalid @enderror" 
                                    value="{{ old('username', $user->username) }}" 
                                    required>
@@ -99,7 +99,7 @@
                         </label>
                         <input type="email" 
                                name="email" 
-                               id="email" 
+                               id="email" autocomplete="email" 
                                class="form-control @error('email') is-invalid @enderror" 
                                value="{{ old('email', $user->email) }}" 
                                required>
@@ -124,9 +124,9 @@
                             <div class="password-wrapper">
                                 <input type="password" 
                                        name="current_password" 
-                                       id="current_password" 
+                                       id="current_password" autocomplete="current-password" 
                                        class="form-control @error('current_password') is-invalid @enderror">
-                                <i class="bi bi-eye-slash toggle-password" onclick="togglePassword('current_password')"></i>
+                                <i class="bi bi-eye-slash toggle-password" role="button" tabindex="0" aria-label="Tampilkan password" onclick="togglePassword('current_password')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();togglePassword('current_password');}"></i>
                             </div>
                             @error('current_password')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -140,9 +140,9 @@
                             <div class="password-wrapper">
                                 <input type="password" 
                                        name="password" 
-                                       id="password" 
+                                       id="password" autocomplete="new-password" minlength="6" 
                                        class="form-control @error('password') is-invalid @enderror">
-                                <i class="bi bi-eye-slash toggle-password" onclick="togglePassword('password')"></i>
+                                <i class="bi bi-eye-slash toggle-password" role="button" tabindex="0" aria-label="Tampilkan password" onclick="togglePassword('password')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();togglePassword('password');}"></i>
                             </div>
                             <small class="form-text text-muted">Minimal 6 karakter</small>
                             @error('password')
@@ -157,9 +157,9 @@
                             <div class="password-wrapper">
                                 <input type="password" 
                                        name="password_confirmation" 
-                                       id="password_confirmation" 
+                                       id="password_confirmation" autocomplete="new-password" 
                                        class="form-control @error('password_confirmation') is-invalid @enderror">
-                                <i class="bi bi-eye-slash toggle-password" onclick="togglePassword('password_confirmation')"></i>
+                                <i class="bi bi-eye-slash toggle-password" role="button" tabindex="0" aria-label="Tampilkan password" onclick="togglePassword('password_confirmation')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();togglePassword('password_confirmation');}"></i>
                             </div>
                             @error('password_confirmation')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -190,12 +190,32 @@ function togglePassword(fieldId) {
         password.type = 'text';
         toggle.classList.remove('bi-eye-slash');
         toggle.classList.add('bi-eye');
+        toggle.setAttribute('aria-label', 'Sembunyikan password');
     } else {
         password.type = 'password';
         toggle.classList.remove('bi-eye');
         toggle.classList.add('bi-eye-slash');
+        toggle.setAttribute('aria-label', 'Tampilkan password');
     }
 }
+
+// cegah tombol diklik dua kali saat form sedang dikirim
+document.querySelectorAll('form').forEach(function (form) {
+    form.addEventListener('submit', function () {
+        const tombol = form.querySelector('button[type="submit"]');
+        if (!tombol) return;
+        tombol.disabled = true;
+        tombol.dataset.teksAsli = tombol.innerHTML;
+        tombol.innerHTML = '<i class="bi bi-hourglass-split"></i> Memproses...';
+    });
+});
+// kalau pengguna menekan tombol kembali di browser, tombol dikembalikan seperti semula
+window.addEventListener('pageshow', function () {
+    document.querySelectorAll('button[type="submit"][data-teks-asli]').forEach(function (t) {
+        t.disabled = false;
+        t.innerHTML = t.dataset.teksAsli;
+    });
+});
 </script>
 @endpush
 @endsection

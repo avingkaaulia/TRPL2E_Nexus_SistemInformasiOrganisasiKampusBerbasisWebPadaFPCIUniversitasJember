@@ -7,20 +7,20 @@
 <div class="auth-container">
     <div class="auth-card">
         <div class="auth-header">
-            <@php $logo = App\Models\Setting::get('site_logo', 'assets/img/logo.png'); @endphp
+            @php $logo = App\Models\Setting::get('site_logo', 'assets/img/logo.png'); @endphp
             <img src="{{ asset($logo) }}" width="80" alt="Logo">
             <h2>Reset Password</h2>
             <p>Buat password baru untuk akun Anda</p>
         </div>
         
         @if(session('error'))
-            <div class="alert alert-danger">
+            <div class="alert alert-danger" role="alert">
                 <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ session('error') }}
             </div>
         @endif
         
         @if($errors->any())
-            <div class="alert alert-danger">
+            <div class="alert alert-danger" role="alert">
                 <i class="bi bi-exclamation-triangle-fill me-2"></i>
                 <ul class="mb-0 mt-1">
                     @foreach($errors->all() as $error)
@@ -43,8 +43,8 @@
                            name="password" 
                            id="password" 
                            class="form-control" 
-                           required>
-                    <i class="bi bi-eye-slash toggle-password" onclick="togglePassword('password')"></i>
+                           required autocomplete="new-password" minlength="6">
+                    <i class="bi bi-eye-slash toggle-password" role="button" tabindex="0" aria-label="Tampilkan password" onclick="togglePassword('password')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();togglePassword('password');}"></i>
                 </div>
                 <small class="text-muted">Minimal 6 karakter</small>
             </div>
@@ -58,8 +58,8 @@
                            name="password_confirmation" 
                            id="password_confirmation" 
                            class="form-control" 
-                           required>
-                    <i class="bi bi-eye-slash toggle-password" onclick="togglePassword('password_confirmation')"></i>
+                           required autocomplete="new-password">
+                    <i class="bi bi-eye-slash toggle-password" role="button" tabindex="0" aria-label="Tampilkan password" onclick="togglePassword('password_confirmation')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();togglePassword('password_confirmation');}"></i>
                 </div>
             </div>
             
@@ -83,12 +83,32 @@ function togglePassword(fieldId) {
         password.type = 'text';
         toggle.classList.remove('bi-eye-slash');
         toggle.classList.add('bi-eye');
+        toggle.setAttribute('aria-label', 'Sembunyikan password');
     } else {
         password.type = 'password';
         toggle.classList.remove('bi-eye');
         toggle.classList.add('bi-eye-slash');
+        toggle.setAttribute('aria-label', 'Tampilkan password');
     }
 }
+
+// cegah tombol diklik dua kali saat form sedang dikirim
+document.querySelectorAll('form').forEach(function (form) {
+    form.addEventListener('submit', function () {
+        const tombol = form.querySelector('button[type="submit"]');
+        if (!tombol) return;
+        tombol.disabled = true;
+        tombol.dataset.teksAsli = tombol.innerHTML;
+        tombol.innerHTML = '<i class="bi bi-hourglass-split"></i> Memproses...';
+    });
+});
+// kalau pengguna menekan tombol kembali di browser, tombol dikembalikan seperti semula
+window.addEventListener('pageshow', function () {
+    document.querySelectorAll('button[type="submit"][data-teks-asli]').forEach(function (t) {
+        t.disabled = false;
+        t.innerHTML = t.dataset.teksAsli;
+    });
+});
 </script>
 @endpush
 @endsection

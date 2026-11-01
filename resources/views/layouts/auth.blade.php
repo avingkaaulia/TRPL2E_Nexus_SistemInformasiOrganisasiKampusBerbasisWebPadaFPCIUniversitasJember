@@ -17,7 +17,7 @@
     <link rel="icon" type="image/x-icon" href="{{ asset($favicon) }}">
 </head>
 <body class="auth-body">
-    <main>
+    <main id="main-content">
         @yield('content')
     </main>
     

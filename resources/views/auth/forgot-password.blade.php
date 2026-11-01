@@ -14,19 +14,19 @@
         </div>
         
         @if(session('error'))
-            <div class="alert alert-danger">
+            <div class="alert alert-danger" role="alert">
                 <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ session('error') }}
             </div>
         @endif
         
         @if(session('success'))
-            <div class="alert alert-success">
+            <div class="alert alert-success" role="status">
                 <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
             </div>
         @endif
         
         @if($errors->any())
-            <div class="alert alert-danger">
+            <div class="alert alert-danger" role="alert">
                 <i class="bi bi-exclamation-triangle-fill me-2"></i>
                 <ul class="mb-0 mt-1">
                     @foreach($errors->all() as $error)
@@ -47,7 +47,7 @@
                        id="email" 
                        class="form-control" 
                        value="{{ old('email') }}" 
-                       required autofocus>
+                       required autofocus autocomplete="email" inputmode="email">
             </div>
             
             <button type="submit" class="btn-login-submit">
@@ -60,4 +60,26 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+// cegah tombol diklik dua kali saat form sedang dikirim
+document.querySelectorAll('form').forEach(function (form) {
+    form.addEventListener('submit', function () {
+        const tombol = form.querySelector('button[type="submit"]');
+        if (!tombol) return;
+        tombol.disabled = true;
+        tombol.dataset.teksAsli = tombol.innerHTML;
+        tombol.innerHTML = '<i class="bi bi-hourglass-split"></i> Memproses...';
+    });
+});
+// kalau pengguna menekan tombol kembali di browser, tombol dikembalikan seperti semula
+window.addEventListener('pageshow', function () {
+    document.querySelectorAll('button[type="submit"][data-teks-asli]').forEach(function (t) {
+        t.disabled = false;
+        t.innerHTML = t.dataset.teksAsli;
+    });
+});
+</script>
+@endpush
 @endsection
