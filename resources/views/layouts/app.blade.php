@@ -5,10 +5,12 @@
     $favicon = App\Models\Setting::get('site_favicon', 'assets/img/favicon.ico');
 @endphp
 <!DOCTYPE html>
-<html>
+<html lang="id">
 
 <head>
-    <title>@yield('meta_title', 'FPCI UNEJ')</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@yield('meta_title', $__env->yieldContent('title', 'FPCI UNEJ'))</title>
     <meta name="description" content="@yield('meta_description', 'FPCI Universitas Jember')">
     <meta property="og:title" content="@yield('og_title', 'FPCI UNEJ')">
     <meta property="og:description" content="@yield('og_description', 'FPCI Universitas Jember')">
@@ -26,10 +28,12 @@
     <link rel="stylesheet" href="{{ asset('assets/css/kegiatan.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/about.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ asset('assets/css/ui-revisi.css') }}">
 </head>
 
 
 <body>
+    <a class="skip-link" href="#main-content">Lewati ke konten utama</a>
 
 
     <!-- NAVBAR -->
@@ -38,10 +42,10 @@
 
 
             <!-- LOGO -->
-            <img src="{{ asset($logo) }}" width="90" alt="Logo FPCI UNEJ">
+            <a href="{{ route('home') }}"><img src="{{ asset($logo) }}" width="90" alt="Logo FPCI UNEJ"></a>
 
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler" type="button" aria-label="Buka menu navigasi" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
@@ -97,7 +101,7 @@
                 class="d-flex align-items-center search-form position-relative" id="searchForm">
                 <div class="search-wrapper position-relative">
                     <i class="bi bi-search search-icon" id="searchIcon"></i>
-                    <input type="text" name="q" id="searchInput" class="search-input" placeholder="Cari..."
+                    <input type="text" name="q" id="searchInput" class="search-input" placeholder="Cari..." aria-label="Cari di situs"
                         autocomplete="off">
                     <div id="searchResults" class="search-autocomplete"></div>
                 </div>
@@ -138,7 +142,7 @@
                 </div>
             @else
                 <a href="{{ route('login') }}" class="btn btn-login ms-2">
-                    </i> Login
+                    <i class="bi bi-box-arrow-in-right me-1"></i> Login
                 </a>
             @endauth
 
@@ -147,7 +151,7 @@
     </nav>
 
 
-    <main class="flex-grow-1">
+    <main class="flex-grow-1" id="main-content">
         @yield('content')
     </main>
 
@@ -197,7 +201,7 @@
 
                         <div class="row">
                             <div class="col-6">
-                                @foreach($chunks->get(0, []) as $m)
+                                @foreach($chunks->get(0, collect()) as $m)
                                     <p>
                                         <a href="{{ $m->link }}" class="footer-link">
                                             {{ $m->menu_label }}
@@ -229,7 +233,7 @@
                         <div class="d-flex gap-3 mt-2 flex-wrap">
                             <!-- Instagram -->
                             @if($contact && $contact->instagram)
-                                <a href="https://instagram.com/{{ $contact->instagram }}" target="_blank"
+                                <a href="https://instagram.com/{{ $contact->instagram }}" target="_blank" rel="noopener noreferrer"
                                     class="social-icon" title="Instagram">
                                     <i class="bi bi-instagram"></i>
                                 </a>
@@ -238,7 +242,7 @@
 
                             <!-- LinkedIn -->
                             @if($contact && $contact->linkedin)
-                                <a href="https://linkedin.com/company/{{ $contact->linkedin }}" target="_blank"
+                                <a href="https://linkedin.com/company/{{ $contact->linkedin }}" target="_blank" rel="noopener noreferrer"
                                     class="social-icon" title="LinkedIn">
                                     <i class="bi bi-linkedin"></i>
                                 </a>
@@ -247,7 +251,7 @@
 
                             <!-- TikTok -->
                             @if($contact && $contact->tiktok)
-                                <a href="https://tiktok.com/@{{ $contact->tiktok }}" target="_blank" class="social-icon"
+                                <a href="https://tiktok.com/@{{ $contact->tiktok }}" target="_blank" rel="noopener noreferrer" class="social-icon"
                                     title="TikTok">
                                     <i class="bi bi-tiktok"></i>
                                 </a>
@@ -256,7 +260,7 @@
 
                             <!-- YouTube -->
                             @if($contact && $contact->youtube)
-                                <a href="https://youtube.com/{{ $contact->youtube }}" target="_blank" class="social-icon"
+                                <a href="https://youtube.com/{{ $contact->youtube }}" target="_blank" rel="noopener noreferrer" class="social-icon"
                                     title="YouTube">
                                     <i class="bi bi-youtube"></i>
                                 </a>
@@ -265,7 +269,7 @@
 
                             <!-- Twitter/X -->
                             @if($contact && $contact->x)
-                                <a href="https://twitter.com/{{ $contact->x }}" target="_blank" class="social-icon"
+                                <a href="https://twitter.com/{{ $contact->x }}" target="_blank" rel="noopener noreferrer" class="social-icon"
                                     title="Twitter / X">
                                     <i class="bi bi-twitter-x"></i>
                                 </a>
@@ -281,7 +285,7 @@
         </div>
     </div>
     <div class="footer-bottom">
-        Copyright © 2024 fpci-unej
+        Copyright © {{ date('Y') }} fpci-unej
     </div>
 
 

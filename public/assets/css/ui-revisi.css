@@ -1,0 +1,447 @@
+/*
+ * ui-revisi.css
+ * Revisi tampilan FPCI UNEJ (sprint lanjutan).
+ * File ini hanya MENAMBAH aturan, css lama tidak diubah.
+ * Dimuat paling akhir di layouts/app.blade.php, jadi aturannya menang kalau bentrok.
+ * Hapus link-nya kalau mau kembali ke tampilan awal.
+ *
+ * Isi:
+ *  1. dasar        2. navbar semua ukuran      3. fokus keyboard
+ *  4. tablet landscape (992-1199)              5. menu geser dari kiri (HP dan tablet, sampai 991px)
+ *  6. HP kecil     7. carousel                 8. footer
+ */
+
+/* font Poppins dipakai di style.css tapi sebelumnya tidak pernah dimuat */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+:root {
+    --fpci-beige: #D7CEAF;
+    --fpci-cream: #F5F2E8;
+    --fpci-olive: #5C6844;
+    --fpci-olive-gelap: #4A5537;
+    --fpci-tinta: #1C150F;
+    --fpci-bayangan: 0 10px 28px rgba(28, 21, 15, 0.12);
+    --ui-nav-h: 68px; /* tinggi navbar, diukur ulang oleh ui-revisi.js */
+}
+
+/* ---------- 1. dasar ---------- */
+html {
+    scroll-padding-top: 90px; /* supaya anchor tidak tertutup navbar yang menempel */
+}
+
+body {
+    height: auto; /* height:100% di style.css membuat navbar sticky berhenti menempel */
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+main img {
+    max-width: 100%;
+}
+
+::selection {
+    background: rgba(92, 104, 68, 0.3);
+}
+
+/* ---------- 2. navbar (semua ukuran layar) ---------- */
+.navbar {
+    position: sticky;
+    top: 0;
+}
+
+.navbar-toggler {
+    min-width: 44px;
+    min-height: 44px;
+}
+
+.btn-login {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* submenu terbuka lewat keyboard (Tab) dan lewat ketukan di layar sentuh, bukan hanya hover */
+.fpci-dropdown:focus-within .fpci-dropdown-menu,
+.fpci-dropdown.open .fpci-dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+}
+
+.fpci-dropdown.open .fpci-dropdown-toggle::after {
+    transform: rotate(180deg);
+}
+
+/* tombol tutup dan latar gelap dibuat oleh ui-revisi.js, di layar lebar tidak dipakai */
+.ui-drawer-tutup,
+.ui-backdrop {
+    display: none;
+}
+
+/* ---------- 3. fokus keyboard yang jelas ---------- */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+.nav-link:focus-visible {
+    outline: 3px solid var(--fpci-olive);
+    outline-offset: 2px;
+}
+
+.skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 100000;
+    padding: 10px 16px;
+    background: var(--fpci-olive);
+    color: #fff;
+    border-radius: 0 0 8px 0;
+    text-decoration: none;
+}
+
+.skip-link:focus {
+    left: 0;
+    color: #fff;
+}
+
+/* kartu, pagination, footer */
+.writing-card {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.writing-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--fpci-bayangan);
+}
+
+.pagination-wrapper {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 24px;
+}
+
+.footer-link {
+    transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+    text-decoration: underline;
+}
+
+.social-icon {
+    transition: transform 0.2s ease;
+}
+
+.social-icon:hover {
+    transform: translateY(-3px);
+}
+
+/* ---------- 4. laptop kecil dan tablet landscape (992px - 1199px) ---------- */
+/* menu masih tampil melebar, jadi dirapatkan supaya tidak patah ke baris kedua */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .navbar .container {
+        gap: 12px;
+    }
+
+    .navbar-nav {
+        gap: 2px;
+    }
+
+    .navbar .nav-link {
+        padding: 10px 12px !important;
+        margin: 0 2px;
+        font-size: 14px;
+    }
+
+    .search-input.active {
+        width: 190px;
+    }
+}
+
+/* ---------- 5. HP dan tablet (sampai 991px): menu geser dari kiri ---------- */
+@media (max-width: 991.98px) {
+    .navbar {
+        padding: 10px 0;
+        /* backdrop-filter membuat elemen fixed di dalamnya ikut "terkurung", jadi dimatikan di sini */
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+    }
+
+    /* baris atas: logo | cari | login | tombol menu */
+    .navbar .container {
+        flex-wrap: nowrap;
+        gap: 10px;
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    .navbar .container > a:first-child img {
+        width: 64px;
+        height: auto;
+        display: block;
+    }
+
+    .navbar .search-form {
+        order: 1;
+        margin-left: auto;
+    }
+
+    .navbar .container > .user-dropdown,
+    .navbar .container > .btn-login {
+        order: 2;
+        margin-left: 0 !important;
+    }
+
+    .navbar .navbar-toggler {
+        order: 3;
+    }
+
+    .search-input.active {
+        width: min(50vw, 220px);
+    }
+
+    /* hasil pencarian melebar penuh di bawah navbar, tidak terpotong di tepi layar */
+    .search-autocomplete {
+        position: fixed;
+        top: var(--ui-nav-h);
+        left: 12px;
+        right: 12px;
+        width: auto;
+        max-height: 60vh;
+    }
+
+    /* menu jadi panel yang menggeser dari kiri */
+    .navbar .navbar-collapse {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 2;
+        width: min(320px, 86vw);
+        height: 100vh !important;
+        height: 100dvh !important;
+        margin: 0;
+        padding: 72px 16px 24px;
+        background: #fff;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        display: block !important;
+        visibility: hidden;
+        transform: translateX(-102%);
+        transition: transform 0.3s ease, visibility 0s linear 0.3s;
+    }
+
+    .navbar .navbar-collapse.collapsing {
+        height: 100vh !important;
+        height: 100dvh !important;
+    }
+
+    .navbar .navbar-collapse.show,
+    .navbar .navbar-collapse.ui-open {
+        visibility: visible;
+        transform: none;
+        box-shadow: 8px 0 30px rgba(28, 21, 15, 0.25);
+        transition: transform 0.3s ease, visibility 0s;
+    }
+
+    .ui-drawer-tutup {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        width: 44px;
+        height: 44px;
+        border: 0;
+        border-radius: 50%;
+        background: rgba(92, 104, 68, 0.1);
+        color: var(--fpci-tinta);
+        font-size: 18px;
+    }
+
+    .ui-backdrop {
+        display: block;
+        position: fixed;
+        inset: 0;
+        z-index: 9990;
+        background: rgba(28, 21, 15, 0.5);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+    }
+
+    .ui-backdrop.tampil {
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 0.3s ease, visibility 0s;
+    }
+
+    body.ui-menu-open {
+        overflow: hidden;
+    }
+
+    /* isi menu: tiap baris besar dan mudah ditekan jari */
+    .navbar .navbar-nav,
+    .navbar .navbar-nav.mx-auto {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        gap: 2px;
+        align-items: stretch;
+    }
+
+    .navbar .nav-link {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 0;
+        padding: 14px 16px !important;
+        font-size: 16px;
+        border-radius: 12px;
+    }
+
+    .navbar .nav-link:hover {
+        transform: none;
+    }
+
+    /* submenu menjadi daftar yang melipat di bawah menu induknya */
+    .fpci-dropdown-menu {
+        position: static;
+        min-width: 0;
+        margin: 0;
+        padding: 0 0 0 12px;
+        background: transparent;
+        border-radius: 0;
+        box-shadow: none;
+        opacity: 1;
+        visibility: visible;
+        transition: none;
+    }
+
+    html.ui-js .fpci-dropdown-menu {
+        display: none;
+    }
+
+    html.ui-js .fpci-dropdown.open > .fpci-dropdown-menu {
+        display: block;
+    }
+
+    .fpci-dropdown-item {
+        padding: 12px 16px;
+        font-size: 15px;
+        border-radius: 10px;
+    }
+
+    .fpci-dropdown-item:hover,
+    .fpci-dropdown-item.active {
+        padding-left: 16px;
+    }
+}
+
+/* tablet (768px - 991px) */
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .carousel-item img {
+        height: 450px;
+    }
+
+    .carousel-caption h1 {
+        font-size: 44px;
+    }
+}
+
+/* ---------- 6. HP kecil (sampai 575px) ---------- */
+@media (max-width: 575.98px) {
+    .navbar .container > a:first-child img {
+        width: 56px;
+    }
+
+    .search-input.active {
+        width: min(44vw, 180px);
+    }
+
+    /* tombol login hanya ikon supaya baris atas tidak sesak (labelnya dipasang ui-revisi.js) */
+    .navbar .btn-login {
+        font-size: 0;
+        padding: 8px 12px;
+        min-width: 44px;
+    }
+
+    .navbar .btn-login i {
+        font-size: 20px;
+        margin: 0 !important;
+    }
+
+    /* 16px mencegah browser iPhone memperbesar layar sendiri saat kolom diklik */
+    input,
+    select,
+    textarea {
+        font-size: 16px;
+    }
+}
+
+/* ---------- 7. carousel di HP ---------- */
+@media (max-width: 575.98px) {
+    .carousel-item img {
+        height: 240px;
+    }
+
+    .carousel-caption {
+        left: 6%;
+        right: 6%;
+        bottom: 14%;
+    }
+
+    .carousel-caption h1 {
+        font-size: 24px;
+        margin-bottom: 8px;
+    }
+
+    .carousel-caption p {
+        font-size: 13px;
+        margin-bottom: 12px;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+}
+
+/* ---------- 8. footer di HP: kolom ditumpuk, tidak lagi terjepit berjajar ---------- */
+@media (max-width: 767.98px) {
+    .footer-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .footer-row > div,
+    .footer-row > div:first-child,
+    .footer-row > div:nth-child(2),
+    .footer-row > div:last-child {
+        flex: none;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 24px;
+    }
+
+    .footer-row > div:first-child {
+        align-items: center;
+    }
+
+    .footer-row > div:last-child .d-flex {
+        justify-content: center;
+    }
+}
+
+/* hormati pengguna yang mematikan animasi di perangkatnya */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
